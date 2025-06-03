@@ -1,0 +1,20 @@
+
+axes.titlesize : 24
+axes.labelsize : 20
+
+lines.linewidth : 2.5
+lines.markersize : 10
+lines.linestyle : -
+lines.marker: o
+
+xtick.labelsize : 16
+ytick.labelsize : 16
+
+font.family : serif
+
+axes.grid : True
+grid.linestyle : -
+grid.alpha : 0.7
+
+mathtext.default : regular
+
