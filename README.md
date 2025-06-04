@@ -1,6 +1,6 @@
 # **Catch22 test limitations (title pending)**
 
-Here we present a modular Python pipeline for generating, transforming, and classifying moisy time series signals, including synthetic sine waves and FitzHugh-Nagumo (FHN) models. The system supports different preprocessing and classification configurations.
+Here we present a modular Python pipeline for generating, transforming, and classifying noisy time series signals, including synthetic sine waves and FitzHugh-Nagumo (FHN) models. The system supports different preprocessing and classification configurations.
 
 ## **Features**
 * **Signal generation**: Modular system for noisy sine and FHN signals.
