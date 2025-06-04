@@ -37,6 +37,6 @@ Each experiment evaluates classification performance under 4 cofigurations:
 All configuration share identical cross-validations splits for fair comparison.
 
 ## **TO-DOs**
-- [] Add support for additional classifiers (RandomForest, KNN, etc.)
-- [] Extend to real-world physiological signals
-- [] Add CLI/argparse support
+- [ ] Add support for additional classifiers (RandomForest, KNN, etc.)
+- [ ] Extend to real-world physiological signals
+- [ ] Add CLI/argparse support
