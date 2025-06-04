@@ -1,5 +1,6 @@
 import numpy as np
 from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 import pandas as pd
 
 def apply_pca(X, n_components = 2):
@@ -19,11 +20,14 @@ def apply_pca(X, n_components = 2):
         X_values = X
     else:
         raise ValueError("Input data must be a numpy array or pandas DataFrame.")
-    
+     
+    scaler = StandardScaler()
+    X_values = scaler.fit_transform(X_values)
+
     pca = PCA(n_components=n_components)
     X_pca = pca.fit_transform(X_values)
 
-    return X_pca, pca
+    return X_pca, pca, scaler
 
 # for test data, we need to apply pca.transform for the data in the folds.
 

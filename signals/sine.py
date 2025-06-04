@@ -12,15 +12,16 @@ def sinusoidal_base(t, args):
 
     Parameters:
     - t (np.ndarray): Time vector.
-    - args (list or tuple): [f, phi, noise_strength]
+    - args (list or tuple): [f, noise_strength, n_points, n_periods]
         - f: frequency in Hz
-        - phi: phase in radians
         - noise_strength: standard deviation of Gaussian noise (0 for no noise)
+        - n_points: number of points per period
+        - n_periods: number of periods to generate
 
     Returns:
     - y (np.ndarray): Noisy sine wave.
     """
-    f, _, noise_strength = args
+    f, noise_strength, _, _ = args
     phi =  np.random.uniform(0, 2*np.pi)
     y = np.sin(2 * np.pi * f * t + phi)
     if noise_strength > 0:
@@ -28,21 +29,23 @@ def sinusoidal_base(t, args):
     return y
 
 
-def generate_sine_noise_once(n_points, n_periods, args):
+def generate_sine_noise_once(args):
     """
     Generate a sine wave over a given number of periods with optional noise.
 
     Parameters:
-    - f (float): Frequency of the sine wave.
-    - n_pts (int): Points per period.
-    - n_periodos (float): Number of periods.
-    - args (list): [f, phi, noise_strength]
+    - args (list): [f, noise_strength, n_points, n_periods]
+        - f (float): Frequency of the sine wave.
+        - noise_strength (float): Standard deviation of Gaussian noise (0 for no noise).
+        - n_pts (int): Points per period.
+        - n_periodos (float): Number of periods.
+    
 
     Returns:
     - t (np.ndarray): Time vector.
     - y (np.ndarray): Noisy sine wave.
     """
-    f, _, _ = args
+    f, _ , n_points, n_periods= args
     total_points = int(n_points * n_periods)
     duration = n_periods / f
     t = np.linspace(0, duration, total_points, endpoint=False)

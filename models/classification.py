@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.metrics import roc_auc_score, accuracy_score
 
-
+# ---------- Core classification evaluation functions ----------
 def evaluate_model_auc(splits_frames, classifier, probability=True):
     """
     Evaluate a model using k-fold splits and compute AUC scores
@@ -57,3 +57,19 @@ def evaluate_model_accuracy(splits_frames, classifier):
         print(f"Fold Accuracy: {accuracy:.3f}")
     
     return accuracy_scores
+
+def evaluate_single_fold(X_train, X_test, y_train, y_test, clf):
+
+    # Fit the model
+    clf.fit(X_train, y_train)
+    probs = clf.predict_proba(X_test)[:, 1]
+    return roc_auc_score(y_test, probs)
+
+# ---------- Split preparation function ----------
+
+
+
+
+
+# ---------- Pipeline function ----------
+
