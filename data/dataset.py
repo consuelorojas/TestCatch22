@@ -1,11 +1,11 @@
 import numpy as np
 import os
 import sys
-sys.path.append(os.path.abspath("../signals"))
-sys.path.append(os.path.abspath("../preprocessing"))
-from sklearn.model_selection import train_test_split, StratifiedKFold, KFold
+sys.path.append(os.path.abspath("./signals"))
+#sys.path.append(os.path.abspath("./preprocessing"))
+from sklearn.model_selection import StratifiedKFold
 from dispatcher import generate_signal
-from preprocessing import subsample_signals
+#from preprocessing import subsample_signals
 
 def create_labeled_dataset(class_configs, n_samples_per_class, subsample_step = None, transient = 0, return_time = False):
     """

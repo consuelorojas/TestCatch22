@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 from pycatch22 import catch22_all
 
+
+
 def extract_features(signals, return_array = False):
     """
     Extract catch22 features from a list of time series signals.

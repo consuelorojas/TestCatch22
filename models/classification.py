@@ -5,8 +5,8 @@ import pandas as pd
 
 import sys
 import os
-sys.path.append(os.path.abspath("../preprocessing"))
-sys.path.append(os.path.abspath("../features"))
+sys.path.append(os.path.abspath("./preprocessing"))
+sys.path.append(os.path.abspath("./features"))
 
 from preprocessing import apply_pca
 from features import extract_features
@@ -147,9 +147,10 @@ def run_experiment(X,y, splits, n_pca_components = 2, clf_fn = None):
         clf = clf_fn()
         train_feat_pca, pca_tf, scaler = apply_pca(train_feat, n_components=n_pca_components)
         test_feat = test_feat.values if isinstance(test_feat, pd.DataFrame) else test_feat
-        test_feat_pca, _, _ = apply_pca(test_feat, n_components=n_pca_components)
-        #test_feat_pca = scaler.transform(test_feat)
-        #test_feat_pca = pca_tf.transform(test_feat_pca)
+    
+        test_feat_pca = scaler.transform(test_feat)
+        test_feat_pca = pca_tf.transform(test_feat_pca)
+        
         feat_pca.append(evaluate_single_fold(train_feat_pca, test_feat_pca, y_train, y_test, clf))
 
     return {
