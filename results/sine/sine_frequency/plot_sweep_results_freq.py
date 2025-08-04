@@ -3,11 +3,11 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-plt.style.use('report.mlpstyle')
+plt.style.use('/home/consuelo/Documentos/GitHub/TestCatch22/report.mlpstyle')
 
 # ---- Load results from file ----
-# Replace this with your actual path:
-result_file = "results/sine_frequency/results_20250608_235103.pkl"
+# Results path:
+result_file = "results/sine/sine_frequency/results_20250801_140245.pkl"
 
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
@@ -53,12 +53,12 @@ for method, marker in markers.items():
     )
 
 #plt.title("AUC vs Frequency Difference (Δf)")
-plt.xlabel(r"Frequency Difference $(\omega_0 - \omega_1)$")
+plt.xlabel(r"Parameter Difference $(\omega_0 - \omega_1)$")
 plt.ylabel("AUC")
 plt.legend(title="Method")
 plt.grid(True)
 plt.tight_layout()
 plt.ylim(-0.1, 1.1)
 plt.xlim(-0.05, 0.65)
-plt.savefig("results/sine_frequency/auc_vs_freq_diff2.png", dpi=180)
+plt.savefig("/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_frequency/auc_vs_freq_diff2.png", dpi=180)
 plt.show()
