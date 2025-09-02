@@ -3,6 +3,7 @@ import sys
 import pickle
 from datetime import datetime
 
+
 sys.path.append(os.path.abspath("./models"))
 sys.path.append(os.path.abspath("./data"))
 
@@ -12,15 +13,15 @@ from dataset import create_labeled_dataset, get_kfold_splits
 
 ## sweep configuration
 fbase = 5
-f1 = 5.25
-npoints = [3, 5, 7, 10, 15, 20, 50]
+f1 = 5.18
+npoints = [1, 2, 3, 5, 7, 10, 15, 20, 30]
 nperiods = 3
 
 noise = 0.1
 samples = 100
 
 ## Output directory
-sweep_name = "sine_points"
+sweep_name = "sine/sine_points"
 output_dir = os.path.join("results", sweep_name)
 os.makedirs(output_dir, exist_ok=True)
 

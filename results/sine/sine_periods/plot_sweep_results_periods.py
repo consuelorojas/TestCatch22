@@ -4,11 +4,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from datetime import datetime
-plt.style.use('report.mlpstyle')
+plt.style.use('report.mplstyle')
 
-# ---- Load results from file ----
-# Replace this with your actual path:
-result_file = "results/sine_periods/results_20250608_235320.pkl"
+
+result_file = "results/sine/sine_periods/results_20250827_142306.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
@@ -60,5 +59,44 @@ plt.grid(True)
 plt.tight_layout()
 plt.ylim(-0.1, 1.1)
 #plt.xlim(-0.05, 0.65)
-plt.savefig(f"results/sine_periods/auc_vs_np_{datetime.now()}.png", dpi=180)
+plt.savefig(f"results/sine/sine_periods/auc_vs_np_{datetime.now()}.png", dpi=180)
+plt.show()
+
+#### error bars
+
+# --- Compute mean & std per method/Δf ---
+df_grouped = (
+    df_results
+    .groupby(["Method", "periods"])
+    .agg(AUC_mean=("AUC", "mean"), AUC_std=("AUC", "std"))
+    .reset_index()
+)
+
+
+# Ensure numeric
+df_grouped["periods"] = pd.to_numeric(df_grouped["periods"], errors="coerce")
+
+plt.figure(figsize=(10, 6))
+for method, marker in markers.items():
+    data = df_grouped[df_grouped["Method"] == method].sort_values("periods")
+    plt.errorbar(
+        data["periods"], data["AUC_mean"],
+        yerr=data["AUC_std"],
+        fmt=marker,
+        capsize=4,
+        elinewidth=1,
+        alpha=0.7,
+        label=method
+    )
+
+plt.xlabel(r"Number of periods $(N_p)$")
+plt.ylabel("AUC")
+plt.legend(title="Method")
+plt.grid(True)
+plt.tight_layout()
+plt.ylim(-0.1, 1.1)
+plt.savefig(
+    "results/sine/sine_periods/auc_vs_periods_diff_errorbars.png",
+    dpi=180
+)
 plt.show()

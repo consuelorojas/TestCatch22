@@ -4,11 +4,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from datetime import datetime
-plt.style.use('report.mlpstyle')
+plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/sine_noise/results_20250608_234927.pkl"
+result_file = "results/sine/sine_noise/results_20250827_141622.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
@@ -52,7 +52,6 @@ for method, marker in markers.items():
         alpha=0.7
     )
 
-#plt.title("AUC vs Frequency Difference (Δf)")
 plt.xlabel(r"Noise Level $(D)$")
 plt.ylabel("AUC")
 plt.legend(title="Method")
@@ -60,5 +59,50 @@ plt.grid(True)
 plt.tight_layout()
 plt.ylim(-0.1, 1.1)
 #plt.xlim(-0.05, 0.65)
-plt.savefig(f"results/sine_noise/auc_vs_np_{datetime.now()}.png", dpi=180)
+plt.savefig(f"results/sine/sine_noise/auc_vs_np_scatter.png", dpi=180)
+plt.show()
+
+
+
+# --- Compute mean & std per method/Δf ---
+df_grouped = (
+    df_results
+    .groupby(["Method", "noise"])
+    .agg(AUC_mean=("AUC", "mean"), AUC_std=("AUC", "std"))
+    .reset_index()
+)
+
+# --- Plot with error bars ---
+markers = {
+    "raw": "o", 
+    "pca": "s", 
+    "features": "D", 
+    "features_pca": "^"
+}
+
+plt.figure(figsize=(10, 6))
+
+for method, marker in markers.items():
+    data = df_grouped[df_grouped["Method"] == method]
+    plt.errorbar(
+        data["noise"], data["AUC_mean"],
+        yerr=data["AUC_std"],
+        fmt=marker,         # marker style
+        capsize=4,          # error bar caps
+        elinewidth=1,       # error bar line thickness
+        alpha=0.7,
+        label=method
+    )
+
+plt.xlabel(r"Noise Levels $(D)$")
+plt.ylabel("AUC")
+plt.legend(title="Method")
+plt.grid(True)
+plt.tight_layout()
+plt.ylim(-0.1, 1.1)
+plt.xlim(-0.05, 0.65)
+plt.savefig(
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_noise/auc_vs_noise_diff_errorbars.png",
+    dpi=180
+)
 plt.show()

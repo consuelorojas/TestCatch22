@@ -12,7 +12,7 @@ from dataset import create_labeled_dataset, get_kfold_splits
 
 ## sweep configuration
 fbase = 5
-f1 = 5.25
+f1 = 5.18
 nperiods = 3
 npoints = 5
 
@@ -20,7 +20,7 @@ noise = [0, 0.1, 0.2, 0.3, 0.5, 0.7, 1]
 samples = 100
 
 ## Output directory
-sweep_name = "sine_noise"
+sweep_name = "sine/sine_noise"
 output_dir = os.path.join("results", sweep_name)
 os.makedirs(output_dir, exist_ok=True)
 

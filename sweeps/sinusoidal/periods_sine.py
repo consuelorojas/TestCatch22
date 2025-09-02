@@ -12,15 +12,15 @@ from dataset import create_labeled_dataset, get_kfold_splits
 
 ## sweep configuration
 fbase = 5
-f1 = 5.25
-nperiods = [1, 1.5, 2, 3, 4, 5]
+f1 = 5.18
+nperiods = [1, 1.5, 2, 2.5, 3, 3.5, 4, 5]
 npoints = 5
 
 noise = 0.1
 samples = 100
 
 ## Output directory
-sweep_name = "sine_periods"
+sweep_name = "sine/sine_periods"
 output_dir = os.path.join("results", sweep_name)
 os.makedirs(output_dir, exist_ok=True)
 

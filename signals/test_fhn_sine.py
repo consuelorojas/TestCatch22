@@ -9,11 +9,13 @@ project_folder/
     └── sin.py
 '''
 
+### this no longer works, at least not with the dispatcher ###
+
 import numpy as np
 import matplotlib.pyplot as plt
 
-from signals.fhn import SDEs_fhn
-from signals.sine import sin_noise
+from fhn import SDEs_fhn
+from sine import sin_noise
 
 def test_fhn_model():
     print("Testing FitzHugh-Nagumo model...")

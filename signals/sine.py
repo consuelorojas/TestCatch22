@@ -1,6 +1,4 @@
-
 import numpy as np
-import random
 
 '''
 Create sinusoidal signals with noise
@@ -29,7 +27,7 @@ def sinusoidal_base(t, args):
     return y
 
 
-def generate_sine_noise_once(args, base_freq = 5):
+def generate_sine_noise_once(args, base_freq = 5, t_shared=None):
     """
     Generate a sine wave over a given number of periods with optional noise.
 
@@ -47,12 +45,10 @@ def generate_sine_noise_once(args, base_freq = 5):
     """
     f, _ , n_points, n_periods = args
 
-    if base_freq > f:
-        base_freq = f
+    if t_shared is None:
+        total_points = int(n_points * n_periods)
+        duration = n_periods / base_freq
+        t_shared = np.linspace(0, duration, total_points, endpoint=False)
 
-    total_points = int(n_points * n_periods)
-    duration = n_periods / base_freq
-    t = np.linspace(0, duration, total_points, endpoint=False)
-    y = sinusoidal_base(t, args)
-
-    return t, y
+    y = sinusoidal_base(t_shared, args)
+    return t_shared, y

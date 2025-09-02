@@ -1,5 +1,7 @@
 {
     "python.analysis.extraPaths": [
-        "./signals"
+        "./signals",
+        "./models",
+        "./data"
     ]
 }

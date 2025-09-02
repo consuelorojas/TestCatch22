@@ -12,9 +12,9 @@ from dataset import create_labeled_dataset, get_kfold_splits
 
 ## sweep configuration
 fbase = 5
-deltaf = 0.1
-f1 = [fbase + deltaf*i for i in range(0, 15, 1)]
-dfreq = [deltaf *  i for i in range(0, 15, 1)]
+deltaf = 0.01
+f1 = [fbase + deltaf*i for i in range(0, 22, 2)]
+dfreq = [deltaf *  i for i in range(0, 22, 2)]
 
 npoints = 5
 nperiods = 3
@@ -23,7 +23,7 @@ noise = 0.1
 samples = 100
 
 ## Output directory
-sweep_name = "sine_frequency"
+sweep_name = "sine/sine_frequency"
 output_dir = os.path.join("results", sweep_name)
 os.makedirs(output_dir, exist_ok=True)
 
