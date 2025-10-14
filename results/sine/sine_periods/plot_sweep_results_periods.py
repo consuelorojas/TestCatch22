@@ -7,7 +7,7 @@ from datetime import datetime
 plt.style.use('report.mplstyle')
 
 
-result_file = "results/sine/sine_periods/results_20250827_142306.pkl"
+result_file = "results/sine/sine_periods/results_20251008_113147.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
@@ -40,7 +40,7 @@ markers = {
     "features_pca": "^"
 }
 
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(20, 14))
 
 for method, marker in markers.items():
     data = df_results[df_results["Method"] == method]
@@ -59,7 +59,7 @@ plt.grid(True)
 plt.tight_layout()
 plt.ylim(-0.1, 1.1)
 #plt.xlim(-0.05, 0.65)
-plt.savefig(f"results/sine/sine_periods/auc_vs_np_{datetime.now()}.png", dpi=180)
+#plt.savefig(f"results/sine/sine_periods/auc_vs_np_{datetime.now()}.png", dpi=180)
 plt.show()
 
 #### error bars
@@ -76,15 +76,15 @@ df_grouped = (
 # Ensure numeric
 df_grouped["periods"] = pd.to_numeric(df_grouped["periods"], errors="coerce")
 
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(15, 10))
 for method, marker in markers.items():
     data = df_grouped[df_grouped["Method"] == method].sort_values("periods")
     plt.errorbar(
         data["periods"], data["AUC_mean"],
         yerr=data["AUC_std"],
         fmt=marker,
-        capsize=4,
-        elinewidth=1,
+        capsize=5,
+        #elinewidth=1,
         alpha=0.7,
         label=method
     )
@@ -96,7 +96,7 @@ plt.grid(True)
 plt.tight_layout()
 plt.ylim(-0.1, 1.1)
 plt.savefig(
-    "results/sine/sine_periods/auc_vs_periods_diff_errorbars.png",
+    "results/sine/sine_periods/errorbars_1-8_np.png",
     dpi=180
 )
 plt.show()

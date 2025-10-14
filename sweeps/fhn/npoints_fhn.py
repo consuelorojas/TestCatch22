@@ -16,7 +16,7 @@ from dataset import create_labeled_dataset, get_kfold_splits
 b0 = 0.1
 
 b1 = 1
-db1 = 0.0889
+db1 = 0.18
 b12 = b1 + db1
 
 epsilon = 0.2
@@ -26,7 +26,8 @@ dt = 0.1
 
 # step to subsampling
 pseudo_period = 30
-npp = [2, 3, 5, 7, 10, 30, 50, 100]            # change the number of points per period here!
+npp = np.arange(5, 51, 5)          # change the number of points per period here!
+npp = np.concatenate((np.array([3,4]), npp))  # add 3 and 4 points per period
 step = [int(pseudo_period / elem / dt) for elem in npp]
 
 epsilon = 0.2
@@ -37,7 +38,7 @@ trans = 50 # transient
 
 samples = 100
 ## Output directory
-sweep_name = "fhn_npp"
+sweep_name = "fhn/fhn_npp"
 output_dir = os.path.join("results", sweep_name)
 os.makedirs(output_dir, exist_ok=True)
 

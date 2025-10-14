@@ -16,7 +16,7 @@ from dataset import create_labeled_dataset, get_kfold_splits
 b0 = 0.1
 
 b1 = 1
-db1 = 0.0889
+db1 = 0.18
 b12 = b1 + db1
 
 epsilon = 0.2

@@ -4,6 +4,8 @@ Each signal model must define a 'generate_<model_name>_signal_once(**kwargs)' fu
 '''
 from fhn import generate_fhn_signal_once
 from sine import generate_sine_noise_once
+from lorenz import generate_lorenz_once
+from fhn_obs import generate_fhn_obs_signal_once
 
 def get_signal_generator(model_name):
     '''
@@ -20,7 +22,9 @@ def get_signal_generator(model_name):
     '''
     generators = {
         'fhn': generate_fhn_signal_once,
-        'sine': generate_sine_noise_once
+        'sine': generate_sine_noise_once,
+        'lorenz': generate_lorenz_once,
+        'fhn_obs': generate_fhn_obs_signal_once,
         # new models can be added here
     }
     

@@ -13,13 +13,13 @@ from dataset import create_labeled_dataset, get_kfold_splits
 ## sweep configuration
 fbase = 5
 deltaf = 0.01
-f1 = [fbase + deltaf*i for i in range(0, 22, 2)]
-dfreq = [deltaf *  i for i in range(0, 22, 2)]
+f1 = [fbase + deltaf*i for i in range(0, 52, 2)]
+dfreq = [deltaf *  i for i in range(0, 52, 2)]
 
-npoints = 5
+npoints = 7
 nperiods = 3
 
-noise = 0.1
+noise = 0.2
 samples = 100
 
 ## Output directory

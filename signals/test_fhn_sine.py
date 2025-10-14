@@ -14,8 +14,11 @@ project_folder/
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 from fhn import SDEs_fhn
-from sine import sin_noise
+from sine import generate_sine_noise_once as sin_noise
+from lorenz import lorenz_base
+
 
 def test_fhn_model():
     print("Testing FitzHugh-Nagumo model...")
@@ -53,7 +56,7 @@ def test_sin_noise():
     n_periodos = 5
     args = [f, phi, noise_strength]
 
-    t, y = sin_noise(f, n_pts, n_periodos, args)
+    t, y = sin_noise(args)
 
     # Basic shape checks
     assert len(t) == len(y), "Time and signal arrays must be the same length"
@@ -68,6 +71,50 @@ def test_sin_noise():
     plt.tight_layout()
     plt.show()
 
+def test_lorenz_model():
+    print("Testing Lorenz attractor model...")
+
+    from lorenz import lorenz_base
+
+    # Parameters
+    state0 = [1.0, 1.0, 1.0]
+    sigma = 10.0
+    rho = 28.0
+    beta = 8/3
+    dt = 0.01
+    steps = 10000
+    noise_strength = 20.0
+    args = [state0, sigma, rho, beta, dt, steps, noise_strength]
+
+    times, traj = lorenz_base(args)
+
+    # Basic shape checks
+    assert traj.shape == (steps, 3), "Trajectory shape must be (steps, 3)"
+
+    # Plot - 3D trajectory
+    fig = plt.figure(figsize=(8, 6))
+    ax = fig.add_subplot(111, projection='3d')
+    ax.plot(traj[:,0], traj[:,1], traj[:,2])
+    ax.set_title('Lorenz Attractor')
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    #ax.set_zlabel('Z')
+    plt.tight_layout()
+    plt.show()
+
+    # 1D trajectory plot
+    plt.figure(figsize=(10, 4))
+    plt.plot(times, traj[:,0], label='X coordinate')
+    plt.plot(times, traj[:,1], label='Y coordinate')
+    plt.plot(times, traj[:,2], label='Z coordinate')
+    plt.title('Lorenz Attractor - X Coordinate Over Time')
+    plt.xlabel('Time')
+    plt.ylabel('X')
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+
 if __name__ == "__main__":
-    test_fhn_model()
-    test_sin_noise()
+    #test_fhn_model()
+    #test_sin_noise()
+    test_lorenz_model()

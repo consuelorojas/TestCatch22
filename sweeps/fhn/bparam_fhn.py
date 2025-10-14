@@ -2,6 +2,7 @@ import os
 import sys
 import pickle
 from datetime import datetime
+from matplotlib import pyplot as plt
 import numpy as np
 from tqdm import tqdm
 
@@ -19,9 +20,9 @@ b0 = 0.1
 
 b1 = 1
 db1 = 0.2
-b12g = np.arange(1.3, 2.2, db1)
+#b12g = np.arange(1.3, 2.2, db1)
 b12s = np.linspace(b1, 1.2, 10)
-b12 = np.concatenate((b12s, b12g))
+b12 = np.concatenate((b12s, np.array([1.25, 1.3, 1.35, 1.4])))
 deltab12 = b12 - b1
 
 epsilon = 0.2
@@ -33,7 +34,7 @@ dt = 0.1
 
 # step to subsampling
 pseudo_period = 30
-npp = 10            # change the number of points per period here!
+npp = 10            # change the number of points per period here
 step = int(pseudo_period / npp / dt)
 
 trans = 50 # transient
@@ -58,6 +59,8 @@ for i, b in enumerate(tqdm(b12)):
         )
     
     splits = get_kfold_splits(X, y, n_splits=5, stratified=False)
+    #plt.plot(X[0], '*-')
+    #plt.show()
     results = run_experiment(X, y, splits)
 
     all_results.append({

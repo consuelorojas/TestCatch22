@@ -39,6 +39,7 @@ def SDEs_fhn(x0, tmax, dt, args):
     '''
     _, _, _, _, noise_strength = args
     # setting arrays
+    x0 = np.random.randn(len(x0)) * 0.1 + x0  # small random perturbation to initial condition
     n_steps = int(tmax/dt)
     t = np.arange(0,tmax, dt)
     x = np.zeros((n_steps, len(x0)))

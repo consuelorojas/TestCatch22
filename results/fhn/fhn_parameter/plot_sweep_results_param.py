@@ -7,7 +7,7 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/fhn/fhn_parameter/results_20250609_120140.pkl"
+result_file = "results/fhn/fhn_parameter/results_20251010_145904.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
@@ -102,7 +102,7 @@ markers = {
     "features_pca": "^"
 }
 
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(15, 10))
 
 for method, marker in markers.items():
     data = df_grouped[df_grouped["Method"] == method]
@@ -110,19 +110,19 @@ for method, marker in markers.items():
         data["b"], data["AUC_mean"],
         yerr=data["AUC_std"],
         fmt=marker,         # marker style
-        capsize=4,          # error bar caps
-        elinewidth=1,       # error bar line thickness
+        capsize=5,          # error bar caps
+        #elinewidth=1,       # error bar line thickness
         alpha=0.7,
         label=method
     )
 
 plt.xlabel(r"Parameter Difference $(b_0 - b_1)$")
 plt.ylabel("AUC")
-plt.legend(title="Method")
+plt.legend(title="Method", loc ="lower left")
 plt.grid(True)
 plt.tight_layout()
 plt.ylim(-0.1, 1.1)
-plt.xlim(-0.01, 0.35)
+plt.xlim(-0.01, 0.31)
 plt.savefig(
     "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_parameter/param_fhn_errorbars.png",
     dpi=180

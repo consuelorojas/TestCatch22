@@ -2,6 +2,7 @@ import os
 import sys
 import pickle
 from datetime import datetime
+import numpy as np
 
 sys.path.append(os.path.abspath("./models"))
 sys.path.append(os.path.abspath("./data"))
@@ -14,9 +15,14 @@ from dataset import create_labeled_dataset, get_kfold_splits
 fbase = 5
 f1 = 5.18
 nperiods = 3
-npoints = 5
+npoints = 7
 
-noise = [0, 0.1, 0.2, 0.3, 0.5, 0.7, 1]
+#noise = [0, 0.1, 0.2, 0.3, 0.5, 0.7, 1]
+noise = np.linspace(0, 0.4, 20)
+bignoise = np.array([0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
+noise = np.concatenate((noise, bignoise))
+noise = np.round(noise, 3)
+
 samples = 100
 
 ## Output directory

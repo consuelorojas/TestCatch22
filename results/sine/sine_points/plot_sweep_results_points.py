@@ -8,7 +8,7 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/sine/sine_points/results_20250901_182048.pkl"
+result_file = "results/sine/sine_points/results_20251008_112823.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
@@ -41,7 +41,7 @@ markers = {
     "features_pca": "^"
 }
 
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(20, 14))
 
 for method, marker in markers.items():
     data = df_results[df_results["Method"] == method]
@@ -61,7 +61,7 @@ plt.grid(True)
 plt.tight_layout()
 plt.ylim(-0.1, 1.1)
 #plt.xlim(-0.05, 0.65)
-plt.savefig(f"results/sine/sine_points/auc_vs_npp_{datetime.now()}.png", dpi=180)
+#plt.savefig(f"results/sine/sine_points/auc_vs_npp_{datetime.now()}.png", dpi=180)
 plt.show()
 
 
@@ -81,7 +81,7 @@ markers = {
     "features_pca": "^"
 }
 
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(15, 10))
 
 for method, marker in markers.items():
     data = df_grouped[df_grouped["Method"] == method]
@@ -89,21 +89,21 @@ for method, marker in markers.items():
         data["npp"], data["AUC_mean"],
         yerr=data["AUC_std"],
         fmt=marker,         # marker style
-        capsize=4,          # error bar caps
-        elinewidth=1,       # error bar line thickness
+        capsize=5,          # error bar caps
+        #elinewidth=1,       # error bar line thickness
         alpha=0.7,
         label=method
     )
 
 plt.xlabel(r"Number of points per period $(N_{pp})$")
 plt.ylabel("AUC")
-plt.legend(title="Method")
+plt.legend(title="Method", loc='lower left')
 plt.grid(True)
 plt.tight_layout()
 plt.ylim(-0.1, 1.1)
 #plt.xlim(-0.05, 0.65)
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_points/auc_vs_points_diff_errorbars.png",
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_points/errorbars_1-20_npp.png",
     dpi=180
 )
 plt.show()

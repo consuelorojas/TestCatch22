@@ -1,6 +1,7 @@
 import os
 import sys
 import pickle
+import numpy as np
 from datetime import datetime
 
 
@@ -14,7 +15,8 @@ from dataset import create_labeled_dataset, get_kfold_splits
 ## sweep configuration
 fbase = 5
 f1 = 5.18
-npoints = [1, 2, 3, 5, 7, 10, 15, 20, 30]
+#npoints = [1, 2, 3, 5, 7, 10, 15, 20, 30]
+npoints = np.arange(1, 21)  # From 1 to 20 in steps of 2
 nperiods = 3
 
 noise = 0.1

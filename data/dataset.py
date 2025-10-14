@@ -27,8 +27,10 @@ def create_labeled_dataset(class_configs, n_samples_per_class, subsample_step = 
 
         for t, s in signals:
             if subsample_step is not None:
-                s = s[transient::subsample_step]
-                t = t[transient::subsample_step]
+                s = s[transient::]
+                s = s[::subsample_step]
+                t = t[transient::]
+                t = t[::subsample_step]
             X.append(s)
             y.append(label)
             if return_time:

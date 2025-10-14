@@ -13,8 +13,8 @@ from dataset import create_labeled_dataset, get_kfold_splits
 ## sweep configuration
 fbase = 5
 f1 = 5.18
-nperiods = [1, 1.5, 2, 2.5, 3, 3.5, 4, 5]
-npoints = 5
+nperiods = [1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8]
+npoints = 7
 
 noise = 0.1
 samples = 100
