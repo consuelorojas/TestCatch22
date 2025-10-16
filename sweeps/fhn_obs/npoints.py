@@ -16,7 +16,7 @@ from dataset import create_labeled_dataset, get_kfold_splits
 b0 = 0.1
 
 b1 = 1
-db1 = 0.075
+db1 = 0.03157
 b12 = b1 + db1
 
 epsilon = 0.2
@@ -26,8 +26,9 @@ dt = 0.1
 
 # step to subsampling
 pseudo_period = 30
-npp = np.arange(5, 51, 5)          # change the number of points per period here!
-npp = np.concatenate((np.array([3,4]), npp))  # add 3 and 4 points per period
+#npp = np.arange(5, 51, 5)          # change the number of points per period here!
+#npp = np.concatenate((np.array([3,4]), npp))  # add 3 and 4 points per period
+npp = np.linspace(3, 20, 18)
 step = [int(pseudo_period / elem / dt) for elem in npp]
 
 epsilon = 0.2

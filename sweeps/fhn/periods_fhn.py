@@ -28,7 +28,7 @@ dt = 0.1
 pseudo_period = 30
 npp = 10          # change the number of points per period here!
 step = int(pseudo_period / npp / dt)
-periods = [300, 450, 600, 900, 1200, 1500, 3000]
+periods = [300, 450, 600, 900, 1200, 1500, 1800, 2100, 2400, 2700, 3000]
 
 epsilon = 0.2
 I = 0
@@ -38,7 +38,7 @@ trans = 50 # transient
 
 samples = 100
 ## Output directory
-sweep_name = "fhn_periods"
+sweep_name = "fhn/fhn_periods"
 output_dir = os.path.join("results", sweep_name)
 os.makedirs(output_dir, exist_ok=True)
 

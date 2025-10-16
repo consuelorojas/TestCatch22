@@ -3,11 +3,12 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import numpy as np
 plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/fhn_obs/noise/results_20251010_153744.pkl"
+result_file = "results/fhn_obs/noise/results_20251016_125231.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
@@ -87,6 +88,7 @@ plt.xlim(-0.05, 0.3)
 plt.show()
 
 # --- Compute mean & std per method/Δf ---
+noise = np.round(np.linspace(0, 1.5, 25), 2)
 df_grouped = (
     df_results
     .groupby(["Method", "noise"])
@@ -102,7 +104,7 @@ markers = {
     "features_pca": "^"
 }
 
-plt.figure(figsize=(15, 10))
+plt.figure(figsize=(15, 10.5))
 
 for method, marker in markers.items():
     data = df_grouped[df_grouped["Method"] == method]
@@ -116,12 +118,13 @@ for method, marker in markers.items():
         label=method
     )
 
-plt.xlabel(r"Noise level $(D)$")
+plt.xlabel(r"Noise strength $(D)$")
 plt.ylabel("AUC")
 plt.legend(title="Method", loc ="lower left")
 plt.grid(True)
 plt.tight_layout()
 plt.ylim(-0.1, 1.1)
+plt.xticks(noise[::2])
 #plt.xlim(-0.05, 0.65)
 plt.savefig(
     "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn_obs/noise/noise_fhn_obs_errorbars.png",

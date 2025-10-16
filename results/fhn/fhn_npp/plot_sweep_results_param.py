@@ -7,7 +7,7 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/fhn/fhn_npp/results_20251010_150819.pkl"
+result_file = "results/fhn/fhn_npp/results_20251016_133318.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
@@ -82,7 +82,6 @@ plt.grid(True)
 plt.tight_layout()
 plt.ylim(-0.1, 1.1)
 plt.xscale('log')
-plt.xticks(data.npp.unique())
 #plt.xlim(-0.05, 0.75)
 plt.savefig("results/fhn/fhn_npp/npp_diff_lim2.png", dpi=180)
 plt.show()
@@ -123,6 +122,7 @@ plt.legend(title="Method", loc ="lower left")
 plt.grid(True)
 plt.tight_layout()
 plt.ylim(-0.1, 1.1)
+plt.xticks(data.npp.unique()[::2])
 #plt.xlim(-0.05, 0.65)
 plt.savefig(
     "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_npp/npp_fhn_errorbars.png",

@@ -41,7 +41,7 @@ trans = 50 # transient
 
 samples = 100
 ## Output directory
-sweep_name = "fhn_parameter"
+sweep_name = "fhn/fhn_parameter"
 output_dir = os.path.join("results", sweep_name)
 os.makedirs(output_dir, exist_ok=True)
 

@@ -94,7 +94,7 @@ for method, marker in markers.items():
         label=method
     )
 
-plt.xlabel(r"Noise Levels $(D)$")
+plt.xlabel(r"Noise strength $(D)$")
 plt.ylabel("AUC")
 plt.legend(title="Method", loc = 'lower left')
 plt.grid(True)

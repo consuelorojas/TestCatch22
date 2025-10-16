@@ -19,7 +19,7 @@ from dataset import create_labeled_dataset, get_kfold_splits
 b0 = 0.1
 
 b1 = 1.0
-db1 = 0.075
+db1 = 0.03157
 b12 = b1 + db1
 dt = 0.1
 

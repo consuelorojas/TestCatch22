@@ -7,7 +7,7 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/fhn/fhn_parameter/results_20251010_145904.pkl"
+result_file = "results/fhn/fhn_parameter/results_20251016_132046.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
@@ -58,6 +58,7 @@ plt.legend(title="Method")
 plt.grid(True)
 plt.tight_layout()
 plt.ylim(-0.1, 1.1)
+plt.xticks(data.b.unique())
 #plt.xlim(-0.05, 0.65)
 plt.savefig("results/fhn/fhn_parameter/param_diff.png", dpi=180)
 plt.show()

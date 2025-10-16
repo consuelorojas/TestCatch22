@@ -16,7 +16,7 @@ from dataset import create_labeled_dataset, get_kfold_splits
 b0 = 0.1
 
 b1 = 1
-db1 = 0.075
+db1 = 0.03157
 b12 = b1 + db1
 
 epsilon = 0.2
@@ -28,7 +28,7 @@ dt = 0.1
 pseudo_period = 30
 npp = 10          # change the number of points per period here!
 step = int(pseudo_period / npp / dt)
-periods = [300, 450, 600, 900, 1200, 1500, 3000]
+periods = [300, 450, 600, 900, 1200, 1500, 1800, 2100, 2400, 2700, 3000]
 
 epsilon = 0.2
 I = 0

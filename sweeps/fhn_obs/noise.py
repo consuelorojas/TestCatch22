@@ -17,12 +17,12 @@ from dataset import create_labeled_dataset, get_kfold_splits
 b0 = 0.1
 
 b1 = 1
-db1 = 0.075
+db1 = 0.03157
 b12 = b1 + db1
 
 epsilon = 0.2
 I = 0
-noise = 0
+#noise = 0
 dt = 0.1
 
 # step to subsampling
@@ -33,7 +33,7 @@ step = int(pseudo_period / npp / dt)
 
 epsilon = 0.2
 I = 0
-noise = np.linspace(0, 1, 25)
+noise = np.linspace(0, 1.5, 25)
 
 trans = 50 # transient
 
@@ -57,7 +57,7 @@ for i, n in enumerate(tqdm(noise)):
         )
     
     splits = get_kfold_splits(X, y, n_splits=5, stratified=False)
-    print(f" train set size: {len(splits[0][0])}, test set size: {len(splits[0][1])}")
+    #print(f" train set size: {len(splits[0][0])}, test set size: {len(splits[0][1])}")
     results = run_experiment(X, y, splits)
     
 

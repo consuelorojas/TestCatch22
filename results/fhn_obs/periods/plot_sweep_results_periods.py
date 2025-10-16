@@ -7,7 +7,7 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/fhn_obs/periods/results_20251010_155113.pkl"
+result_file = "results/fhn_obs/periods/results_20251016_131404.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
@@ -122,6 +122,7 @@ plt.legend(title="Method", loc ="lower left")
 plt.grid(True)
 plt.tight_layout()
 plt.ylim(-0.1, 1.1)
+plt.xticks(data.periods.unique())
 #plt.xlim(-0.05, 0.65)
 plt.savefig(
     "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn_obs/periods/periods_fhn_obs_errorbars.png",

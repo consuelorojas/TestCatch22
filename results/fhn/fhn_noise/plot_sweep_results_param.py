@@ -7,7 +7,7 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/fhn/fhn_noise/results_20251010_150328.pkl"
+result_file = "results/fhn/fhn_noise/results_20251016_132412.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
@@ -116,11 +116,12 @@ for method, marker in markers.items():
         label=method
     )
 
-plt.xlabel(r"Noise level $(D)$")
+plt.xlabel(r"Noise strength $(D)$")
 plt.ylabel("AUC")
 plt.legend(title="Method", loc ="lower left")
 plt.grid(True)
 plt.tight_layout()
+plt.xticks(data.noise.unique())
 plt.ylim(-0.1, 1.1)
 #plt.xlim(-0.05, 0.65)
 plt.savefig(
