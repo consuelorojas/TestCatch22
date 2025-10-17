@@ -54,20 +54,7 @@ for frame in x_feat:
     # x_pca is a list of numpy arrays, one per fold.
 
 # Finally, we get the cross relation between the two PCA components and each feature per fold
-# pearson correlation 
-'''cross= []
-for (frame, pca_data) in zip(x_feat, x_pca):
-    aux1 = []
-    aux2 = []
-    for col in frame.columns:
-        pca1 = np.cross(frame[col], pca_data[:,0])
-        pca2 = np.cross(frame[col], pca_data[:,1])
-        aux1.append(pca1)
-        aux2.append(pca2)
-    cross.append([aux1, aux2])
-    # cross_corrs is a list of lists, one per fold.'''
-# as we should know, the cross product is not possible between vector over 3-dimensions
-# so i will use pearson correlation
+# pearson correlation between each feature and each PCA component
 
 corr = []
 for (frame, pca_data) in zip(x_feat, x_pca):
@@ -78,19 +65,23 @@ for (frame, pca_data) in zip(x_feat, x_pca):
 # Now we can plot the correlation heatmaps for each fold
 
 mean_corr = sum(corr) / len(corr)
+
+# sort by PCA1 and drop NaN rows/columns
+mean_corr_sorted = mean_corr.sort_values(by='PCA1', ascending=False).dropna(axis=1, how='all').dropna(axis=0, how='all')
+
 plt.figure(figsize=(10, 8))
 plt.title('Mean Correlation Heatmap Across Folds')
-sns.heatmap(mean_corr, fmt=".2f", cmap='coolwarm', cbar=True)
+sns.heatmap(mean_corr_sorted, fmt=".2f", cmap='coolwarm', cbar=True)
 plt.tight_layout()
-#plt.savefig('notebooks/cross_correlation_heatmap_mean.png', dpi=300)
+plt.savefig('notebooks/correlation_heatmap_mean_sine.png', dpi=300)
 plt.show()
 
-'''for i, c in enumerate(corr):
-    plt.figure(figsize=(10, 8))
-    plt.title(f'Fold {i+1} Correlation Heatmap')
-    sns.heatmap(c, annot=True, fmt=".2f", cmap='coolwarm', cbar=True)
-    plt.tight_layout()
-    #plt.savefig(f'notebooks/cross_correlation_heatmap_fold_{i+1}.png', dpi=300)
-    plt.show()
-    plt.close()
-'''
+# now, we get the heatmap only for PCA1 and PCA2
+mean_corr_pca = mean_corr.loc[['PCA1', 'PCA2'], [col for col in mean_corr_sorted.columns if col not in ['PCA1', 'PCA2']]].T
+mean_corr_pca = mean_corr_pca.sort_values(by='PCA1', ascending=False)
+plt.figure(figsize=(8, 4))
+plt.title('Mean Correlation with PCA Components')
+sns.heatmap(mean_corr_pca, fmt=".2f", cmap='coolwarm', cbar=True)
+plt.tight_layout()
+plt.savefig('notebooks/correlation_heatmap_mean_pca_sine.png', dpi=300)
+plt.show()

@@ -21,7 +21,7 @@ def extract_features(signals, return_array = False):
         features = catch22_all(signal, short_names=True)
         feat_rows.append(features['values'])
         if i == 0:
-            cols_names = features['names']  
+            cols_names = features['short_names']  
 
 
     features = np.array(feat_rows)
