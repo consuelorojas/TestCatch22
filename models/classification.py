@@ -2,6 +2,7 @@ import numpy as np
 from sklearn.metrics import roc_auc_score, accuracy_score
 from sklearn.svm import SVC
 import pandas as pd
+import time
 
 import sys
 import os
@@ -159,3 +160,84 @@ def run_experiment(X,y, splits, n_pca_components = 2, clf_fn = None):
         "features": feat,
         "features_pca": feat_pca
     }
+
+# Time for the run_experiment function. Get the time per configuration
+
+def time_experiment(X,y, splits, n_pca_components = 2, clf_fn = None):
+    """
+    Time the classification pipeline with four config
+    - Raw
+    - Raw + PCA
+    - Features
+    - Features + PCA
+
+    Parameters:
+    - X (np.ndarray): raw input singals
+    - y (np.ndarray): labels
+    - splits (list) of (train_idx, test_idx)
+    # - feature_fn (callable): function to extract features from raw signals
+    - n_pca_components (int): number of PCA components to keep
+    - clf_fn (callable): classifier function, if None, use default classifier
+
+    Returns:
+    - results (dict): dictionary containing times scores for each configuration
+    """
+
+    if clf_fn is None:
+        clf_fn = lambda: SVC(probability=True, random_state=42)
+    
+    raw, pca, feat, feat_pca = [], [], [], []
+
+    start_time = time.time()
+    for train_idx, test_idx  in splits:
+        x_train, x_test = X[train_idx], X[test_idx]
+        y_train, y_test = y[train_idx], y[test_idx]
+
+        # raw
+        clf = clf_fn()
+        _ = evaluate_single_fold(x_train, x_test, y_train, y_test, clf)
+        end_time = time.time()
+        raw.append(end_time - start_time)
+        start_time = end_time
+
+        # raw + pca
+        clf = clf_fn()
+        train_pca, pca_tf, scaler = apply_pca(x_train,n_components = n_pca_components)
+        test_pca = scaler.transform(x_test)
+        test_pca = pca_tf.transform(test_pca)
+
+        _ = evaluate_single_fold(train_pca, test_pca, y_train, y_test, clf)
+
+        end_time = time.time()
+        pca.append(end_time - start_time)
+        start_time = end_time
+
+        # features
+        clf = clf_fn()
+        X_feat = extract_features(X, return_array=True)
+        train_feat, test_feat = X_feat[train_idx], X_feat[test_idx]
+        _ = evaluate_single_fold(train_feat, test_feat, y_train, y_test, clf)
+
+        end_time = time.time()
+        feat.append(end_time - start_time)
+        start_time = end_time
+
+        # features + pca
+        clf = clf_fn()
+        train_feat_pca, pca_tf, scaler = apply_pca(train_feat, n_components=n_pca_components)
+        test_feat = test_feat.values if isinstance(test_feat, pd.DataFrame) else test_feat
+    
+        test_feat_pca = scaler.transform(test_feat)
+        test_feat_pca = pca_tf.transform(test_feat_pca)
+
+        _ = evaluate_single_fold(train_feat_pca, test_feat_pca, y_train, y_test, clf)
+
+        end_time = time.time()
+        feat_pca.append(end_time - start_time)
+        start_time = end_time
+
+    return {
+        "raw": raw,
+        "pca": pca,
+        "features": feat,
+        "features_pca": feat_pca}

@@ -19,7 +19,7 @@ dfreq = [deltaf *  i for i in range(0, 52, 2)]
 npoints = 7
 nperiods = 3
 
-noise = 0.2
+noise = 0.1
 samples = 100
 
 ## Output directory
