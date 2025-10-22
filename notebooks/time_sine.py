@@ -30,8 +30,18 @@ X,y = create_labeled_dataset(
 splits = get_kfold_splits(X, y, n_splits=5, stratified=False)
 results = time_experiment(X, y, splits)
 
-print("Timing Results (seconds):")
-print(f"Raw: {np.mean(results['raw']):.4f} ± {np.std(results['raw']):.4f}")
-print(f"Raw + PCA: {np.mean(results['pca']):.4f} ± {np.std(results['pca']):.4f}")
-print(f"Features: {np.mean(results['features']):.4f} ± {np.std(results['features']):.4f}")
-print(f"Features + PCA: {np.mean(results['features_pca']):.4f} ± {np.std(results['features_pca']):.4f}")
+
+train = lambda arr: np.mean(arr) * 1000
+std = lambda arr: np.std(arr) * 1000
+
+print("Raw train: {:.2f} ± {:.2f} ms".format(train([x[0] for x in results['raw']]), std([x[0] for x in results['raw']])))
+print("Raw test:  {:.2f} ± {:.2f} ms".format(train([x[1] for x in results['raw']]), std([x[1] for x in results['raw']])))
+
+print("Raw + PCA train: {:.2f} ± {:.2f} ms".format(train([x[0] for x in results['pca']]), std([x[0] for x in results['pca']])))
+print("Raw + PCA test:  {:.2f} ± {:.2f} ms".format(train([x[1] for x in results['pca']]), std([x[1] for x in results['pca']])))
+
+print("Features train: {:.2f} ± {:.2f} ms".format(train([x[0] for x in results['features']]), std([x[0] for x in results['features']])))
+print("Features test:  {:.2f} ± {:.2f} ms".format(train([x[1] for x in results['features']]), std([x[1] for x in results['features']])))
+
+print("Features + PCA train: {:.2f} ± {:.2f} ms".format(train([x[0] for x in results['features_pca']]), std([x[0] for x in results['features_pca']])))
+print("Features + PCA test:  {:.2f} ± {:.2f} ms".format(train([x[1] for x in results['features_pca']]), std([x[1] for x in results['features_pca']])))

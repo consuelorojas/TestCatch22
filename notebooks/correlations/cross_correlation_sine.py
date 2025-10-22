@@ -72,22 +72,30 @@ mean_corr = sum(corr) / len(corr)
 
 
 
-# sort by PCA1 and drop NaN rows/columns
-mean_corr_sorted = mean_corr.sort_values(by='PCA1', ascending=False)#.dropna(axis=1, how='all').dropna(axis=0, how='all')
+# sort by PCA1 and drop NaN rows/columns 
+order = ['acf_timescale', 'centroid_freq', 'acf_first_min', 'ami2',
+       'embedding_dist', 'stretch_decreasing', 'outlier_timing_pos',
+       'high_fluctuation', 'entropy_pairs', 'trev', 'outlier_timing_neg',
+       'mode_5', 'mode_10', 'stretch_high', 'transition_matrix',
+       'forecast_error', 'low_freq_power', 'periodicity', 'ami_timescale',
+       'whiten_timescale', 'rs_range', 'dfa']
 
 plt.figure(figsize=(10, 8))
 plt.title('Mean Correlation Heatmap Across Folds')
-sns.heatmap(mean_corr_sorted, fmt=".2f", cmap=cmap, cbar=True, mask=mean_corr_sorted.isnull(), vmin=-1, vmax=1)
+sns.heatmap(mean_corr, fmt=".2f", cmap=cmap, cbar=True, mask=mean_corr.isnull(), vmin=-1, vmax=1)
 plt.tight_layout()
-plt.savefig('notebooks/correlation_heatmap_mean_sine.png', dpi=300)
+#plt.savefig('notebooks/correlation_heatmap_mean_sine.png', dpi=300)
 plt.show()
 
 # now, we get the heatmap only for PCA1 and PCA2
-mean_corr_pca = mean_corr.loc[['PCA1', 'PCA2'], [col for col in mean_corr_sorted.columns if col not in ['PCA1', 'PCA2']]].T
+
+mean_corr_pca = mean_corr.loc[['PCA1', 'PCA2'], [col for col in mean_corr.columns if col not in ['PCA1', 'PCA2']]].T
+
 mean_corr_pca = mean_corr_pca.sort_values(by='PCA1', ascending=False)
+print(mean_corr_pca.index)
 plt.figure(figsize=(8, 4))
-plt.title('Mean Correlation with PCA Components')
+#plt.title('Mean Correlation with PCA Components')
 sns.heatmap(mean_corr_pca, fmt=".2f", cmap=cmap, cbar=True, vmin=-1, vmax=1, mask=mean_corr_pca.isnull())
 plt.tight_layout()
-plt.savefig('notebooks/correlation_heatmap_mean_pca_sine.png', dpi=300)
+plt.savefig('notebooks/correlations/correlation_heatmap_mean_pca_sine.png', dpi=300)
 plt.show()

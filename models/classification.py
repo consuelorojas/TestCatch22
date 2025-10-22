@@ -95,6 +95,37 @@ def evaluate_single_fold(X_train, X_test, y_train, y_test, classifier, probabili
     
     return roc_auc_score(y_test, y_pred)
 
+def time_single_fold(X_train, X_test, y_train, y_test, classifier, probability=True):
+    """
+    Evaluate a single fold of data using a classifier and compute AUC score.
+    Parameters:
+    - X_train: Training features
+    - X_test: Testing features
+    - y_train: Training labels
+    - y_test: Testing labels
+    - classifier: scikit-learn compatible classifier
+    - probability (bool): whether model supports 'predict_proba' method or to use 'decision_function'
+    Returns:
+    - auc_score: AUC score for the fold
+    """
+    train_time, test_time = 0, 0
+    start = time.time()
+    classifier.fit(X_train, y_train)
+    train_time = time.time() - start
+    # compute probabilities or decision function
+    if probability and hasattr(classifier, 'predict_proba'):
+        _= classifier.predict_proba(X_test)[:, 1]
+        test_time = time.time() - start - train_time
+
+    elif hasattr(classifier, 'decision_function'):
+        _ = classifier.decision_function(X_test)
+        test_time = time.time() - start - train_time
+
+    else:
+        raise ValueError("Model does not support probability prediction or decision function.")
+    
+    return train_time, test_time
+
 # ---------- Pipeline function ----------
 
 def run_experiment(X,y, splits, n_pca_components = 2, clf_fn = None):
@@ -180,7 +211,7 @@ def time_experiment(X,y, splits, n_pca_components = 2, clf_fn = None):
     - clf_fn (callable): classifier function, if None, use default classifier
 
     Returns:
-    - results (dict): dictionary containing times scores for each configuration
+    - results (dict): dictionary containing times scores for each configuration and split.
     """
 
     if clf_fn is None:
@@ -188,17 +219,14 @@ def time_experiment(X,y, splits, n_pca_components = 2, clf_fn = None):
     
     raw, pca, feat, feat_pca = [], [], [], []
 
-    start_time = time.time()
     for train_idx, test_idx  in splits:
         x_train, x_test = X[train_idx], X[test_idx]
         y_train, y_test = y[train_idx], y[test_idx]
 
         # raw
         clf = clf_fn()
-        _ = evaluate_single_fold(x_train, x_test, y_train, y_test, clf)
-        end_time = time.time()
-        raw.append(end_time - start_time)
-        start_time = end_time
+        train_time, test_time = time_single_fold(x_train, x_test, y_train, y_test, clf)
+        raw.append((train_time, test_time))
 
         # raw + pca
         clf = clf_fn()
@@ -206,21 +234,18 @@ def time_experiment(X,y, splits, n_pca_components = 2, clf_fn = None):
         test_pca = scaler.transform(x_test)
         test_pca = pca_tf.transform(test_pca)
 
-        _ = evaluate_single_fold(train_pca, test_pca, y_train, y_test, clf)
+        train_time, test_time = time_single_fold(train_pca, test_pca, y_train, y_test, clf)
 
-        end_time = time.time()
-        pca.append(end_time - start_time)
-        start_time = end_time
+        pca.append((train_time, test_time))
 
         # features
         clf = clf_fn()
         X_feat = extract_features(X, return_array=True)
         train_feat, test_feat = X_feat[train_idx], X_feat[test_idx]
-        _ = evaluate_single_fold(train_feat, test_feat, y_train, y_test, clf)
+        train_time, test_time = time_single_fold(train_feat, test_feat, y_train, y_test, clf)
 
-        end_time = time.time()
-        feat.append(end_time - start_time)
-        start_time = end_time
+        feat.append((train_time, test_time))
+
 
         # features + pca
         clf = clf_fn()
@@ -230,11 +255,9 @@ def time_experiment(X,y, splits, n_pca_components = 2, clf_fn = None):
         test_feat_pca = scaler.transform(test_feat)
         test_feat_pca = pca_tf.transform(test_feat_pca)
 
-        _ = evaluate_single_fold(train_feat_pca, test_feat_pca, y_train, y_test, clf)
+        train_time, test_time = time_single_fold(train_feat_pca, test_feat_pca, y_train, y_test, clf)
 
-        end_time = time.time()
-        feat_pca.append(end_time - start_time)
-        start_time = end_time
+        feat_pca.append([train_time, test_time])
 
     return {
         "raw": raw,
