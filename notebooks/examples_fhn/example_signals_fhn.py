@@ -63,12 +63,12 @@ for i in range(len(X)):
             plt.plot(t[i],X[i], marker='', alpha=0.1, color='grey')  # rest are semi-transparent
 
 # Horizontal line across the whole plot at y=0
-plt.axhline(y=0, color='black', marker='',linestyle='-')
+#plt.axhline(y=0, color='black', marker='',linestyle='-')
 plt.ylabel(r"$v(t)$")
 plt.xlabel("Time [a.u]")
 plt.title("Class 0: b=1.0")
 plt.tight_layout()
-plt.savefig('notebooks/example_fhn/example_signals_fhn_class0.pdf', format='pdf', dpi=300)
+plt.savefig('notebooks/examples_fhn/example_signals_fhn_class0.pdf', format='pdf', dpi=300)
 #plt.show()
 
 plt.figure(figsize=(6.4, 4.8))
@@ -87,7 +87,7 @@ for i in range(len(X)):
             plt.plot(t[i],X[i], marker='', alpha=0.1, color='grey')  # rest are semi-transparent
 
 # Horizontal line across the whole plot at y=1
-plt.axhline(y=0, color='black', marker='',linestyle='-')
+#plt.axhline(y=0, color='black', marker='',linestyle='-')
 plt.ylabel(r"$v(t)$")
 plt.title(f"Class 1: b={b12}")
 plt.xlabel("Time [a.u]")
@@ -101,6 +101,6 @@ plt.plot(X[indices_zero[1]], alpha=1, color='tab:blue', label=f'Class 0: b={b1}'
 plt.xlabel("Time [a.u]")
 plt.ylabel(r"$v(t)$")
 plt.legend(loc = 'lower left')
-plt.savefig('notebooks/examples_fhn/example_signals_fhn_single.png', dpi=300)
+#plt.savefig('notebooks/examples_fhn/example_signals_fhn_single.png', dpi=300)
 plt.show()
 

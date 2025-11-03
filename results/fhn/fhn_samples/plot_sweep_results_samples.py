@@ -7,7 +7,7 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/fhn/fhn_samples/results_20251016_135146.pkl"
+result_file = "results/fhn/fhn_samples/results_20251103_173110.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
@@ -20,47 +20,6 @@ for entry in all_results:
             records.append({"samples": df, "Method": method, "AUC": auc})
 
 df_results = pd.DataFrame(records)
-
-# ---- Boxplot ----
-plt.figure(figsize=(20, 14))
-sns.boxplot(data=df_results, x="samples", y="AUC", hue="Method", palette="Set2")
-#plt.title("AUC across frequency differences by method")
-plt.xticks(rotation=45)
-plt.tight_layout()
-plt.grid(True, axis="y")
-plt.legend(title="Method")
-plt.ylim(-0.1, 1.1)
-plt.show()
-
-# ---- Scatter plot with markers ----
-markers = {
-    "raw": "o", 
-    "pca": "s", 
-    "features": "D", 
-    "features_pca": "^"
-}
-
-plt.figure(figsize=(10, 6))
-
-for method, marker in markers.items():
-    data = df_results[df_results["Method"] == method]
-    plt.scatter(
-        data["samples"], data["AUC"],
-        label=method,
-        marker=marker,
-        alpha=0.7
-    )
-
-#plt.title("AUC vs Frequency Difference (Δf)")
-plt.xlabel(r"Samples ($N_s$)")
-plt.ylabel("AUC")
-plt.legend(title="Method")
-plt.grid(True)
-plt.tight_layout()
-plt.ylim(-0.1, 1.1)
-#plt.xlim(-0.05, 0.65)
-plt.savefig("results/fhn/fhn_samples/samples_diff.png", dpi=180)
-plt.show()
 
 
 # --- Compute mean & std per method/Δf ---
@@ -95,10 +54,12 @@ for method, marker in markers.items():
 
 plt.xlabel(r"Samples ($N_s$)")
 plt.ylabel("AUC")
-plt.legend(ncol=2, loc ="lower right")
+#plt.legend(ncol=2, loc ="lower right")
 plt.grid(True)
 plt.xticks(data.samples.unique()[::2])#, rotation=45)
-plt.ylim(-0.1, 1.1)
+plt.ylim(0.2, 1.1)
+plt.xlim(0, 205)
+plt.text(5, 1.0, "(c)", fontweight="bold", fontsize=14, va="bottom", ha="left")
 plt.tight_layout()
 plt.savefig(
     "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_samples/samples_fhn_errorbars.eps",

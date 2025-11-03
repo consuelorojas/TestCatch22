@@ -7,25 +7,32 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/fhn/fhn_periods/results_20251103_173711.pkl"
+result_file = "results/fhn/fhn_noise/results_20251103_175615.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
 # ---- Convert to DataFrame ----
 records = []
 for entry in all_results:
-    df = entry["periods"]
+    df = entry["noise"]
     for method in ["raw", "pca", "features", "features_pca"]:
         for auc in entry[method]:
-            records.append({"periods": df, "Method": method, "AUC": auc})
+            records.append({"noise": df, "Method": method, "AUC": auc})
 
 df_results = pd.DataFrame(records)
 
+# ---- Scatter plot with markers ----
+markers = {
+    "raw": "o", 
+    "pca": "s", 
+    "features": "D", 
+    "features_pca": "^"
+}
 
 # --- Compute mean & std per method/Δf ---
 df_grouped = (
     df_results
-    .groupby(["Method", "periods"])
+    .groupby(["Method", "noise"])
     .agg(AUC_mean=("AUC", "mean"), AUC_std=("AUC", "std"))
     .reset_index()
 )
@@ -43,7 +50,7 @@ plt.figure(figsize=(6.4, 4.8))
 for method, marker in markers.items():
     data = df_grouped[df_grouped["Method"] == method]
     plt.errorbar(
-        data["periods"], data["AUC_mean"],
+        data["noise"], data["AUC_mean"],
         yerr=data["AUC_std"],
         fmt=marker,         # marker style
         capsize=5,          # error bar caps
@@ -52,17 +59,18 @@ for method, marker in markers.items():
         label=method
     )
 
-plt.xlabel(r"Number of periods $(N_p)$")
+plt.xlabel(r"Noise strength $(D_{dyn})$")
 plt.ylabel("AUC")
-#plt.legend(ncol=2, loc ="lower left")
+#plt.legend(title="Method", loc ="lower left")
 plt.grid(True)
-plt.ylim(0.2, 1.1)
-plt.xticks(data.periods.unique()[::2])
-plt.text(1.0, 1.0, "(b)", fontweight="bold", fontsize=14, va="bottom", ha="left")
 plt.tight_layout()
+plt.xticks(data.noise.unique())
+plt.text(0.0, 1.0, "(d)", fontweight="bold", fontsize=14, va="bottom", ha="left")
+plt.ylim(0.2, 1.1)
 #plt.xlim(-0.05, 0.65)
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_periods/periods_fhn_errorbars.eps",
-    format = 'eps', dpi=180
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_noise/noise_fhn_errorbars.eps",
+    format='eps',
+    dpi=180
 )
 plt.show()
