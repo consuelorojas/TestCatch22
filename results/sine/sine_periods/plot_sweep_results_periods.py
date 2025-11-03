@@ -7,9 +7,10 @@ from datetime import datetime
 plt.style.use('report.mplstyle')
 
 
-result_file = "results/sine/sine_periods/results_20251008_113147.pkl"
+result_file = "results/sine/sine_periods/results_20251103_155528.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
+
 
 # ---- Convert to DataFrame ----
 records = []
@@ -20,7 +21,7 @@ for entry in all_results:
             records.append({"periods": df, "Method": method, "AUC": auc})
 
 df_results = pd.DataFrame(records)
-
+'''
 # ---- Boxplot ----
 plt.figure(figsize=(20, 14))
 sns.boxplot(data=df_results, x="periods", y="AUC", hue="Method", palette="Set2")
@@ -62,7 +63,15 @@ plt.ylim(-0.1, 1.1)
 #plt.savefig(f"results/sine/sine_periods/auc_vs_np_{datetime.now()}.png", dpi=180)
 plt.show()
 
+'''
 #### error bars
+
+markers = {
+    "raw": "o", 
+    "pca": "s", 
+    "features": "D", 
+    "features_pca": "^"
+}
 
 # --- Compute mean & std per method/Δf ---
 df_grouped = (
@@ -76,7 +85,8 @@ df_grouped = (
 # Ensure numeric
 df_grouped["periods"] = pd.to_numeric(df_grouped["periods"], errors="coerce")
 
-plt.figure(figsize=(15, 10))
+plt.figure(figsize=(6.4, 4.8))
+
 for method, marker in markers.items():
     data = df_grouped[df_grouped["Method"] == method].sort_values("periods")
     plt.errorbar(
@@ -91,12 +101,13 @@ for method, marker in markers.items():
 
 plt.xlabel(r"Number of periods $(N_p)$")
 plt.ylabel("AUC")
-plt.legend(title="Method")
+#plt.legend(ncol=2, loc="lower right")
 plt.grid(True)
 plt.tight_layout()
-plt.ylim(-0.1, 1.1)
+plt.text(0.8, 1.0, "(b)", fontweight="bold", fontsize=14, va="bottom", ha="left")
+plt.ylim(0.2, 1.1)
 plt.savefig(
-    "results/sine/sine_periods/errorbars_1-8_np.png",
+    "results/sine/sine_periods/errorbars_1-8_np.eps", format="eps",
     dpi=180
 )
 plt.show()

@@ -79,7 +79,7 @@ markers = {
     "features_pca": "^"
 }
 
-plt.figure(figsize=(15, 10))
+plt.figure(figsize=(6.4, 4.8))
 
 for method, marker in markers.items():
     data = df_grouped[df_grouped["Method"] == method]
@@ -95,14 +95,13 @@ for method, marker in markers.items():
 
 plt.xlabel(r"Samples ($N_s$)")
 plt.ylabel("AUC")
-plt.legend(title="Method", loc ="lower left")
+plt.legend(ncol=2, loc ="lower left")
 plt.grid(True)
-plt.tight_layout()
-#plt.xticks(data.samples.unique())
+plt.xticks(data.samples.unique()[::2])
 plt.ylim(-0.1, 1.1)
-#plt.xlim(-0.05, 0.65)
+plt.tight_layout()
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn_obs/samples/samples_fhn_obs_errorbars.png",
-    dpi=180
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn_obs/samples/samples_fhn_obs_errorbars.eps",
+    format="eps", dpi=180
 )
 plt.show()

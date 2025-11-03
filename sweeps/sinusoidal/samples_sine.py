@@ -3,6 +3,7 @@ import sys
 import pickle
 from datetime import datetime
 import numpy as np
+from tqdm import tqdm
 
 sys.path.append(os.path.abspath("./models"))
 sys.path.append(os.path.abspath("./data"))
@@ -20,7 +21,7 @@ npoints = 7
 #noise = [0, 0.1, 0.2, 0.3, 0.5, 0.7, 1]
 noise = 0.1
 
-samples = np.arange(50, 1050, 50)
+samples = np.arange(10, 520, 10)
 
 ## Output directory
 sweep_name = "sine/sine_samples"
@@ -33,13 +34,13 @@ output_file = os.path.join(output_dir, f"results_{timestamp}.pkl")
 
 # Run sweep
 all_results = []
-for i, s in enumerate(samples):
+for i, s in enumerate(tqdm(samples, desc="Sweeping number of samples")):
     X, y = create_labeled_dataset(
         [(0, 'sine', {'args': [fbase, noise, npoints, nperiods]}),
          (1, 'sine', {'args': [f1, noise, npoints, nperiods]})],
         n_samples_per_class=s
     )
-    splits = get_kfold_splits(X, y, n_splits=5, stratified=False)
+    splits = get_kfold_splits(X, y, n_splits=50, stratified=True)
     results = run_experiment(X, y, splits)
 
     all_results.append({

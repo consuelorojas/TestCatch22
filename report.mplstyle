@@ -1,18 +1,19 @@
 
-axes.titlesize : 24
-axes.labelsize : 24
+axes.titlesize : 14
+axes.labelsize : 14
 
-lines.linewidth : 2.5
-lines.markersize : 15
+lines.linewidth : 2.0
+lines.markersize : 6
 lines.linestyle : -
 lines.marker: o
 
-xtick.labelsize : 22
-ytick.labelsize : 22
+xtick.labelsize : 14
+ytick.labelsize : 14
 
-legend.fontsize : 22
+legend.fontsize : 14
 legend.markerscale: 1
 legend.loc : "upper left"
+
 
 font.family : serif
 

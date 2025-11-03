@@ -20,7 +20,7 @@ for entry in all_results:
             records.append({"b": df, "Method": method, "AUC": auc})
 
 df_results = pd.DataFrame(records)
-
+'''
 # ---- Boxplot ----
 plt.figure(figsize=(20, 14))
 sns.boxplot(data=df_results, x="b", y="AUC", hue="Method", palette="Set2")
@@ -86,7 +86,7 @@ plt.ylim(-0.1, 1.1)
 plt.xlim(-0.05, 0.75)
 plt.savefig("results/fhn/fhn_parameter/param_diff_lim.png", dpi=180)
 plt.show()
-
+'''
 # --- Compute mean & std per method/Δf ---
 df_grouped = (
     df_results
@@ -103,7 +103,7 @@ markers = {
     "features_pca": "^"
 }
 
-plt.figure(figsize=(15, 10))
+plt.figure(figsize=(6.4, 4.8))
 
 for method, marker in markers.items():
     data = df_grouped[df_grouped["Method"] == method]
@@ -119,13 +119,14 @@ for method, marker in markers.items():
 
 plt.xlabel(r"Parameter Difference $(b_0 - b_1)$")
 plt.ylabel("AUC")
-plt.legend(title="Method", loc ="lower left")
+plt.legend(ncol=2, loc ="lower left")
 plt.grid(True)
-plt.tight_layout()
-plt.ylim(-0.1, 1.1)
+plt.ylim(0.2, 1.1)
 plt.xlim(-0.01, 0.31)
+plt.text(0.0, 1.00, "(a)", fontweight="bold", fontsize=13, va="bottom", ha="left")
+plt.tight_layout()
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_parameter/param_fhn_errorbars.png",
-    dpi=180
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_parameter/param_fhn_errorbars.eps",
+    format='eps', dpi=180
 )
 plt.show()

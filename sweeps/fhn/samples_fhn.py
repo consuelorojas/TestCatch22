@@ -35,7 +35,7 @@ epsilon = 0.2
 I = 0
 trans = 50 # transient
 
-samples = np.arange(50, 1050, 50)
+samples = np.arange(10, 520, 10)
 ## Output directory
 sweep_name = "fhn/fhn_samples"
 output_dir = os.path.join("results", sweep_name)
@@ -53,14 +53,14 @@ for i, sample in enumerate(tqdm(samples)):
         (1, 'fhn', {'length':750, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b12, epsilon, I, noise]})],
         n_samples_per_class=sample, subsample_step = step, transient = trans
         )
-    
-    splits = get_kfold_splits(X, y, n_splits=5, stratified=False)
-    print(f" train set size: {len(splits[0][0])}, test set size: {len(splits[0][1])}")
+
+    splits = get_kfold_splits(X, y, n_splits=50, stratified=True)
+    #print(f" train set size: {len(splits[0][0])}, test set size: {len(splits[0][1])}")
     results = run_experiment(X, y, splits)
     
 
     all_results.append({
-        'samples': len(X),
+        'samples': len(X) // 2,
         'raw': results['raw'],
         'pca': results['pca'],
         'features': results['features'],

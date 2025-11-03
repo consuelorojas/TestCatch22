@@ -7,7 +7,7 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/sine/sine_samples/results_20251016_144535.pkl"
+result_file = "results/sine/sine_samples/results_20251103_155623.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
@@ -79,7 +79,7 @@ markers = {
     "features_pca": "^"
 }
 
-plt.figure(figsize=(15, 10))
+plt.figure(figsize=(6.4, 4.8))
 
 for method, marker in markers.items():
     data = df_grouped[df_grouped["Method"] == method]
@@ -95,14 +95,15 @@ for method, marker in markers.items():
 
 plt.xlabel(r"Samples ($N_s$)")
 plt.ylabel("AUC")
-plt.legend(title="Method", loc ="lower left")
+#plt.legend(loc ="lower right", ncol=2)
 plt.grid(True)
 plt.tight_layout()
-#plt.xticks(data.samples.unique())
-plt.ylim(-0.1, 1.1)
-#plt.xlim(-0.05, 0.65)
+plt.xticks(data.samples.unique())
+plt.ylim(0.0, 1.1)
+plt.xlim(0, 520)
+plt.text(0.0, 1.0, "(a)", fontweight="bold", fontsize=14, va="bottom", ha="left")
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_samples/samples_sine_errorbars.png",
-    dpi=180
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_samples/samples_sine_errorbars.eps",
+    format="eps", dpi=180
 )
 plt.show()

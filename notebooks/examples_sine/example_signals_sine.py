@@ -10,8 +10,7 @@ sys.path.append(os.path.abspath("./models"))
 sys.path.append(os.path.abspath("./data"))
 
 #from classification import run_experiment
-from dataset import create_labeled_dataset, get_kfold_splits
-
+from dataset import create_labeled_dataset
 
 ######### FITZHUGH-NAGUMO  #########
 
@@ -32,7 +31,8 @@ X, y = create_labeled_dataset(
     n_samples_per_class=samples
 )
 
-plt.figure(figsize=(15, 10))
+plt.figure(figsize=(6.4, 4.8))
+
 t = np.linspace(0, nperiods/fbase, npoints*nperiods)
 # Find the indices where y == 0
 indices_zero = [i for i in range(len(X)) if y[i] == 0]
@@ -48,15 +48,16 @@ for i in range(len(X)):
             plt.plot(t,X[i], marker='', alpha=0.1, color='grey')  # rest are semi-transparent
 
 # Horizontal line across the whole plot at y=0
-plt.axhline(y=0, color='black', marker='',linestyle='-')
+#plt.axhline(y=0, color='black', marker='',linestyle='-')
 plt.ylabel(r"$x(t)$")
 plt.xlabel("Time [s]")
 plt.title("Class 0: 5.0 Hz")
-plt.savefig('notebooks/example_signals_sine_class0.png', dpi=300)
+plt.tight_layout()
+plt.savefig('notebooks/examples_sine/example_signals_sine_class0.pdf', format='pdf', dpi=300)
 
 #plt.show()
 
-plt.figure(figsize=(15, 10))
+plt.figure(figsize=(6.4, 4.8))
 
 t2 = np.linspace(0, nperiods/f1, npoints*nperiods)
 # Find the indices where y == 1
@@ -73,19 +74,21 @@ for i in range(len(X)):
             plt.plot(t2,X[i], marker='', alpha=0.1, color='grey')  # rest are semi-transparent
 
 # Horizontal line across the whole plot at y=1
-plt.axhline(y=0, color='black', marker='',linestyle='-')
+#plt.axhline(y=0, color='black', marker='',linestyle='-')
 plt.ylabel(r"$x(t)$")
 plt.xlabel("Time [s]")
 plt.title("Class 1: 5.18 Hz")
-plt.savefig('notebooks/example_signals_sine_class1.png', dpi=300)
+plt.tight_layout()
+plt.savefig('notebooks/examples_sine/example_signals_sine_class1.pdf', format='pdf', dpi=300)
 plt.show()
 
-plt.figure(figsize=(14, 6))
+plt.figure(figsize=(6.4, 4.8))
+
 plt.plot(X[indices_one[1]], marker='*', alpha=1, color='tab:red', label='Class 1: 5.18 Hz')
 plt.plot(X[indices_zero[1]], alpha=1, color='tab:blue', label='Class 0: 5.0 Hz')
 plt.xlabel("Time [s]")
 plt.ylabel(r"$x(t)$")
-plt.savefig('notebooks/example_signals_sine_single.png', dpi=300)
+plt.savefig('notebooks/examples_sine/example_signals_sine_single.pdf', format='pdf', dpi=300)
 plt.legend(loc = 'lower left')
 plt.show()
 

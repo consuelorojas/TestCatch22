@@ -12,7 +12,7 @@ from sklearn.preprocessing import StandardScaler
 
 
 
-#plt.style.use('report.mplstyle')
+plt.style.use('report.mplstyle')
 
 # own modules
 sys.path.append(os.path.abspath("./models"))
@@ -31,7 +31,8 @@ cmap.set_bad("gray")
 b0 = 0.1
 
 b1 = 1.0
-db1 = 0.178
+#db1 = 0.178
+db1 = 0.032
 b12 = b1 + db1
 dt = 0.1
 
@@ -51,8 +52,8 @@ samples = 80
 
 
 X, y, t = create_labeled_dataset([
-    (0, 'fhn', {'length':850, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b1, epsilon, I, noise]}),
-    (1, 'fhn', {'length':850, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b12, epsilon, I, noise]})],
+    (0, 'fhn_obs', {'length':850, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b1, epsilon, I, noise]}),
+    (1, 'fhn_obs', {'length':850, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b12, epsilon, I, noise]})],
     n_samples_per_class=samples, subsample_step = step, transient = trans, return_time=True
     )
 
@@ -87,8 +88,7 @@ mean_corr = sum(corr) / len(corr)
 # sort by PCA1 and drop NaN rows/columns
 mean_corr_sorted = mean_corr#.sort_values(by='PCA1', ascending=False)#.dropna(axis=1, how='all').dropna(axis=0, how='all')
 
-plt.figure(figsize=(10, 8))
-plt.title('Mean Correlation Heatmap Across Folds')
+plt.figure(figsize=(6.4, 4.8))
 sns.heatmap(mean_corr_sorted, fmt=".2f", cmap=cmap, cbar=True, vmin=-1, vmax=1, mask=mean_corr_sorted.isnull())
 plt.tight_layout()
 #plt.savefig('notebooks/correlation_heatmap_mean_fhn.png', dpi=300)
@@ -106,8 +106,13 @@ mean_corr_pca = mean_corr.loc[['PCA1', 'PCA2'],[col for col in mean_corr_sorted.
 mean_corr_pca = mean_corr_pca[sine_order].T
 #mean_corr_pca = mean_corr_pca[sine_order]
 
-plt.figure(figsize=(8, 4))
-sns.heatmap(mean_corr_pca, fmt=".2f", cmap=cmap, cbar=True, vmin=-1, vmax=1, mask=mean_corr_pca.isnull())
+plt.figure(figsize=(5.7, 4.8))
+ax = sns.heatmap(mean_corr_pca, fmt=".2f", cmap=cmap, cbar=False, vmin=-1, vmax=1,
+                  mask=mean_corr_pca.isnull(), square=True)
+ax.tick_params(left=False, labelleft=False)
+plt.grid(False)
+plt.yticks()
 plt.tight_layout()
-plt.savefig('notebooks/correlations/correlation_heatmap_mean_pca_fhn.png', dpi=300)
+plt.savefig('notebooks/correlations/correlation_heatmap_mean_pca_fhn_obs.eps', format = 'eps',
+            bbox_inches='tight', dpi=300)
 plt.show()

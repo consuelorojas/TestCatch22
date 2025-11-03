@@ -58,7 +58,7 @@ for i, b in enumerate(tqdm(b12)):
         n_samples_per_class=samples, subsample_step = step, transient = trans
         )
     
-    splits = get_kfold_splits(X, y, n_splits=5, stratified=False)
+    splits = get_kfold_splits(X, y, n_splits=50, stratified=True)
     #plt.plot(X[0], '*-')
     #plt.show()
     results = run_experiment(X, y, splits)

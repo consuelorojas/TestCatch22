@@ -3,7 +3,7 @@ import os
 import sys
 sys.path.append(os.path.abspath("./signals"))
 #sys.path.append(os.path.abspath("./preprocessing"))
-from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import StratifiedShuffleSplit, KFold
 from dispatcher import generate_signal
 #from preprocessing import subsample_signals
 
@@ -41,23 +41,22 @@ def create_labeled_dataset(class_configs, n_samples_per_class, subsample_step = 
         return np.array(X), np.array(y)
 
 
-def get_kfold_splits(X, y, n_splits = 5, random_state = 42, stratified = True):
+def get_kfold_splits(X, y, n_splits = 5, random_state = 42, stratified = True, test_size = 0.2):
     """
-    Generate train/test splits using K-fold cross-validation.
+    Generate train/test splits using StratifiedShuffleSplit to get stratified samples for training.
     Parameters:
         X: np.ndarray
         y: np.ndarray
         n_splits: int
         random_state: int
         stratified: bool
+        test_size: float
     Returns:
         list of tuples (train_indices, test_indices)
     """
     if stratified:
-        kf = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=random_state)
+        kf = StratifiedShuffleSplit(n_splits=n_splits, test_size=test_size, random_state=random_state)
     else:
-        from sklearn.model_selection import KFold
         kf = KFold(n_splits=n_splits, shuffle=True, random_state=random_state)
 
     return list(kf.split(X, y))
-

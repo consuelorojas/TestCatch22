@@ -2,6 +2,7 @@ import os
 import sys
 import pickle
 from datetime import datetime
+from tqdm import tqdm
 
 sys.path.append(os.path.abspath("./models"))
 sys.path.append(os.path.abspath("./data"))
@@ -30,13 +31,13 @@ output_file = os.path.join(output_dir, f"results_{timestamp}.pkl")
 
 # Run sweep
 all_results = []
-for i, periods in enumerate(nperiods):
+for i, periods in enumerate(tqdm(nperiods, desc="Sweeping number of periods")):
     X, y = create_labeled_dataset(
         [(0, 'sine', {'args': [fbase, 0.1, npoints, periods]}),
          (1, 'sine', {'args': [f1, 0.1, npoints, periods]})],
         n_samples_per_class=samples
     )
-    splits = get_kfold_splits(X, y, n_splits=5, stratified=False)
+    splits = get_kfold_splits(X, y, n_splits=50, stratified=True)
     results = run_experiment(X, y, splits)
 
     all_results.append({

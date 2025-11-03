@@ -21,7 +21,7 @@ for entry in all_results:
             records.append({"npp": df, "Method": method, "AUC": auc})
 
 df_results = pd.DataFrame(records)
-
+'''
 # ---- Boxplot ----
 plt.figure(figsize=(20, 14))
 sns.boxplot(data=df_results, x="npp", y="AUC", hue="Method", palette="Set2")
@@ -64,7 +64,7 @@ plt.ylim(-0.1, 1.1)
 #plt.savefig(f"results/sine/sine_points/auc_vs_npp_{datetime.now()}.png", dpi=180)
 plt.show()
 
-
+'''
 # --- Compute mean & std per method/Δf ---
 df_grouped = (
     df_results
@@ -81,7 +81,7 @@ markers = {
     "features_pca": "^"
 }
 
-plt.figure(figsize=(15, 10))
+plt.figure(figsize=(6.4, 4.8))
 
 for method, marker in markers.items():
     data = df_grouped[df_grouped["Method"] == method]
@@ -97,13 +97,14 @@ for method, marker in markers.items():
 
 plt.xlabel(r"Number of points per period $(N_{pp})$")
 plt.ylabel("AUC")
-plt.legend(title="Method", loc='lower left')
+#plt.legend(title="Method", loc='lower left')
 plt.grid(True)
 plt.tight_layout()
-plt.ylim(-0.1, 1.1)
+plt.ylim(0.2, 1.1)
+plt.text(0.5, 1.0, "(c)", fontweight="bold", fontsize=14, va="bottom", ha="left")
 #plt.xlim(-0.05, 0.65)
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_points/errorbars_1-20_npp.png",
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_points/errorbars_1-20_npp.eps", format="eps",
     dpi=180
 )
 plt.show()

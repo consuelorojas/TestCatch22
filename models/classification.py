@@ -230,34 +230,38 @@ def time_experiment(X,y, splits, n_pca_components = 2, clf_fn = None):
 
         # raw + pca
         clf = clf_fn()
+        pca_time = time.time()
         train_pca, pca_tf, scaler = apply_pca(x_train,n_components = n_pca_components)
         test_pca = scaler.transform(x_test)
         test_pca = pca_tf.transform(test_pca)
+        pca_time = time.time() - pca_time
 
         train_time, test_time = time_single_fold(train_pca, test_pca, y_train, y_test, clf)
-
-        pca.append((train_time, test_time))
+        pca.append((train_time + pca_time, test_time))
 
         # features
         clf = clf_fn()
+        feat_time = time.time()
         X_feat = extract_features(X, return_array=True)
         train_feat, test_feat = X_feat[train_idx], X_feat[test_idx]
-        train_time, test_time = time_single_fold(train_feat, test_feat, y_train, y_test, clf)
+        feat_time = time.time() - feat_time
 
-        feat.append((train_time, test_time))
+        train_time, test_time = time_single_fold(train_feat, test_feat, y_train, y_test, clf)
+        feat.append((train_time + feat_time, test_time))
 
 
         # features + pca
         clf = clf_fn()
+        feat_pca_time = time.time()
         train_feat_pca, pca_tf, scaler = apply_pca(train_feat, n_components=n_pca_components)
         test_feat = test_feat.values if isinstance(test_feat, pd.DataFrame) else test_feat
     
         test_feat_pca = scaler.transform(test_feat)
         test_feat_pca = pca_tf.transform(test_feat_pca)
-
+        feat_pca_time = time.time() - feat_pca_time
         train_time, test_time = time_single_fold(train_feat_pca, test_feat_pca, y_train, y_test, clf)
 
-        feat_pca.append([train_time, test_time])
+        feat_pca.append([train_time + feat_pca_time + feat_time, test_time])
 
     return {
         "raw": raw,

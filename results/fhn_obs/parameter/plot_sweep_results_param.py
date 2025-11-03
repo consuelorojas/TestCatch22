@@ -30,7 +30,7 @@ plt.tight_layout()
 plt.grid(True, axis="y")
 plt.legend(title="Method")
 plt.ylim(-0.1, 1.1)
-plt.show()
+
 
 # ---- Scatter plot with markers ----
 markers = {
@@ -59,8 +59,7 @@ plt.grid(True)
 plt.tight_layout()
 plt.ylim(-0.1, 1.1)
 #plt.xlim(-0.05, 0.65)
-plt.savefig("results/fhn_obs/parameter/param_diff.png", dpi=180)
-plt.show()
+
 
 
 
@@ -84,7 +83,7 @@ plt.ylim(-0.1, 1.1)
 #plt.xscale('log')
 plt.xlim(-0.05, 0.75)
 #plt.savefig("results/fhn/fhn_parameter/param_diff_lim.png", dpi=180)
-plt.show()
+
 
 # --- Compute mean & std per method/Δf ---
 df_grouped = (
@@ -102,7 +101,7 @@ markers = {
     "features_pca": "^"
 }
 
-plt.figure(figsize=(15, 10))
+plt.figure(figsize=(6.4, 4.8))
 
 for method, marker in markers.items():
     data = df_grouped[df_grouped["Method"] == method]
@@ -118,13 +117,13 @@ for method, marker in markers.items():
 
 plt.xlabel(r"Parameter Difference $(b_0 - b_1)$")
 plt.ylabel("AUC")
-plt.legend(title="Method", loc ="lower right")
+plt.legend(ncol=2, loc ="lower right")
 plt.grid(True)
 plt.tight_layout()
 plt.ylim(-0.1, 1.1)
 plt.xlim(-0.01, 0.11)
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn_obs/parameter/param_fhn_errorbars.png",
-    dpi=180
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn_obs/parameter/param_fhn_errorbars.eps",
+    format="eps", dpi=180
 )
 plt.show()

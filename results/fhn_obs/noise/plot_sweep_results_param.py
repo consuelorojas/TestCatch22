@@ -60,8 +60,8 @@ plt.grid(True)
 plt.tight_layout()
 plt.ylim(-0.1, 1.1)
 #plt.xlim(-0.05, 0.65)
-plt.savefig("results/fhn_obs/noise/noise_diff.png", dpi=180)
-plt.show()
+#plt.savefig("results/fhn_obs/noise/noise_diff.png", dpi=180)
+#plt.show()
 
 
 
@@ -85,7 +85,7 @@ plt.ylim(-0.1, 1.1)
 #plt.xscale('log')
 plt.xlim(-0.05, 0.3)
 #plt.savefig("results/fhn_obs/noise/noise_diff_lim.png", dpi=180)
-plt.show()
+#plt.show()
 
 # --- Compute mean & std per method/Δf ---
 noise = np.round(np.linspace(0, 1.5, 25), 2)
@@ -104,7 +104,7 @@ markers = {
     "features_pca": "^"
 }
 
-plt.figure(figsize=(15, 10.5))
+plt.figure(figsize=(6.4, 4.8))
 
 for method, marker in markers.items():
     data = df_grouped[df_grouped["Method"] == method]
@@ -120,14 +120,14 @@ for method, marker in markers.items():
 
 plt.xlabel(r"Noise strength $(D)$")
 plt.ylabel("AUC")
-plt.legend(title="Method", loc ="lower left")
+plt.legend(ncol=2, loc ="lower left")
 plt.grid(True)
 plt.tight_layout()
 plt.ylim(-0.1, 1.1)
-plt.xticks(noise[::2])
+plt.xticks(noise[::3])
 #plt.xlim(-0.05, 0.65)
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn_obs/noise/noise_fhn_obs_errorbars.png",
-    dpi=180
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn_obs/noise/noise_fhn_obs_errorbars.eps",
+    format="eps", dpi=180
 )
 plt.show()

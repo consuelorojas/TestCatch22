@@ -14,7 +14,8 @@ from dataset import create_labeled_dataset, get_kfold_splits
 b0 = 0.1
 
 b1 = 1.0
-db1 = 0.032
+#db1 = 0.032
+db1 = 0.178
 b12 = b1 + db1
 dt = 0.1
 
@@ -34,8 +35,8 @@ samples = 80
 
 
 X, y, t = create_labeled_dataset([
-    (0, 'fhn_obs', {'length':850, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b1, epsilon, I, noise]}),
-    (1, 'fhn_obs', {'length':850, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b12, epsilon, I, noise]})],
+    (0, 'fhn', {'length':850, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b1, epsilon, I, noise]}),
+    (1, 'fhn', {'length':850, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b12, epsilon, I, noise]})],
     n_samples_per_class=samples, subsample_step = step, transient = trans, return_time=True
     )
 
