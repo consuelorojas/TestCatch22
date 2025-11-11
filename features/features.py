@@ -16,7 +16,7 @@ def extract_features(signals, return_array = False):
     - pd.Dataframe or np.ndarray: Feature matrix (n_signals x n_features)
     """
     feat_rows = []
-    cols_nameEs = []
+    cols_names = []
     for i, signal in enumerate(signals):
         features = catch22_all(signal, short_names=True)
         feat_rows.append(features['values'])
@@ -24,12 +24,11 @@ def extract_features(signals, return_array = False):
             cols_names = features['short_names']  
 
 
-    features = np.array(feat_rows)
+    features = pd.DataFrame(feat_rows, columns=cols_names).dropna(axis=1)
 
     if return_array:
-        return features
-    
+        return features.values
+
     else:
-        return pd.DataFrame(features, columns=cols_names)
-    
+        return features
 

@@ -171,7 +171,7 @@ def run_experiment(X,y, splits, n_pca_components = 2, clf_fn = None):
 
         # features
         clf = clf_fn()
-        X_feat = extract_features(X, return_array=True).dropna()
+        X_feat = extract_features(X, return_array=True)
         train_feat, test_feat = X_feat[train_idx], X_feat[test_idx]
         feat.append(evaluate_single_fold(train_feat, test_feat, y_train, y_test, clf))
 
