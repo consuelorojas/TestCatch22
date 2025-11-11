@@ -21,49 +21,7 @@ for entry in all_results:
             records.append({"periods": df, "Method": method, "AUC": auc})
 
 df_results = pd.DataFrame(records)
-'''
-# ---- Boxplot ----
-plt.figure(figsize=(20, 14))
-sns.boxplot(data=df_results, x="periods", y="AUC", hue="Method", palette="Set2")
-plt.title("AUC across different periods by method")
-plt.xticks(rotation=45)
-plt.tight_layout()
-plt.grid(True, axis="y")
-plt.legend(title="Method")
-plt.ylim(-0.1, 1.1)
-plt.show()
 
-# ---- Scatter plot with markers ----
-markers = {
-    "raw": "o", 
-    "pca": "s", 
-    "features": "D", 
-    "features_pca": "^"
-}
-
-plt.figure(figsize=(20, 14))
-
-for method, marker in markers.items():
-    data = df_results[df_results["Method"] == method]
-    plt.scatter(
-        data["periods"], data["AUC"],
-        label=method,
-        marker=marker,
-        alpha=0.7
-    )
-
-#plt.title("AUC vs Frequency Difference (Δf)")
-plt.xlabel(r"Number of periods $(N_p)$")
-plt.ylabel("AUC")
-plt.legend(title="Method")
-plt.grid(True)
-plt.tight_layout()
-plt.ylim(-0.1, 1.1)
-#plt.xlim(-0.05, 0.65)
-#plt.savefig(f"results/sine/sine_periods/auc_vs_np_{datetime.now()}.png", dpi=180)
-plt.show()
-
-'''
 #### error bars
 
 markers = {
@@ -107,7 +65,7 @@ plt.tight_layout()
 plt.text(0.8, 1.0, "(b)", fontweight="bold", fontsize=14, va="bottom", ha="left")
 plt.ylim(0.2, 1.1)
 plt.savefig(
-    "results/sine/sine_periods/errorbars_1-8_np.eps", format="eps",
+    "results/sine/sine_periods/errorbars_1-8_np.png", format="png",
     dpi=180
 )
 plt.show()

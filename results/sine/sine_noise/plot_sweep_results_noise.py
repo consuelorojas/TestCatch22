@@ -103,7 +103,7 @@ plt.ylim(0.2, 1.1)
 plt.xlim(-0.01, 0.42)
 plt.text(0.0, 1.0, "(d)", fontweight="bold", fontsize=14, va="bottom", ha="left")
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_noise/errorbars_noise_resolution.eps",
-    format="eps", dpi=180
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_noise/errorbars_noise_resolution.png",
+    format="png", dpi=180
 )
 plt.show()

@@ -69,8 +69,8 @@ plt.text(0.0, 1.0, "(d)", fontweight="bold", fontsize=14, va="bottom", ha="left"
 plt.ylim(0.2, 1.1)
 #plt.xlim(-0.05, 0.65)
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_noise/noise_fhn_errorbars.eps",
-    format='eps',
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_noise/noise_fhn_errorbars.png",
+    format='png',
     dpi=180
 )
 plt.show()

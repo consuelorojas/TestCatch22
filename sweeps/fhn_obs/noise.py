@@ -17,12 +17,12 @@ from dataset import create_labeled_dataset, get_kfold_splits
 b0 = 0.1
 
 b1 = 1
-db1 = 0.03157
+db1 = 0.18
 b12 = b1 + db1
 
 epsilon = 0.2
 I = 0
-#noise = 0
+noise = 0
 dt = 0.1
 
 # step to subsampling
@@ -33,9 +33,8 @@ step = int(pseudo_period / npp / dt)
 
 epsilon = 0.2
 I = 0
-noise = np.linspace(0, 1.5, 25)
-
-trans = 50 # transient
+noise = np.arange(0, 0.5, 0.05)
+trans = 100 # transient
 
 samples = 100
 ## Output directory
@@ -51,12 +50,12 @@ output_file = os.path.join(output_dir, f"results_{timestamp}.pkl")
 all_results = []
 for i, n in enumerate(tqdm(noise)):
     X, y = create_labeled_dataset([
-        (0, 'fhn_obs', {'length':750, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b1, epsilon, I, n]}),
-        (1, 'fhn_obs', {'length':750, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b12, epsilon, I, n]})],
+        (0, 'fhn_obs', {'length':800, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b1, epsilon, I, n]}),
+        (1, 'fhn_obs', {'length':800, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b12, epsilon, I, n]})],
         n_samples_per_class=samples, subsample_step = step, transient = trans
         )
     
-    splits = get_kfold_splits(X, y, n_splits=5, stratified=False)
+    splits = get_kfold_splits(X, y, n_splits=50, stratified=True)
     #print(f" train set size: {len(splits[0][0])}, test set size: {len(splits[0][1])}")
     results = run_experiment(X, y, splits)
     

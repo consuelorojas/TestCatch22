@@ -62,7 +62,7 @@ plt.xticks(data.npp.unique()[::2])
 plt.tight_layout()
 #plt.xlim(-0.05, 0.65)
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_npp/npp_fhn_errorbars.eps",
-    format='eps', dpi=180
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_npp/npp_fhn_errorbars.png",
+    format='png', dpi=180
 )
 plt.show()

@@ -118,8 +118,8 @@ plt.ylim(0.2, 1.1)
 plt.text(0.0, 1.0, "(a)", fontweight="bold", fontsize=14, va="bottom", ha="left")
 #plt.xlim(-0.05, 0.65)
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_frequency/errorbars_0-042.eps",
-    format="eps", dpi=180
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_frequency/errorbars_0-042.png",
+    format="png", dpi=180
 )
 #legend = plt.legend(fontsize=14,ncol=1)
 #export_legend(legend)

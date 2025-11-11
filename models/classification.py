@@ -171,7 +171,7 @@ def run_experiment(X,y, splits, n_pca_components = 2, clf_fn = None):
 
         # features
         clf = clf_fn()
-        X_feat = extract_features(X, return_array=True)
+        X_feat = extract_features(X, return_array=True).dropna()
         train_feat, test_feat = X_feat[train_idx], X_feat[test_idx]
         feat.append(evaluate_single_fold(train_feat, test_feat, y_train, y_test, clf))
 
@@ -226,7 +226,7 @@ def time_experiment(X,y, splits, n_pca_components = 2, clf_fn = None):
         # raw
         clf = clf_fn()
         train_time, test_time = time_single_fold(x_train, x_test, y_train, y_test, clf)
-        raw.append((train_time, test_time))
+        raw.append((train_time, test_time, 0.0))
 
         # raw + pca
         clf = clf_fn()
@@ -237,17 +237,17 @@ def time_experiment(X,y, splits, n_pca_components = 2, clf_fn = None):
         pca_time = time.time() - pca_time
 
         train_time, test_time = time_single_fold(train_pca, test_pca, y_train, y_test, clf)
-        pca.append((train_time + pca_time, test_time))
+        pca.append((train_time, test_time, pca_time))
 
         # features
         clf = clf_fn()
         feat_time = time.time()
-        X_feat = extract_features(X, return_array=True)
+        X_feat = extract_features(X, return_array=True).dropna()
         train_feat, test_feat = X_feat[train_idx], X_feat[test_idx]
         feat_time = time.time() - feat_time
 
         train_time, test_time = time_single_fold(train_feat, test_feat, y_train, y_test, clf)
-        feat.append((train_time + feat_time, test_time))
+        feat.append((train_time, test_time, feat_time))
 
 
         # features + pca
@@ -261,7 +261,7 @@ def time_experiment(X,y, splits, n_pca_components = 2, clf_fn = None):
         feat_pca_time = time.time() - feat_pca_time
         train_time, test_time = time_single_fold(train_feat_pca, test_feat_pca, y_train, y_test, clf)
 
-        feat_pca.append([train_time + feat_pca_time + feat_time, test_time])
+        feat_pca.append([train_time, test_time, feat_pca_time+feat_time])
 
     return {
         "raw": raw,

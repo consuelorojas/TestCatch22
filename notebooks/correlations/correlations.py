@@ -86,6 +86,7 @@ Obs_corr = ObsFeats.corr(method='pearson')
 Dyn_corr = DynFeats.corr(method='pearson')
 
 order = S_corr.sort_values(by='PCA1', ascending=False).loc[lambda x: ~x.index.isin(['PCA1', 'PCA2'])].index
+print(order)
 
 Splot = S_corr.loc[['PCA1', 'PCA2'], [col for col in S_corr.columns if col not in ['PCA1', 'PCA2']]]
 Splot = Splot[order].T
@@ -144,4 +145,59 @@ fig.text(0.67, 0.90, "(c)", fontweight="bold", fontsize=11, va="bottom", ha="lef
 plt.grid(False)
 plt.subplots_adjust(left=0.20, right=0.92)# tweak if colorbar clipped
 plt.savefig("notebooks/correlations/three_heatmaps_combined.eps", bbox_inches='tight', dpi=300)
+plt.show()
+
+
+# Get the ordered feature list (the same as in your table)
+ordered_features = [
+    'acf_timescale', 'centroid_freq', 'acf_first_min', 'ami2', 'mode_5',
+    'outlier_timing_pos', 'stretch_decreasing', 'mode_10', 'stretch_high',
+    'outlier_timing_neg', 'entropy_pairs', 'trev', 'high_fluctuation',
+    'embedding_dist', 'transition_matrix', 'forecast_error', 'low_freq_power',
+    'periodicity', 'ami_timescale', 'whiten_timescale', 'rs_range', 'dfa'
+]
+
+# Create a mapping from feature name → index number (with parentheses)
+feature_map = {name: f"({i+1})" for i, name in enumerate(ordered_features)}
+
+# Rename the row indices (y-axis) of each DataFrame using this mapping
+Splot_num = Splot.rename(index=feature_map)
+Obs_plot_num = Obs_plot.rename(index=feature_map)
+Dyn_plot_num = Dyn_plot.rename(index=feature_map)
+
+# Now plot the numeric-labeled heatmaps
+
+vmin, vmax = -1, 1
+fig = plt.figure(figsize=(12, 4.2))
+spec = gridspec.GridSpec(nrows=1, ncols=4, width_ratios=[1, 1, 1, 0.08], wspace=0.3)
+
+ax1 = fig.add_subplot(spec[0])
+ax2 = fig.add_subplot(spec[1])
+ax3 = fig.add_subplot(spec[2])
+cax = fig.add_subplot(spec[3])
+
+# Plot 1: with y labels (numbers)
+sns.heatmap(Splot_num, ax=ax1, cmap=cmap, vmin=vmin, vmax=vmax, cbar=False, square=False)
+ax1.set_ylabel("")
+ax1.tick_params(left=True, labelleft=True, bottom=False, labelbottom=True)
+ax1.grid(False)
+
+# Plot 2: no y labels
+sns.heatmap(Obs_plot_num, ax=ax2, cmap=cmap, vmin=vmin, vmax=vmax, cbar=False, square=False)
+ax2.tick_params(left=False, labelleft=False, bottom=False, labelbottom=True)
+ax2.grid(False)
+
+# Plot 3: no y labels + colorbar
+sns.heatmap(Dyn_plot_num, ax=ax3, cmap=cmap, vmin=vmin, vmax=vmax, cbar=True, cbar_ax=cax, square=False)
+ax3.tick_params(left=False, labelleft=False, bottom=False, labelbottom=True)
+ax3.grid(False)
+
+# Figure labels (a,b,c)
+fig.text(0.2, 0.90, "(a)", fontweight="bold", fontsize=11, va="bottom", ha="left")
+fig.text(0.435, 0.90, "(b)", fontweight="bold", fontsize=11, va="bottom", ha="left")
+fig.text(0.67, 0.90, "(c)", fontweight="bold", fontsize=11, va="bottom", ha="left")
+
+plt.grid(False)
+plt.subplots_adjust(left=0.20, right=0.92)
+plt.savefig("notebooks/correlations/three_heatmaps_combined_numbered.eps", bbox_inches='tight', dpi=300)
 plt.show()

@@ -7,24 +7,25 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/fhn_obs/periods/results_20251103_184110.pkl"
+result_file = "results/fhn_obs/npoints/results_20251103_183951.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
 # ---- Convert to DataFrame ----
 records = []
 for entry in all_results:
-    df = entry["periods"]
+    df = entry["npp"]
     for method in ["raw", "pca", "features", "features_pca"]:
         for auc in entry[method]:
-            records.append({"periods": df, "Method": method, "AUC": auc})
+            records.append({"npp": df, "Method": method, "AUC": auc})
 
 df_results = pd.DataFrame(records)
+
 
 # --- Compute mean & std per method/Δf ---
 df_grouped = (
     df_results
-    .groupby(["Method", "periods"])
+    .groupby(["Method", "npp"])
     .agg(AUC_mean=("AUC", "mean"), AUC_std=("AUC", "std"))
     .reset_index()
 )
@@ -42,7 +43,7 @@ plt.figure(figsize=(6.4, 4.8))
 for method, marker in markers.items():
     data = df_grouped[df_grouped["Method"] == method]
     plt.errorbar(
-        data["periods"], data["AUC_mean"],
+        data["npp"], data["AUC_mean"],
         yerr=data["AUC_std"],
         fmt=marker,         # marker style
         capsize=5,          # error bar caps
@@ -51,17 +52,17 @@ for method, marker in markers.items():
         label=method
     )
 
-plt.xlabel(r"Number of periods $(N_p)$")
+plt.xlabel(r"Number of points per period $(N_{pp})$")
 plt.ylabel("AUC")
 #plt.legend(ncol=2, loc ="lower left")
 plt.grid(True)
 plt.tight_layout()
 plt.ylim(0.2, 1.1)
-plt.text(1.0, 1.00, "(b)", fontweight="bold", fontsize=13, va="bottom", ha="left")
-plt.xticks(data.periods.unique()[::2])
+plt.xticks(data.npp.unique()[::2])
+plt.text(3.0, 1.0, "(c)", fontweight="bold", fontsize=14, va="bottom", ha="left")
 #plt.xlim(-0.05, 0.65)
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn_obs/periods/periods_fhn_obs_errorbars.eps",
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn_obs/npoints/npp_fhn_errorbars.eps",
     format="eps", dpi=180
 )
 plt.show()

@@ -104,7 +104,7 @@ plt.ylim(0.2, 1.1)
 plt.text(0.5, 1.0, "(c)", fontweight="bold", fontsize=14, va="bottom", ha="left")
 #plt.xlim(-0.05, 0.65)
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_points/errorbars_1-20_npp.eps", format="eps",
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_points/errorbars_1-20_npp.png", format="png",
     dpi=180
 )
 plt.show()

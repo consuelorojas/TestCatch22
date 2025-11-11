@@ -60,7 +60,7 @@ plt.xlim(-0.01, 0.31)
 plt.text(0.0, 1.00, "(a)", fontweight="bold", fontsize=13, va="bottom", ha="left")
 plt.tight_layout()
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_parameter/param_fhn_errorbars.eps",
-    format='eps', dpi=180
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_parameter/param_fhn_errorbars.png",
+    format='png', dpi=180
 )
 plt.show()

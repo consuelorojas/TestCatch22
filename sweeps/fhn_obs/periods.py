@@ -55,7 +55,7 @@ for i, p in enumerate(tqdm(periods)):
         n_samples_per_class=samples, subsample_step = step, transient = trans
         )
     
-    splits = get_kfold_splits(X, y, n_splits=5, stratified=False)
+    splits = get_kfold_splits(X, y, n_splits=50, stratified=True)
     results = run_experiment(X, y, splits)
     
     plabel = p/(pseudo_period/dt)
