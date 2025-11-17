@@ -7,7 +7,7 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/fhn/fhn_samples/results_20251103_173110.pkl"
+result_file = "results/fhn/fhn_samples/results_20251112_115812.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
@@ -38,14 +38,22 @@ markers = {
     "features_pca": "^"
 }
 
+method_colors = {
+    "raw": "C0", 
+    "pca": "C1", 
+    "features": "C2", 
+    "features_pca": "C3"
+}
+
 plt.figure(figsize=(6.4, 4.8))
 
-for method, marker in markers.items():
+for method, color in method_colors.items():
     data = df_grouped[df_grouped["Method"] == method]
     plt.errorbar(
         data["samples"], data["AUC_mean"],
         yerr=data["AUC_std"],
-        fmt=marker,         # marker style
+        fmt='s',         # marker style
+        color=color,
         capsize=5,          # error bar caps
         #elinewidth=1,       # error bar line thickness
         alpha=0.7,
@@ -58,7 +66,7 @@ plt.ylabel("AUC")
 plt.grid(True)
 plt.xticks(data.samples.unique()[::2])#, rotation=45)
 plt.ylim(0.2, 1.1)
-plt.xlim(0, 205)
+plt.xlim(0, 255)
 plt.text(5, 1.0, "(c)", fontweight="bold", fontsize=14, va="bottom", ha="left")
 plt.tight_layout()
 plt.savefig(

@@ -22,7 +22,6 @@ b12 = b1 + db1
 
 epsilon = 0.2
 I = 0
-noise = 0
 dt = 0.1
 
 # step to subsampling
@@ -33,7 +32,7 @@ step = int(pseudo_period / npp / dt)
 
 epsilon = 0.2
 I = 0
-noise = np.arange(0, 0.5, 0.05)
+noise = np.arange(0, 1.5, 0.05)
 trans = 100 # transient
 
 samples = 100

@@ -8,7 +8,7 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/sine/sine_noise/results_20251103_153954.pkl"
+result_file = "results/sine/sine_noise/results_20251112_112335.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
@@ -21,48 +21,6 @@ for entry in all_results:
             records.append({"noise": df, "Method": method, "AUC": auc})
 
 df_results = pd.DataFrame(records)
-'''
-# ---- Boxplot ----
-plt.figure(figsize=(20, 14))
-sns.boxplot(data=df_results, x="noise", y="AUC", hue="Method", palette="Set2")
-plt.title("AUC across different noise by method")
-plt.xticks(rotation=45)
-plt.tight_layout()
-plt.grid(True, axis="y")
-plt.legend(title="Method")
-plt.ylim(-0.1, 1.1)
-plt.show()
-
-# ---- Scatter plot with markers ----
-markers = {
-    "raw": "o", 
-    "pca": "s", 
-    "features": "D", 
-    "features_pca": "^"
-}
-
-plt.figure(figsize=(20, 14))
-
-for method, marker in markers.items():
-    data = df_results[df_results["Method"] == method]
-    plt.scatter(
-        data["noise"], data["AUC"],
-        label=method,
-        marker=marker,
-        alpha=0.7
-    )
-
-plt.xlabel(r"Noise Level $(D)$")
-plt.ylabel("AUC")
-plt.legend(title="Method")
-plt.grid(True)
-plt.tight_layout()
-plt.ylim(-0.1, 1.1)
-#plt.xlim(-0.05, 0.65)
-#plt.savefig(f"results/sine/sine_noise/auc_vs_np_scatter.png", dpi=180)
-plt.show()
-
-'''
 
 # --- Compute mean & std per method/Δf ---
 df_grouped = (
@@ -80,18 +38,25 @@ markers = {
     "features_pca": "^"
 }
 
+method_colors = {
+    "raw": "C0", 
+    "pca": "C1", 
+    "features": "C2", 
+    "features_pca": "C3"
+}
+
 plt.figure(figsize=(6.4, 4.8))
 
-for method, marker in markers.items():
+for method, color in method_colors.items():
     data = df_grouped[df_grouped["Method"] == method]
     plt.errorbar(
         data["noise"], data["AUC_mean"],
         yerr=data["AUC_std"],
-        fmt=marker,         # marker style
+        fmt='o',         # marker style
         capsize=5,          # error bar caps
         #elinewidth=1,       # error bar line thickness
         alpha=0.7,
-        label=method
+        color=color
     )
 
 plt.xlabel(r"Noise strength $(D)$")
@@ -103,7 +68,7 @@ plt.ylim(0.2, 1.1)
 plt.xlim(-0.01, 0.42)
 plt.text(0.0, 1.0, "(d)", fontweight="bold", fontsize=14, va="bottom", ha="left")
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_noise/errorbars_noise_resolution.png",
-    format="png", dpi=180
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_noise/errorbars_noise_resolution.eps",
+    format="eps", dpi=180
 )
 plt.show()

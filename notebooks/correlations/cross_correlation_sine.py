@@ -70,6 +70,7 @@ for (frame, pca_data) in zip(x_feat, x_pca):
 
 mean_corr = sum(corr) / len(corr)
 
+print(mean_corr.isnull().sum())
 
 
 # sort by PCA1 and drop NaN rows/columns 

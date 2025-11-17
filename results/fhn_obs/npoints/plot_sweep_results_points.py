@@ -38,14 +38,22 @@ markers = {
     "features_pca": "^"
 }
 
+method_colors = {
+    "raw": "C0", 
+    "pca": "C1", 
+    "features": "C2", 
+    "features_pca": "C3"
+}
+
 plt.figure(figsize=(6.4, 4.8))
 
-for method, marker in markers.items():
+for method, color in method_colors.items():
     data = df_grouped[df_grouped["Method"] == method]
     plt.errorbar(
         data["npp"], data["AUC_mean"],
         yerr=data["AUC_std"],
-        fmt=marker,         # marker style
+        fmt='*',         # marker style
+        color=color,
         capsize=5,          # error bar caps
         #elinewidth=1,       # error bar line thickness
         alpha=0.7,

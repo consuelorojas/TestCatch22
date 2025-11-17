@@ -7,7 +7,7 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Results path:
-result_file = "results/sine/sine_frequency/results_20251111_173201.pkl"
+result_file = "results/sine/sine_frequency/results_20251112_112335.pkl"
 
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
@@ -85,7 +85,7 @@ plt.savefig(
     "/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_frequency/errorbars_0-042.eps",
     format="eps", dpi=180
 )
-#legend = plt.legend(fontsize=14,ncol=1)
+#legend = plt.legend(fontsize=14,ncol=4)
 #export_legend(legend)
 plt.show()
 

@@ -7,7 +7,7 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/fhn/fhn_npp/results_20251103_172838.pkl"
+result_file = "results/fhn/fhn_npp/results_20251112_115649.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
@@ -38,18 +38,26 @@ markers = {
     "features_pca": "^"
 }
 
+method_colors = {
+    "raw": "C0", 
+    "pca": "C1", 
+    "features": "C2", 
+    "features_pca": "C3"
+}
+
 plt.figure(figsize=(6.4, 4.8))
 
-for method, marker in markers.items():
+for method, color in method_colors.items():
     data = df_grouped[df_grouped["Method"] == method]
     plt.errorbar(
         data["npp"], data["AUC_mean"],
         yerr=data["AUC_std"],
-        fmt=marker,         # marker style
+        fmt='s',         # marker style
         capsize=5,          # error bar caps
         #elinewidth=1,       # error bar line thickness
         alpha=0.7,
-        label=method
+        label=method,
+        color=color
     )
 
 plt.xlabel(r"Number of points per period $(N_{pp})$")
@@ -62,7 +70,7 @@ plt.xticks(data.npp.unique()[::2])
 plt.tight_layout()
 #plt.xlim(-0.05, 0.65)
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_npp/npp_fhn_errorbars.png",
-    format='png', dpi=180
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_npp/npp_fhn_errorbars.eps",
+    format='eps', dpi=180
 )
 plt.show()

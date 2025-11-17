@@ -7,7 +7,7 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/sine/sine_samples/results_20251103_155623.pkl"
+result_file = "results/sine/sine_samples/results_20251112_112451.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
@@ -21,46 +21,6 @@ for entry in all_results:
 
 df_results = pd.DataFrame(records)
 
-# ---- Boxplot ----
-plt.figure(figsize=(20, 14))
-sns.boxplot(data=df_results, x="samples", y="AUC", hue="Method", palette="Set2")
-#plt.title("AUC across frequency differences by method")
-plt.xticks(rotation=45)
-plt.tight_layout()
-plt.grid(True, axis="y")
-plt.legend(title="Method")
-plt.ylim(-0.1, 1.1)
-plt.show()
-
-# ---- Scatter plot with markers ----
-markers = {
-    "raw": "o", 
-    "pca": "s", 
-    "features": "D", 
-    "features_pca": "^"
-}
-
-plt.figure(figsize=(10, 6))
-
-for method, marker in markers.items():
-    data = df_results[df_results["Method"] == method]
-    plt.scatter(
-        data["samples"], data["AUC"],
-        label=method,
-        marker=marker,
-        alpha=0.7
-    )
-
-#plt.title("AUC vs Frequency Difference (Δf)")
-plt.xlabel(r"Samples ($N_s$)")
-plt.ylabel("AUC")
-plt.legend(title="Method")
-plt.grid(True)
-plt.tight_layout()
-plt.ylim(-0.1, 1.1)
-#plt.xlim(-0.05, 0.65)
-plt.savefig("results/sine/sine_samples/samples_diff.png", dpi=180)
-plt.show()
 
 
 # --- Compute mean & std per method/Δf ---
@@ -79,14 +39,22 @@ markers = {
     "features_pca": "^"
 }
 
+method_colors = {
+    "raw": "C0", 
+    "pca": "C1", 
+    "features": "C2", 
+    "features_pca": "C3"
+}
+
 plt.figure(figsize=(6.4, 4.8))
 
-for method, marker in markers.items():
+for method, color in method_colors.items():
     data = df_grouped[df_grouped["Method"] == method]
     plt.errorbar(
         data["samples"], data["AUC_mean"],
         yerr=data["AUC_std"],
-        fmt=marker,         # marker style
+        fmt='o',         # marker style
+        color=color,
         capsize=5,          # error bar caps
         #elinewidth=1,       # error bar line thickness
         alpha=0.7,
@@ -98,9 +66,9 @@ plt.ylabel("AUC")
 #plt.legend(loc ="lower right", ncol=2)
 plt.grid(True)
 plt.tight_layout()
-plt.xticks(data.samples.unique())
+plt.xticks(data.samples.unique()[::2])
 plt.ylim(0.0, 1.1)
-plt.xlim(0, 520)
+plt.xlim(0, 255)
 plt.text(0.0, 1.0, "(a)", fontweight="bold", fontsize=14, va="bottom", ha="left")
 plt.savefig(
     "/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_samples/samples_sine_errorbars.eps",

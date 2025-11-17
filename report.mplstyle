@@ -3,7 +3,7 @@ axes.titlesize : 14
 axes.labelsize : 14
 
 lines.linewidth : 2.0
-lines.markersize : 6
+lines.markersize : 8
 lines.linestyle : -
 lines.marker: o
 

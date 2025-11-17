@@ -11,6 +11,12 @@ result_file = "results/fhn_obs/parameter/results_20251103_183335.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
+def export_legend(legend, filename="legend.eps"):
+    fig  = legend.figure
+    fig.canvas.draw()
+    bbox  = legend.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
+    fig.savefig(filename, dpi="figure", bbox_inches=bbox)
+
 # ---- Convert to DataFrame ----
 records = []
 for entry in all_results:
@@ -37,18 +43,32 @@ markers = {
     "features_pca": "^"
 }
 
+method_colors = {
+    "raw": "C0", 
+    "pca": "C1", 
+    "features": "C2", 
+    "features_pca": "C3"
+}
+method_labels = {
+    "raw": "Raw",
+    "pca": "PCA",
+    "features": "Catch22",
+    "features_pca": "Catch22 + PCA"
+}
+
 plt.figure(figsize=(6.4, 4.8))
 
-for method, marker in markers.items():
+for method, color in method_colors.items():
     data = df_grouped[df_grouped["Method"] == method]
     plt.errorbar(
         data["b"], data["AUC_mean"],
         yerr=data["AUC_std"],
-        fmt=marker,         # marker style
+        fmt='*',         # marker style
+        color=color,
         capsize=5,          # error bar caps
         #elinewidth=1,       # error bar line thickness
         alpha=0.7,
-        label=method
+        label=method_labels[method],
     )
 
 plt.xlabel(r"Parameter Difference $(b - b_0)$")
@@ -59,8 +79,13 @@ plt.tight_layout()
 plt.ylim(0.2, 1.1)
 plt.xlim(-0.01, 0.11)
 plt.text(-0.002, 1.0, "(a)", fontsize=14, weight='bold', va="bottom", ha="left")
-plt.savefig(
+"""plt.savefig(
     "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn_obs/parameter/param_fhn_errorbars.eps",
     format="eps", dpi=180
 )
+"""
+
+legend = plt.legend(fontsize=14,ncol=4)
+export_legend(legend, filename='fhn_obs_legend.eps')
+
 plt.show()

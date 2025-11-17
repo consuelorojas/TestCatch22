@@ -163,7 +163,7 @@ def run_experiment(X,y, splits, n_pca_components = 2, clf_fn = None):
 
         # raw + pca
         clf = clf_fn()
-        train_pca, pca_tf, scaler = apply_pca(x_train,n_components = n_pca_components)
+        train_pca, pca_tf, scaler = apply_pca(x_train,n_components = 1)
         test_pca = scaler.transform(x_test)
         test_pca = pca_tf.transform(test_pca)
         
@@ -231,7 +231,7 @@ def time_experiment(X,y, splits, n_pca_components = 2, clf_fn = None):
         # raw + pca
         clf = clf_fn()
         pca_time = time.time()
-        train_pca, pca_tf, scaler = apply_pca(x_train,n_components = n_pca_components)
+        train_pca, pca_tf, scaler = apply_pca(x_train,n_components = 1)
         test_pca = scaler.transform(x_test)
         test_pca = pca_tf.transform(test_pca)
         pca_time = time.time() - pca_time
@@ -242,7 +242,7 @@ def time_experiment(X,y, splits, n_pca_components = 2, clf_fn = None):
         # features
         clf = clf_fn()
         feat_time = time.time()
-        X_feat = extract_features(X, return_array=True).dropna()
+        X_feat = extract_features(X, return_array=True)
         train_feat, test_feat = X_feat[train_idx], X_feat[test_idx]
         feat_time = time.time() - feat_time
 

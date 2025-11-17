@@ -35,7 +35,7 @@ epsilon = 0.2
 I = 0
 trans = 50 # transient
 
-samples = np.arange(10, 520, 20)
+samples = np.arange(10, 520, 10)
 ## Output directory
 sweep_name = "fhn_obs/samples"
 output_dir = os.path.join("results", sweep_name)

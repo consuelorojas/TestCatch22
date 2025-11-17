@@ -12,7 +12,7 @@ sys.path.append(os.path.abspath("./data"))
 #from classification import run_experiment
 from dataset import create_labeled_dataset
 
-######### FITZHUGH-NAGUMO  #########
+######### SINE WAVES  #########
 
 ## sweep configuration
 fbase = 5
