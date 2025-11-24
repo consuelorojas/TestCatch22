@@ -7,9 +7,9 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_fhn = "results/fhn/fhn_times/results_20251112_115812.pkl"
-results_fhn_obs = "results/fhn_obs/times/results_20251112_120045.pkl"
-results_sine = ""
+result_fhn = "results/fhn/fhn_times/results_20251124_130931.pkl"
+results_fhn_obs = "results/fhn_obs/times/results_20251124_134421.pkl"
+results_sine = "results/sine/sine_times/results_20251124_145817.pkl"
 
 
 
@@ -23,7 +23,7 @@ Data structure in all_results:
 
 def files_to_dataframe(results_files):
     """
-    Convert sweep results from a pickle file to a pandas DataFrame. For time_experiment results.
+    Convert sweep results from a pickle file to a pandas DataFrame. For time_experiment results.1
     """
     with open(results_files, 'rb') as f:
         all_results = pickle.load(f)
@@ -38,25 +38,43 @@ def files_to_dataframe(results_files):
     df_results = pd.DataFrame(records)
     return df_results
 
-
+sine_results = files_to_dataframe(results_sine)
+fhn_dyn_results = files_to_dataframe(result_fhn)
+fhn_obs_results = files_to_dataframe(results_fhn_obs)
 
 
 # --- Compute mean & std per method/Δf ---
-df_grouped = (
-    df_results
+df_sine = (
+    sine_results
     .groupby(["Method", "samples"])
-    .agg(train_mean=("Train", "mean"), train_std=("AUC", "std"),
+    .agg(train_mean=("Train", "mean"), train_std=("Train", "std"),
          test_mean=("Test", "mean"), test_std=("Test", "std"),
          pre_mean=("Pre", "mean"), pre_std=("Pre", "std"))
+    .reset_index()
+)
+df_fhn_dyn = (
+    fhn_dyn_results
+    .groupby(["Method", "samples"])
+    .agg(train_mean=("Train", "mean"), train_std=("Train", "std"),
+         test_mean=("Test", "mean"), test_std=("Test", "std"),
+         pre_mean=("Pre", "mean"), pre_std=("Pre", "std")) 
+    .reset_index()
+)
+df_fhn_obs = (
+    fhn_obs_results
+    .groupby(["Method", "samples"])
+    .agg(train_mean=("Train", "mean"), train_std=("Train", "std"),
+         test_mean=("Test", "mean"), test_std=("Test", "std"),
+         pre_mean=("Pre", "mean"), pre_std=("Pre", "std")) 
     .reset_index()
 )
 
 # --- Plot with error bars ---
 markers = {
-    
-
+    'sine': 'o',
+    'fhn_dyn': 'S',
+    'fhn_obs': '*'
 }
-
 
 method_colors = {
     "raw": "C0", 
@@ -68,10 +86,10 @@ method_colors = {
 plt.figure(figsize=(6.4, 4.8))
 
 for method, color in method_colors.items():
-    data = df_grouped[df_grouped["Method"] == method]
+    data = df_fhn_dyn[df_fhn_dyn["Method"] == method]
     plt.errorbar(
-        data["samples"], data["AUC_mean"],
-        yerr=data["AUC_std"],
+        data["samples"], data["train_mean"],
+        yerr=data["train_std"],
         fmt='s',         # marker style
         color=color,
         capsize=5,          # error bar caps
@@ -79,19 +97,39 @@ for method, color in method_colors.items():
         alpha=0.7,
         label=method
     )
+    data = df_fhn_obs[df_fhn_obs["Method"] == method]
+    plt.errorbar(
+        data["samples"], data["train_mean"],
+        yerr=data["train_std"],
+        fmt='*',         # marker style
+        color=color,
+        capsize=5,          # error bar caps
+        alpha=0.7,
+        label=method
+    )
+    data = df_sine[df_sine["Method"] == method]
+    plt.errorbar(
+        data["samples"], data["train_mean"],
+        yerr=data["train_std"],
+        fmt='o',         # marker style
+        color=color,
+        capsize=5,          # error bar caps
+        alpha=0.7,
+        label=method
+    )
 
 plt.xlabel(r"Samples ($N_s$)")
 plt.ylabel("Time (ms)")
-#plt.legend(ncol=2, loc ="lower right")
+#plt.legend(ncol=3, loc ="lower right")
 plt.grid(True)
 plt.xticks(data.samples.unique()[::2])#, rotation=45)
-plt.ylim(0.2, 1.1)
+plt.ylim(-0.01, 0.09)
 plt.xlim(0, 255)
 plt.text(5, 1.0, "(c)", fontweight="bold", fontsize=14, va="bottom", ha="left")
-plt.tight_layout()
+#plt.tight_layout()
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_samples/samples_fhn_errorbars.eps",
-    format = 'eps',
+    "notebooks/times/fhn_times_plot.pdf",
+    format = 'pdf',
     dpi=180
 )
 plt.show()
