@@ -69,7 +69,10 @@ df_fhn_obs = (
     .reset_index()
 )
 
-# --- Plot with error bars ---
+print(df_sine.head())
+
+# ---- Markers ---
+
 markers = {
     'sine': 'o',
     'fhn_dyn': 'S',
@@ -83,9 +86,50 @@ method_colors = {
     "features_pca": "C3"
 }
 
+df_labels = {
+    'df_sine':'Sine',
+    'df_fhn_obs': 'FHN obs.',
+    'df_fhn_dyn': 'FHN dyn.'
+}
+
+type_time = {
+    'Train':"C4",
+    "Test": "C5",
+    "Pre": "C6"
+}
+
+# ---- Plots ----
+
+'''
+4 plots in total, one per method.
+Each plot shows the times per sample. The times (train, test, pre) are shown in barplots
+where the x-axis is the number of samples. and the y-axis is the time in ms and the bars are stacked.
+Each signal type is presented as their own bar group (Sine, FHN dyn, FHN obs).
+
+'''
+x_axis= df_sine.samples.unique()[::4]
+dataframes = [df_sine, df_fhn_obs, df_fhn_dyn]
+width = 0.5
+multiplier = 0
+
 plt.figure(figsize=(6.4, 4.8))
 
-for method, color in method_colors.items():
+for method in df_sine.Method.unique()[:1]:
+    fig, ax = plt.subplots(layout='constrained')
+    for frame in dataframes:
+        data = frame[frame['Method']== method]
+        for sample in data.samples.unique()[::4]:
+            offset = width * multiplier
+            rects =  ax.bar(x_axis + offset,
+                             data['train_mean'][::4],
+                            width,)
+            #ax.bar_label(rects, padding=3)
+            multiplier +=1
+    plt.xlabel(r"Samples ($N_s$)")
+    plt.ylabel("Time (ms)")
+    plt.show()
+
+'''for method, color in method_colors.items():
     data = df_fhn_dyn[df_fhn_dyn["Method"] == method]
     plt.errorbar(
         data["samples"], data["train_mean"],
@@ -123,7 +167,7 @@ plt.ylabel("Time (ms)")
 #plt.legend(ncol=3, loc ="lower right")
 plt.grid(True)
 plt.xticks(data.samples.unique()[::2])#, rotation=45)
-plt.ylim(-0.01, 0.09)
+plt.ylim(-0.01, 0.1)
 plt.xlim(0, 255)
 plt.text(5, 1.0, "(c)", fontweight="bold", fontsize=14, va="bottom", ha="left")
 #plt.tight_layout()
@@ -133,3 +177,4 @@ plt.savefig(
     dpi=180
 )
 plt.show()
+'''

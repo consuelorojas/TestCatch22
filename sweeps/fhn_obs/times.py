@@ -60,7 +60,7 @@ for i, sample in enumerate(tqdm(samples)):
     
 
     all_results.append({
-        'samples': len(X),
+        'samples': sample,
         'raw': results['raw'],
         'pca': results['pca'],
         'features': results['features'],
