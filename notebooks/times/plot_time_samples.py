@@ -4,6 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+import matplotlib.ticker as mtick
 plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
@@ -77,12 +78,13 @@ signal_frames = {
     "FHN obs": df_fhn_obs,
 }
 
-method_list = ["raw", "pca", "features", "features_pca"]
+#method_list = ["raw", "pca", "features", "features_pca"]
+method_list = ["raw", "features", "features_pca"]
 
 signal_colors = {
-    "Sine": "C0",
-    "FHN dyn": "C1",
-    "FHN obs": "C2",
+    "Sine": "C4",
+    "FHN obs": "C5",
+    "FHN dyn": "C6",
 }
 
 alpha_vals = {
@@ -106,8 +108,9 @@ offsets = {
     "FHN dyn": 0,
     "FHN obs": group_width,
 }
-subplot_labels = ["(e)", "(f)", "(g)", "(h)"]
+subplot_labels = ["(a)", "(b)", "(c)", "(d)"]
 
+'''
 # ---- Main Loop (one figure per method) ----
 for method in method_list:
 
@@ -162,13 +165,15 @@ for method in method_list:
 
     plt.tight_layout()
     plt.show()
-
-# ---- SubPlots
-
-fig, axs = plt.subplots(2, 2, figsize=(14, 10), sharex=True, sharey=True)
+'''
+# ---- SubPlots (1x3 layout) ----
+fig, axs = plt.subplots(1, 3, figsize=(12, 4.8))
 axs = axs.flatten()
 
-for idx, (method, ax) in enumerate(zip(method_list, axs)):
+for idx, (method, ax) in enumerate(zip(method_list[:3], axs)):
+
+    # Collect the maximum value for this subplot
+    max_val = 0
 
     for signal_name, frame in signal_frames.items():
 
@@ -184,43 +189,54 @@ for idx, (method, ax) in enumerate(zip(method_list, axs)):
         # Stacked bars
         ax.bar(xo, train_means,
                width=group_width, color=color, alpha=alpha_vals["Train"])
-
         ax.bar(xo, test_means,
                width=group_width, color=color, alpha=alpha_vals["Test"],
                bottom=train_means)
-
         ax.bar(xo, pre_means,
                width=group_width, color=color, alpha=alpha_vals["Pre"],
                bottom=train_means + test_means)
 
-    # Titles + subplot letters
-    ax.set_title(f"{subplot_labels[idx]}  {method}", loc="left", fontsize=12)
+        # Update max_val
+        max_val = max(max_val, (train_means + test_means + pre_means).max())
+
+    # Subplot letters
+    ax.text(0.02, 0.95, f"{subplot_labels[idx]}",
+            transform=ax.transAxes,
+            fontweight="bold",
+            fontsize=12,
+            va="top",
+            ha="left")
 
     # Grid
     ax.grid(axis="y", linestyle="--", alpha=0.4)
 
-# Global X/Y labels
-axs[2].set_xlabel("Samples (Nₛ)")
-axs[3].set_xlabel("Samples (Nₛ)")
-axs[0].set_ylabel("Time (s)")
-axs[2].set_ylabel("Time (s)")
+    # Set y-limit to ceiling (rounded to 2 decimals)
+    y_max_ceil = np.ceil(max_val * 100) / 100  # round up to 2 decimal places
+    ax.set_ylim(0, y_max_ceil)
 
-# Set xticks only once
+    # Optional: set y-axis ticks rounded to 2 decimals
+    ax.yaxis.set_major_formatter(mtick.FormatStrFormatter('%.2f'))
+
+# Global X labels
+for ax in axs:
+    ax.set_xlabel(r"Number of samples ($N_s$)")
+axs[0].set_ylabel("Time (s)")
+
+# Set xticks
 for ax in axs:
     ax.set_xticks(x)
     ax.set_xticklabels(all_samples, rotation=45)
 
-# Global legend (from first axis handles)
+# Global legend
 handles = []
 labels = []
 for sig, col in signal_colors.items():
     for phase, a in alpha_vals.items():
-        handles.append(
-            plt.Rectangle((0,0),1,1, color=col, alpha=a)
-        )
+        handles.append(plt.Rectangle((0,0),1,1,color=col,alpha=a))
         labels.append(f"{sig} {phase}")
 
-#fig.legend(handles, labels, ncol=9, loc="upper center", fontsize=10)
+#fig.legend(handles, labels, ncol=3, loc="upper center", fontsize=10)
 
-plt.tight_layout(rect=[0, 0, 1, 0.93])
+plt.tight_layout()
+plt.savefig("notebooks/times/samples_time.pdf", format="pdf")
 plt.show()

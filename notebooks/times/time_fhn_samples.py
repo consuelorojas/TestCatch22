@@ -80,14 +80,6 @@ with open(output_file_fhn, "wb") as f:
     pickle.dump(all_fhn_results, f)
 print(f"FHN Obs Sweep complete. Results saved to {output_file_fhn}")
 
-
-
-
-
-
-
-
-
 ### SINE WAVES
 
 ## sweep configuration

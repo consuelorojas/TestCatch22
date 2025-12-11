@@ -1,10 +1,10 @@
 import pandas as pd
 import numpy as np
-from pycatch22 import catch22_all
+import pycatch22 as catch22
 
 
 
-def extract_features(signals, return_array = False):
+def extract_features(signals, return_array = False, feat = None):
     """
     Extract catch22 features from a list of time series signals.
 
@@ -18,12 +18,21 @@ def extract_features(signals, return_array = False):
     feat_rows = []
     cols_names = []
     for i, signal in enumerate(signals):
-        features = catch22_all(signal, short_names=True)
-        feat_rows.append(features['values'])
-        if i == 0:
-            cols_names = features['short_names']  
+        if feat is None:
+            features = catch22.catch22_all(signal, short_names=True)
+            feat_rows.append(features['values'])
+            cols_names = features["short_names"]
+        
+        else:
+            row = []
+            for f_name in feat:
+                func = getattr(catch22, f_name)
+                val = func(signal)
 
+                row.append(val)
+            feat_rows.append(row)
 
+    # Build Dataframe
     features = pd.DataFrame(feat_rows, columns=cols_names).dropna(axis=1)
 
     if return_array:

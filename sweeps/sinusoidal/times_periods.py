@@ -38,7 +38,7 @@ for i, periods in enumerate(tqdm(nperiods, desc="Sweeping number of periods")):
         n_samples_per_class=samples
     )
     splits = get_kfold_splits(X, y, n_splits=50, stratified=True)
-    results = run_experiment(X, y, splits)
+    results = time_experiment(X, y, splits)
 
     all_results.append({
         'periods': periods,

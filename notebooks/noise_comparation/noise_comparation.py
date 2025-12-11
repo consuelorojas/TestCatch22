@@ -32,7 +32,8 @@ df_fhn_obs = extract_results(fhn_obs)
 df_fhn_dyn = extract_results(fhn_dyn)
 
 noise = sorted(df_sine["noise"].unique())
-methods = ["raw", "pca", "features", "features_pca"]
+#methods = ["raw", "pca", "features", "features_pca"]
+methods = ["raw", "features", "features_pca"]
 panel = ["(a)", "(b)", "(c)", "(d)"]
 
 markers = {
@@ -48,7 +49,7 @@ labels = {
 
 method_colors = {
     "raw": "C0", 
-    "pca": "C1", 
+#    "pca": "C1", 
     "features": "C2", 
     "features_pca": "C3"
 }

@@ -128,7 +128,7 @@ def time_single_fold(X_train, X_test, y_train, y_test, classifier, probability=T
 
 # ---------- Pipeline function ----------
 
-def run_experiment(X,y, splits, n_pca_components = 2, clf_fn = None):
+def run_experiment(X,y, splits, n_pca_components = 2, clf_fn = None, features = None):
     """
     Run classification pipeline with four config
     - Raw
@@ -171,9 +171,14 @@ def run_experiment(X,y, splits, n_pca_components = 2, clf_fn = None):
 
         # features
         clf = clf_fn()
-        X_feat = extract_features(X, return_array=True)
+        if features is None:
+            X_feat = extract_features(X, return_array=True)
+        else:
+            X_feat = extract_features(X, return_array=True, feat=features)
+
         train_feat, test_feat = X_feat[train_idx], X_feat[test_idx]
         feat.append(evaluate_single_fold(train_feat, test_feat, y_train, y_test, clf))
+
 
         # features + pca
         clf = clf_fn()
@@ -194,7 +199,7 @@ def run_experiment(X,y, splits, n_pca_components = 2, clf_fn = None):
 
 # Time for the run_experiment function. Get the time per configuration
 
-def time_experiment(X,y, splits, n_pca_components = 2, clf_fn = None):
+def time_experiment(X,y, splits, n_pca_components = 2, clf_fn = None, features=None):
     """
     Time the classification pipeline with four config
     - Raw
@@ -241,6 +246,11 @@ def time_experiment(X,y, splits, n_pca_components = 2, clf_fn = None):
 
         # features
         clf = clf_fn()
+        if features is None:
+            X_feat = extract_features(X, return_array=True)
+        else:
+            X_feat = extract_features(X, return_array=True, feat=features)
+
         feat_time = time.time()
         X_feat = extract_features(X, return_array=True)
         train_feat, test_feat = X_feat[train_idx], X_feat[test_idx]

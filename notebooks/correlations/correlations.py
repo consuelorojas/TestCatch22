@@ -1,5 +1,6 @@
 import os
 import sys
+import numpy as np
 import seaborn as sns
 import matplotlib as mpl
 import pandas as pd
@@ -81,9 +82,9 @@ ObsFeats['PCA2'] = ObsPCA[:,1]
 DynFeats['PCA1'] = DynPCA[:,0]
 DynFeats['PCA2'] = DynPCA[:,1]
 
-S_corr = Sfeats.corr(method='pearson')
-Obs_corr = ObsFeats.corr(method='pearson')
-Dyn_corr = DynFeats.corr(method='pearson')
+S_corr = np.abs(Sfeats.corr(method='pearson'))
+Obs_corr = np.abs(ObsFeats.corr(method='pearson'))
+Dyn_corr = np.abs(DynFeats.corr(method='pearson'))
 
 order = S_corr.sort_values(by='PCA1', ascending=False).loc[lambda x: ~x.index.isin(['PCA1', 'PCA2'])].index
 print(order)
@@ -101,10 +102,10 @@ from matplotlib import gridspec
 
 # ensure these exist: Splot, Obs_plot, Dyn_plot
 # common vmin/vmax so color scale is consistent across panels
-vmin, vmax = -1, 1
+vmin, vmax = 0, 1
 
 # Figure + GridSpec: reserve a small extra column for the colorbar
-fig = plt.figure(figsize=(12, 4.2))
+fig = plt.figure(figsize=(12, 6.3))
 # 4 columns: heatmap1, heatmap2, heatmap3, colorbar
 spec = gridspec.GridSpec(nrows=1, ncols=4, width_ratios=[1, 1, 1, 0.08], wspace=0.3)
 
@@ -144,7 +145,7 @@ fig.text(0.67, 0.90, "(c)", fontweight="bold", fontsize=11, va="bottom", ha="lef
 # Optional: tighten layout and save
 plt.grid(False)
 plt.subplots_adjust(left=0.20, right=0.92)# tweak if colorbar clipped
-plt.savefig("notebooks/correlations/three_heatmaps_combined.eps", bbox_inches='tight', dpi=300)
+#plt.savefig("notebooks/correlations/three_heatmaps_combined.eps", bbox_inches='tight', dpi=300)
 plt.show()
 
 
@@ -156,6 +157,7 @@ ordered_features = [
     'embedding_dist', 'transition_matrix', 'forecast_error', 'low_freq_power',
     'periodicity', 'ami_timescale', 'whiten_timescale', 'rs_range', 'dfa'
 ]
+ordered_features = order
 
 # Create a mapping from feature name → index number (with parentheses)
 feature_map = {name: f"({i+1})" for i, name in enumerate(ordered_features)}
@@ -167,8 +169,8 @@ Dyn_plot_num = Dyn_plot.rename(index=feature_map)
 
 # Now plot the numeric-labeled heatmaps
 
-vmin, vmax = -1, 1
-fig = plt.figure(figsize=(12, 4.2))
+vmin, vmax = 0, 1
+fig = plt.figure(figsize=(12, 6.3))
 spec = gridspec.GridSpec(nrows=1, ncols=4, width_ratios=[1, 1, 1, 0.08], wspace=0.3)
 
 ax1 = fig.add_subplot(spec[0])
@@ -199,5 +201,5 @@ fig.text(0.67, 0.90, "(c)", fontweight="bold", fontsize=11, va="bottom", ha="lef
 
 plt.grid(False)
 plt.subplots_adjust(left=0.20, right=0.92)
-plt.savefig("notebooks/correlations/three_heatmaps_combined_numbered.eps", bbox_inches='tight', dpi=300)
+#plt.savefig("notebooks/correlations/three_heatmaps_combined_numbered.eps", bbox_inches='tight', dpi=300)
 plt.show()
