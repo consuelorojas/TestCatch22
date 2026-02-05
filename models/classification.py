@@ -9,8 +9,8 @@ import os
 sys.path.append(os.path.abspath("./preprocessing"))
 sys.path.append(os.path.abspath("./features"))
 
-from preprocessing import apply_pca
-from features import extract_features
+from preprocessing import apply_pca #type: ignore
+from features import extract_features #type: ignore
 
 # ---------- Core classification evaluation functions ----------
 def evaluate_model_auc(splits_frames, classifier, probability=True):

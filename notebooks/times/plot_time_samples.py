@@ -40,6 +40,13 @@ def files_to_dataframe(results_files):
     df_results = pd.DataFrame(records)
     return df_results
 
+def export_legend(legend, filename="legend_times.pdf"):
+    fig  = legend.figure
+    fig.canvas.draw()
+    bbox  = legend.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
+    fig.savefig(filename, dpi="figure", bbox_inches=bbox)
+
+
 sine_results = files_to_dataframe(results_sine)
 fhn_dyn_results = files_to_dataframe(result_fhn)
 fhn_obs_results = files_to_dataframe(results_fhn_obs)
@@ -110,7 +117,7 @@ offsets = {
 }
 subplot_labels = ["(a)", "(b)", "(c)", "(d)"]
 
-'''
+
 # ---- Main Loop (one figure per method) ----
 for method in method_list:
 
@@ -164,8 +171,10 @@ for method in method_list:
         ax.legend(ncol=3, fontsize=9)
 
     plt.tight_layout()
+    legend = plt.legend(ncol=5, fontsize=10)
+    export_legend(legend, filename=f"notebooks/times/legend_samples_{method}.pdf")
     plt.show()
-'''
+
 # ---- SubPlots (1x3 layout) ----
 fig, axs = plt.subplots(1, 3, figsize=(12, 4.8))
 axs = axs.flatten()
@@ -238,5 +247,5 @@ for sig, col in signal_colors.items():
 #fig.legend(handles, labels, ncol=3, loc="upper center", fontsize=10)
 
 plt.tight_layout()
-plt.savefig("notebooks/times/samples_time.pdf", format="pdf")
+#plt.savefig("notebooks/times/samples_time.pdf", format="pdf")
 plt.show()

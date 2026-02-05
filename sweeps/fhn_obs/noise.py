@@ -48,7 +48,7 @@ output_file = os.path.join(output_dir, f"results_{timestamp}.pkl")
 # Run sweep
 all_results = []
 for i, n in enumerate(tqdm(noise)):
-    X, y = create_labeled_dataset([
+    X, y = create_labeled_dataset([ #type: ignore
         (0, 'fhn_obs', {'length':800, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b1, epsilon, I, n]}),
         (1, 'fhn_obs', {'length':800, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b12, epsilon, I, n]})],
         n_samples_per_class=samples, subsample_step = step, transient = trans

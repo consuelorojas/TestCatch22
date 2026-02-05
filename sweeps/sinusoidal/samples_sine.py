@@ -35,7 +35,7 @@ output_file = os.path.join(output_dir, f"results_{timestamp}.pkl")
 # Run sweep
 all_results = []
 for i, s in enumerate(tqdm(samples, desc="Sweeping number of samples")):
-    X, y = create_labeled_dataset(
+    X, y = create_labeled_dataset( #type: ignore
         [(0, 'sine', {'args': [fbase, noise, npoints, nperiods]}),
          (1, 'sine', {'args': [f1, noise, npoints, nperiods]})],
         n_samples_per_class=s

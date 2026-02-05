@@ -2,6 +2,16 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 
+
+def export_legend(legend, filename="legend_horizontal_3.eps"):
+    fig = legend.figure
+    fig.canvas.draw()
+    bbox = legend.get_window_extent().transformed(
+        fig.dpi_scale_trans.inverted()
+    )
+    fig.savefig(filename, dpi="figure", bbox_inches=bbox)
+
+
 markers = {
     "sine": "o",
     "fhn_obs": "*",
@@ -43,24 +53,27 @@ method_handles = [
 ]
 
 # Merge into one legend row
-all_handles = signal_handles + method_handles
+handles = signal_handles + method_handles
 
 # ------------------------------
-# Create figure
+# Create legend figure
 # ------------------------------
-fig, ax = plt.subplots(figsize=(12, 1.2))
+fig, ax = plt.subplots(figsize=(12, 1))
 ax.axis("off")
 
 legend = ax.legend(
-    handles=all_handles,
+    handles=handles,
     loc="center",
     frameon=False,
-    ncol=len(all_handles),
-    columnspacing=1.5,
-    handletextpad=0.5,
-    fontsize=10
+    ncol=len(handles),
+    columnspacing=1.0,
+    handletextpad=0.35,
+    fontsize=9
 )
 
-# Save figure
-fig.savefig("legend_horizontal.eps", dpi=300, bbox_inches="tight")
+# ------------------------------
+# Export tightly (legend bbox)
+# ------------------------------
+export_legend(legend, "legend_horizontal_all.eps")
+
 plt.show()

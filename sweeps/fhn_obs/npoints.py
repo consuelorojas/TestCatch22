@@ -26,8 +26,6 @@ dt = 0.1
 
 # step to subsampling
 pseudo_period = 30
-#npp = np.arange(5, 51, 5)          # change the number of points per period here!
-#npp = np.concatenate((np.array([3,4]), npp))  # add 3 and 4 points per period
 npp = np.linspace(3, 20, 18)
 step = [int(pseudo_period / elem / dt) for elem in npp]
 
@@ -38,6 +36,7 @@ noise = 0.1
 trans = 50 # transient
 
 samples = 100
+
 ## Output directory
 sweep_name = "fhn_obs/npoints"
 output_dir = os.path.join("results", sweep_name)
@@ -50,7 +49,7 @@ output_file = os.path.join(output_dir, f"results_{timestamp}.pkl")
 # Run sweep
 all_results = []
 for i, s in enumerate(tqdm(step)):
-    X, y = create_labeled_dataset([
+    X, y = create_labeled_dataset([ #type: ignore
         (0, 'fhn_obs', {'length':750, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b1, epsilon, I, noise]}),
         (1, 'fhn_obs', {'length':750, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b12, epsilon, I, noise]})],
         n_samples_per_class=samples, subsample_step = s, transient = trans

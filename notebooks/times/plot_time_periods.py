@@ -116,61 +116,56 @@ offsets = {
 subplot_labels = ["(a)", "(b)", "(c)", "(d)"]
 
 # ---- Main Loop (one figure per method) ----
-for method in method_list:
+for idx, method in enumerate(method_list):
 
-    fig, ax = plt.subplots(figsize=(11, 5))
+    fig, ax = plt.subplots(figsize=(6.4, 4.8))
 
     for signal_name, frame in signal_frames.items():
         color = signal_colors[signal_name]
 
         dfm = frame[frame["Method"] == method]
 
-        # align times to master sample list
         train_means = dfm.set_index("periods")["train_mean"].reindex(all_samples, fill_value=0)
         test_means  = dfm.set_index("periods")["test_mean"].reindex(all_samples, fill_value=0)
         pre_means   = dfm.set_index("periods")["pre_mean"].reindex(all_samples, fill_value=0)
 
-        # Offsetting signal types
         xo = x + offsets[signal_name]
 
-        # Stacked bars
-        ax.bar(xo, train_means, 
-               width=group_width, 
-               color=color, 
-               alpha=alpha_vals["Train"], 
-               label=f"{signal_name} Train" if method == method_list[0] else None)
+        # Stacked bars (NO labels)
+        ax.bar(xo, train_means,
+               width=group_width, color=color, alpha=alpha_vals["Train"])
+        ax.bar(xo, test_means,
+               width=group_width, bottom=train_means,
+               color=color, alpha=alpha_vals["Test"])
+        ax.bar(xo, pre_means,
+               width=group_width, bottom=train_means + test_means,
+               color=color, alpha=alpha_vals["Pre"])
 
-        ax.bar(xo, test_means, 
-               width=group_width, 
-               bottom=train_means, 
-               color=color, 
-               alpha=alpha_vals["Test"], 
-               label=f"{signal_name} Test" if method == method_list[0] else None)
-
-        ax.bar(xo, pre_means, 
-               width=group_width, 
-               bottom=train_means + test_means,
-               color=color, 
-               alpha=alpha_vals["Pre"], 
-               label=f"{signal_name} Pre" if method == method_list[0] else None)
-
-    # Labels and formatting
-    ax.set_title(f"Timing Breakdown – {method}")
+    # Axes formatting
     ax.set_xticks(x)
     ax.set_xticklabels(all_samples, rotation=45)
     ax.set_xlabel(r"Number of periods ($N_{p}$)")
     ax.set_ylabel("Time (s)")
     ax.grid(axis="y", linestyle="--", alpha=0.4)
-    #ax.xlim(0, 530)
 
-    # only show legend in first plot
-    if method == method_list[0]:
-        ax.legend(ncol=3, fontsize=9)
+    # Panel letter (a), (b), (c), ...
+    ax.text(
+        0.02, 0.95,
+        f"({chr(97 + idx)})",
+        transform=ax.transAxes,
+        fontweight="bold",
+        fontsize=12,
+        va="top",
+        ha="left"
+    )
 
     plt.tight_layout()
-    #plt.show()
+    plt.savefig(f"notebooks/times/periods_times_{method}.pdf", format="pdf")
+    leg = plt.legend(ncol=9, fontsize=10)
+    export_legend(leg, filename=f"notebooks/times/legend_times_{method}.pdf")
+    plt.show()
 
-
+'''
 # ---- SubPlots (1x3 layout) ----
 fig, axs = plt.subplots(1, 3, figsize=(12, 4.8))
 axs = axs.flatten()
@@ -310,3 +305,4 @@ for sig, col in signal_colors.items():
 plt.tight_layout()
 plt.savefig("notebooks/times/periods_times.pdf", format="pdf")
 plt.show()
+'''
