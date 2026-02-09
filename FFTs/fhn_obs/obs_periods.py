@@ -61,6 +61,7 @@ for i, p in enumerate(tqdm(periods)):
 
     splits = get_kfold_splits(X_fft, y, n_splits=50, stratified=True)
     auc_scores = []
+    plabel = p/(pseudo_period/dt)
     for train_idx, test_idx in splits:
 
         x_train, x_test = X_fft[train_idx], X_fft[test_idx]
@@ -72,7 +73,7 @@ for i, p in enumerate(tqdm(periods)):
         y_pred = clf.predict_proba(x_test)[:, 1]
         auc_scores.append(roc_auc_score(y_test, y_pred))
     all_results.append({
-        'periods': periods[i],
+        'periods': plabel,
         'auc': auc_scores
     })
 
