@@ -15,7 +15,6 @@ def read_results(file):
     
 
 
-
 def export_legend(legend, filename="legend_FFTs.eps"):
     fig  = legend.figure
     fig.canvas.draw()
@@ -97,5 +96,6 @@ legend = plt.legend(loc='upper left', bbox_to_anchor=(1.02, 1), frameon=True, nc
 export_legend(legend, filename="FFTs/fhn_dyn/periods_fft/legend_periods_fft.pdf")
 #plt.xticks(frame_stats['periods'].unique()[::2])
 plt.ylim(0.2, 1.1)
+plt.text(0.6, 1.0, "(b)", fontweight='bold', fontsize=14, va='bottom', ha='left')
 plt.savefig('FFTs/fhn_dyn/periods_fft/period_sweep_auc.eps', format='eps')
 plt.show()
