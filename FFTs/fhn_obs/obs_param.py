@@ -34,7 +34,7 @@ dt = 0.1
 
 # step to subsampling
 pseudo_period = 30
-npp = 10            # change the number of points per period here
+npp = 13            # change the number of points per period here
 step = int(pseudo_period / npp / dt)
 
 trans = 50

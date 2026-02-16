@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 plt.style.use('report.mplstyle')
 
 # Load results
-dyn = 'FFTs/fhn_dyn/parameter_fft/dyn_fft_20260204_152335.pkl'
-obs = 'FFTs/fhn_obs/parameter_fft/obs_fft_20260204_175332.pkl'
+dyn = 'FFTs/fhn_dyn/parameter_fft/dyn_fft_20260211_164807.pkl'
+obs = 'FFTs/fhn_obs/parameter_fft/obs_fft_20260211_164820.pkl'
 sine = 'FFTs/sine/freq_fft/sine_fft_20260203_175834.pkl'
 
 def read_results(file):
@@ -78,5 +78,5 @@ plt.tight_layout()
 plt.xlim(-0.01, 0.23)
 plt.ylim(0.0, 1.1)
 plt.text(-0.005, 1.0, "(a)", fontweight='bold', fontsize=14, va='bottom', ha='left')
-plt.savefig('FFTs/fhn_dyn/parameter_fft/parameter_sweep_auc.pdf')
+plt.savefig('FFTs/fhn_dyn/parameter_fft/parameter_sweep_auc.eps', format='eps')
 plt.show()

@@ -17,7 +17,7 @@ from dataset import create_labeled_dataset, get_kfold_splits
 b0 = 0.1
 
 b1 = 1
-db1 = 0.03157
+db1 = 0.032
 b12 = b1 + db1
 
 epsilon = 0.2
@@ -27,7 +27,7 @@ dt = 0.1
 
 # step to subsampling
 pseudo_period = 30
-npp = 10          # change the number of points per period here!
+npp = 13          # change the number of points per period here!
 step = int(pseudo_period / npp / dt)
 periods = [300, 450, 600, 900, 1200, 1500, 1800, 2100, 2400, 2700, 3000]
 

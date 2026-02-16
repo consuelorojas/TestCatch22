@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 plt.style.use('report.mplstyle')
 
 # Load results
-dyn = 'FFTs/fhn_dyn/noise_fft/dyn_fft_20260204_174806.pkl'
-obs = 'FFTs/fhn_obs/noise_fft/obs_fft_20260204_175814.pkl'
+dyn = 'FFTs/fhn_dyn/noise_fft/dyn_fft_20260211_160221.pkl'
+obs = 'FFTs/fhn_obs/noise_fft/obs_fft_20260211_160314.pkl'
 sine = 'FFTs/sine/noise_fft/sine_fft_20260204_125921.pkl'
 
 def read_results(file):
@@ -77,7 +77,7 @@ plt.errorbar(
     dyn_stats['mean_auc'],
     yerr = dyn_stats['std_auc'],
     fmt='s',
-    label = 'FHN Dynamic'º
+    label = 'FHN Dynamic'
 )
 
 plt.xlabel(r"Noise strength $(D)$")
@@ -88,5 +88,5 @@ plt.tight_layout()
 plt.ylim(0.2, 1.1)
 plt.xlim(-0.05, 1.03)
 plt.text(-0.05, 1.0, "(d)", fontweight='bold', fontsize=14, va='bottom', ha='left')
-plt.savefig('FFTs/fhn_dyn/noise_fft/noise_sweep_auc.pdf')
+plt.savefig('FFTs/fhn_dyn/noise_fft/noise_sweep_auc.eps', format='eps')
 plt.show()

@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 plt.style.use('report.mplstyle')
 
 # Load results
-dyn = 'FFTs/fhn_dyn/periods_fft/dyn_fft_20260205_152932.pkl'
-obs = 'FFTs/fhn_obs/periods_fft/obs_fft_20260205_182739.pkl'
+dyn = 'FFTs/fhn_dyn/periods_fft/dyn_fft_20260211_163405.pkl'
+obs = 'FFTs/fhn_obs/periods_fft/obs_fft_20260211_164550.pkl'
 sine = 'FFTs/sine/periods_fft/sine_fft_20260204_115316.pkl'
 
 def read_results(file):

@@ -27,7 +27,7 @@ dt = 0.1
 
 # step to subsampling
 pseudo_period = 30
-npp = np.linspace(3, 20, 18)
+npp = np.linspace(3, 23, 18)
 step = [int(pseudo_period / elem / dt) for elem in npp]
 
 epsilon = 0.2

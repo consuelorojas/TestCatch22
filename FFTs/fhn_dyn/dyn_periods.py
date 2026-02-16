@@ -27,7 +27,7 @@ dt = 0.1
 
 # step to subsampling
 pseudo_period = 30
-npp = 10          # change the number of points per period here!
+npp = 13          # change the number of points per period here!
 step = int(pseudo_period / npp / dt)
 periods = [300, 450, 600, 900, 1200, 1500, 1800, 2100, 2400, 2700, 3000]
 

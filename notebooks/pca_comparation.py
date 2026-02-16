@@ -21,7 +21,7 @@ from features import extract_features
 ######### SINE WAVES  #########
 ## sweep configuration
 fbase = 5
-f1 = 5.5
+f1 = 7
 nperiods = 3
 npoints = 7
 
@@ -67,5 +67,11 @@ axs[1].scatter(test_feat_pca[:, 0], test_feat_pca[:, 1], c=y_test, cmap='viridis
 axs[1].set_title('Features + PCA')
 axs[1].legend()
 
+fig.suptitle(
+    rf'PCA Comparison for Sine Waves $\Delta f = {f1 - fbase}\,\mathrm{{Hz}}$',
+    fontsize=14
+)
+
 plt.tight_layout()
+plt.savefig(f'pca_comparison_sine_{f1 - fbase}.png', dpi=300, bbox_inches='tight')
 plt.show()
