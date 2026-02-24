@@ -56,7 +56,7 @@ for i, p in enumerate(tqdm(periods)):
         )
     
     splits = get_kfold_splits(X, y, n_splits=50, stratified=True)
-    results = run_experiment(X, y, splits)
+    results = run_experiment(X, y, splits, ffts=True)
     
     plabel = p/(pseudo_period/dt)
 
@@ -65,7 +65,9 @@ for i, p in enumerate(tqdm(periods)):
         'raw': results['raw'],
         'pca': results['pca'],
         'features': results['features'],
-        'features_pca': results['features_pca']
+        'features_pca': results['features_pca'],
+        'fft': results['fft'],
+        'fft_pca': results['fft_pca']
     })
 
 # Save results

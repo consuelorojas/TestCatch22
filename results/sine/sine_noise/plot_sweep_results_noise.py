@@ -8,7 +8,7 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/sine/sine_noise/results_20251112_112335.pkl"
+result_file = "results/sine/sine_noise/results_20260224_145230.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
@@ -16,7 +16,7 @@ with open(result_file, 'rb') as f:
 records = []
 for entry in all_results:
     df = entry["noise"]
-    for method in ["raw", "pca", "features", "features_pca"]:
+    for method in ["raw", "pca", "fft", "fft_pca", "features", "features_pca"]:
         for auc in entry[method]:
             records.append({"noise": df, "Method": method, "AUC": auc})
 
@@ -33,16 +33,28 @@ df_grouped = (
 # --- Plot with error bars ---
 markers = {
     "raw": "o", 
-    "pca": "s", 
+    "fft": "s",
+    "fft_pca": "P",
+    #"pca": "s", 
     "features": "D", 
     "features_pca": "^"
 }
 
 method_colors = {
     "raw": "C0", 
-    "pca": "C1", 
+    "fft": "C1",
+    "fft_pca": "C4",
+    #"pca": "C1", 
     "features": "C2", 
     "features_pca": "C3"
+}
+
+method_labels = {
+    "raw": "Raw",
+    "fft": "FFT",
+    "fft_pca": "FFT + PCA",
+    "features": "Catch22",
+    "features_pca": "Catch22 + PCA"
 }
 
 plt.figure(figsize=(6.4, 4.8))

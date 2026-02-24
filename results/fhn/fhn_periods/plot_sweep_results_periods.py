@@ -7,7 +7,7 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/fhn/fhn_periods/results_20251112_115657.pkl"
+result_file = "results/fhn/fhn_periods/results_20260224_163551.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
@@ -15,7 +15,7 @@ with open(result_file, 'rb') as f:
 records = []
 for entry in all_results:
     df = entry["periods"]
-    for method in ["raw", "pca", "features", "features_pca"]:
+    for method in ["raw", "fft", "fft_pca", "features", "features_pca"]:
         for auc in entry[method]:
             records.append({"periods": df, "Method": method, "AUC": auc})
 
@@ -33,14 +33,18 @@ df_grouped = (
 # --- Plot with error bars ---
 markers = {
     "raw": "o", 
-    "pca": "s", 
+    "fft": "s",
+    "fft_pca": "P",
+    #"pca": "s", 
     "features": "D", 
     "features_pca": "^"
 }
 
 method_colors = {
     "raw": "C0", 
-    "pca": "C1", 
+    "fft": "C1",
+    "fft_pca": "C4",
+    #"pca": "C1", 
     "features": "C2", 
     "features_pca": "C3"
 }
@@ -64,9 +68,9 @@ plt.xlabel(r"Number of periods $(N_p)$")
 plt.ylabel("AUC")
 #plt.legend(ncol=2, loc ="lower left")
 plt.grid(True)
-plt.ylim(0.2, 1.1)
+plt.ylim(0.65, 1.05)
 plt.xticks(data.periods.unique()[::2])
-plt.text(1.0, 1.0, "(b)", fontweight="bold", fontsize=14, va="bottom", ha="left")
+plt.text(0.8, 1.02, "(b)", fontweight="bold", fontsize=14, va="bottom", ha="left")
 plt.tight_layout()
 #plt.xlim(-0.05, 0.65)
 plt.savefig(

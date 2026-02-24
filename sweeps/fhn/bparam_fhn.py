@@ -61,14 +61,16 @@ for i, b in enumerate(tqdm(b12)):
     splits = get_kfold_splits(X, y, n_splits=50, stratified=True)
     #plt.plot(X[0], '*-')
     #plt.show()
-    results = run_experiment(X, y, splits)
+    results = run_experiment(X, y, splits, ffts=True)
 
     all_results.append({
         'b': round(b - b1, 3),
         'raw': results['raw'],
         'pca': results['pca'],
         'features': results['features'],
-        'features_pca': results['features_pca']
+        'features_pca': results['features_pca'],
+        'fft': results['fft'],
+        'fft_pca': results['fft_pca']
     })
 
 # Save results

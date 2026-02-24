@@ -7,7 +7,7 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/fhn_obs/parameter/results_20251103_183335.pkl"
+result_file = "results/fhn_obs/parameter/results_20260224_162450.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
@@ -21,7 +21,7 @@ def export_legend(legend, filename="legend.eps"):
 records = []
 for entry in all_results:
     df = entry["b"]
-    for method in ["raw", "pca", "features", "features_pca"]:
+    for method in ["raw", "pca", "fft", "fft_pca", "features", "features_pca"]:
         for auc in entry[method]:
             records.append({"b": df, "Method": method, "AUC": auc})
 
@@ -38,24 +38,29 @@ df_grouped = (
 # --- Plot with error bars ---
 markers = {
     "raw": "o", 
-    "pca": "s", 
+    "fft": "s",
+    "fft_pca": "P",
+    #"pca": "s", 
     "features": "D", 
     "features_pca": "^"
 }
 
 method_colors = {
     "raw": "C0", 
-    "pca": "C1", 
+    "fft": "C1",
+    "fft_pca": "C4",
+    #"pca": "C1", 
     "features": "C2", 
     "features_pca": "C3"
 }
+
 method_labels = {
     "raw": "Raw",
-    "pca": "PCA",
+    "fft": "FFT",
+    "fft_pca": "FFT + PCA",
     "features": "Catch22",
     "features_pca": "Catch22 + PCA"
 }
-
 plt.figure(figsize=(6.4, 4.8))
 
 for method, color in method_colors.items():
@@ -79,13 +84,13 @@ plt.tight_layout()
 plt.ylim(0.2, 1.1)
 plt.xlim(-0.01, 0.11)
 plt.text(-0.002, 1.0, "(a)", fontsize=14, weight='bold', va="bottom", ha="left")
-"""plt.savefig(
+plt.savefig(
     "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn_obs/parameter/param_fhn_errorbars.eps",
     format="eps", dpi=180
 )
-"""
 
-legend = plt.legend(fontsize=14,ncol=4)
-export_legend(legend, filename='fhn_obs_legend.eps')
+
+#legend = plt.legend(fontsize=14,ncol=5)
+#export_legend(legend, filename='fhn_obs_legend.eps')
 
 plt.show()

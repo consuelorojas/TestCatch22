@@ -7,7 +7,7 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Results path:
-result_file = "results/sine/sine_frequency/results_20251112_112335.pkl"
+result_file = "results/sine/sine_frequency/results_20260224_145230.pkl"
 
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
@@ -22,7 +22,7 @@ def export_legend(legend, filename="legend.eps"):
 records = []
 for entry in all_results:
     df = entry["df"]
-    for method in ["raw", "pca", "features", "features_pca"]:
+    for method in ["raw", "pca", "fft", "fft_pca", "features", "features_pca"]:
         for auc in entry[method]:
             records.append({"Δf": df, "Method": method, "AUC": auc})
 
@@ -40,21 +40,26 @@ df_grouped = (
 # --- Plot with error bars ---
 markers = {
     "raw": "o", 
-    "pca": "s", 
+    "fft": "s",
+    "fft_pca": "P",
+    #"pca": "s", 
     "features": "D", 
     "features_pca": "^"
 }
 
 method_colors = {
     "raw": "C0", 
-    "pca": "C1", 
+    "fft": "C1",
+    "fft_pca": "C4",
+    #"pca": "C1", 
     "features": "C2", 
     "features_pca": "C3"
 }
 
 method_labels = {
     "raw": "Raw",
-    "pca": "PCA",
+    "fft": "FFT",
+    "fft_pca": "FFT + PCA",
     "features": "Catch22",
     "features_pca": "Catch22 + PCA"
 }
@@ -78,14 +83,14 @@ plt.xlabel(r"Parameter Difference $(\nu - \nu_1)$")
 plt.ylabel("AUC")
 plt.grid(True)
 plt.tight_layout()
-plt.ylim(0.2, 1.1)
+plt.ylim(0.0, 1.1)
 plt.text(0.0, 1.0, "(a)", fontweight="bold", fontsize=14, va="bottom", ha="left")
 #plt.xlim(-0.05, 0.65)
 plt.savefig(
     "/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_frequency/errorbars_0-042.eps",
     format="eps", dpi=180
 )
-#legend = plt.legend(fontsize=14,ncol=4)
+#legend = plt.legend(fontsize=14,ncol=5)
 #export_legend(legend)
 plt.show()
 

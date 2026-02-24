@@ -7,7 +7,7 @@ from datetime import datetime
 plt.style.use('report.mplstyle')
 
 
-result_file = "results/sine/sine_periods/results_20251112_131233.pkl"
+result_file = "results/sine/sine_periods/results_20260224_145322.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
@@ -16,24 +16,27 @@ with open(result_file, 'rb') as f:
 records = []
 for entry in all_results:
     df = entry["periods"]
-    for method in ["raw", "pca", "features", "features_pca"]:
+    for method in ["raw", "pca", "fft", "fft_pca", "features", "features_pca"]:
         for auc in entry[method]:
             records.append({"periods": df, "Method": method, "AUC": auc})
 
 df_results = pd.DataFrame(records)
 
 #### error bars
-
 markers = {
     "raw": "o", 
-    "pca": "s", 
+    "fft": "s",
+    "fft_pca": "P",
+    #"pca": "s", 
     "features": "D", 
     "features_pca": "^"
 }
 
 method_colors = {
     "raw": "C0", 
-    "pca": "C1", 
+    "fft": "C1",
+    "fft_pca": "C4",
+    #"pca": "C1", 
     "features": "C2", 
     "features_pca": "C3"
 }

@@ -8,7 +8,7 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/fhn_obs/noise/results_20251103_183428.pkl"
+result_file = "results/fhn_obs/noise/results_20260224_162450.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
@@ -16,7 +16,7 @@ with open(result_file, 'rb') as f:
 records = []
 for entry in all_results:
     df = entry["noise"]
-    for method in ["raw", "pca", "features", "features_pca"]:
+    for method in ["raw", "pca", "fft", "fft_pca", "features", "features_pca"]:
         for auc in entry[method]:
             records.append({"noise": df, "Method": method, "AUC": auc})
 
@@ -35,14 +35,18 @@ df_grouped = (
 # --- Plot with error bars ---
 markers = {
     "raw": "o", 
-    "pca": "s", 
+    "fft": "s",
+    "fft_pca": "P",
+    #"pca": "s", 
     "features": "D", 
     "features_pca": "^"
 }
 
 method_colors = {
     "raw": "C0", 
-    "pca": "C1", 
+    "fft": "C1",
+    "fft_pca": "C4",
+    #"pca": "C1", 
     "features": "C2", 
     "features_pca": "C3"
 }
@@ -67,10 +71,10 @@ plt.ylabel("AUC")
 #plt.legend(ncol=2, loc ="lower left")
 plt.grid(True)
 plt.tight_layout()
-plt.ylim(0.2, 1.1)
+plt.ylim(0.5, 1.05)
 #plt.xticks(noise[::3])
-plt.text(0.0, 1.0, "(d)", fontweight="bold", fontsize=14, va="bottom", ha="left")
-#plt.xlim(-0.05, 0.65)
+plt.text(0.42, 1.0, "(d)", fontweight="bold", fontsize=14, va="bottom", ha="left")
+plt.xlim(0.41, 1.51)
 plt.savefig(
     "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn_obs/noise/noise_fhn_obs_errorbars.eps",
     format="eps", dpi=180

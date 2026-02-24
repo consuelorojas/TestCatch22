@@ -4,11 +4,11 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # List of sweep scripts
 SCRIPTS = [
-    "sweeps/sinusoidal/frequency_sine.py",
-    "sweeps/sinusoidal/noise_sine.py",
-    "sweeps/sinusoidal/npoints_sine.py",
-    "sweeps/sinusoidal/periods_sine.py",
-    "sweeps/sinusoidal/samples_sine.py"
+    "sweeps/fhn/bparam_fhn.py",
+    "sweeps/fhn/noise_fhn.py",
+    "sweeps/fhn/npoints_fhn.py",
+    "sweeps/fhn/periods_fhn.py",
+    "sweeps/fhn/samples_fhn.py"
 ]
 
 # Number of parallel workers (default: run all at once)

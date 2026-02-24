@@ -8,24 +8,26 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/sine/sine_points/results_20251112_112417.pkl"
+result_file = "results/sine/sine_points/results_20260224_145318.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
+
+print(all_results)
 
 # ---- Convert to DataFrame ----
 records = []
 for entry in all_results:
-    df = entry["npp"]
-    for method in ["raw", "pca", "features", "features_pca"]:
+    df = entry["npoints"]
+    for method in ["raw", "pca", "fft", "fft_pca", "features", "features_pca"]:
         for auc in entry[method]:
-            records.append({"npp": df, "Method": method, "AUC": auc})
+            records.append({"npoints": df, "Method": method, "AUC": auc})
 
 df_results = pd.DataFrame(records)
 
 # --- Compute mean & std per method/Δf ---
 df_grouped = (
     df_results
-    .groupby(["Method", "npp"])
+    .groupby(["Method", "npoints"])
     .agg(AUC_mean=("AUC", "mean"), AUC_std=("AUC", "std"))
     .reset_index()
 )
@@ -33,17 +35,22 @@ df_grouped = (
 # --- Plot with error bars ---
 markers = {
     "raw": "o", 
-    "pca": "s", 
+    "fft": "s",
+    "fft_pca": "P",
+    #"pca": "s", 
     "features": "D", 
     "features_pca": "^"
 }
 
 method_colors = {
     "raw": "C0", 
-    "pca": "C1", 
+    "fft": "C1",
+    "fft_pca": "C4",
+    #"pca": "C1", 
     "features": "C2", 
     "features_pca": "C3"
 }
+
 
 
 plt.figure(figsize=(6.4, 4.8))
@@ -51,7 +58,7 @@ plt.figure(figsize=(6.4, 4.8))
 for method, color in method_colors.items():
     data = df_grouped[df_grouped["Method"] == method]
     plt.errorbar(
-        data["npp"], data["AUC_mean"],
+        data["npoints"], data["AUC_mean"],
         yerr=data["AUC_std"],
         fmt='o',         # marker style
         color=color,
@@ -66,7 +73,7 @@ plt.ylabel("AUC")
 #plt.legend(title="Method", loc='lower left')
 plt.grid(True)
 plt.tight_layout()
-plt.xticks(data.npp.unique()[::2])
+plt.xticks(data.npoints.unique()[::2])
 plt.ylim(0.2, 1.1)
 plt.text(0.5, 1.0, "(c)", fontweight="bold", fontsize=14, va="bottom", ha="left")
 #plt.xlim(-0.05, 0.65)
