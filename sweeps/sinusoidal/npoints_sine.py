@@ -40,14 +40,16 @@ for i, npp in enumerate(tqdm(npoints, desc="Sweeping number of points")):
         n_samples_per_class=samples
     )
     splits = get_kfold_splits(X, y, n_splits=50, stratified=True)
-    results = run_experiment(X, y, splits)
+    results = run_experiment(X, y, splits, ffts=True)
 
     all_results.append({
-        'npp': npp,
+        'npoints': npp,
         'raw': results['raw'],
         'pca': results['pca'],
         'features': results['features'],
-        'features_pca': results['features_pca']
+        'features_pca': results['features_pca'],
+        'fft': results['fft'],
+        'fft_pca': results['fft_pca']
     })
 
 # Save results

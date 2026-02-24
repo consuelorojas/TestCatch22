@@ -41,18 +41,21 @@ for i, freq in enumerate(tqdm.tqdm(f1,desc="Sweeping frequency differences")):
         n_samples_per_class=samples
     )
     splits = get_kfold_splits(X, y, n_splits=50, stratified=True)
-    results = run_experiment(X, y, splits)
+    results = run_experiment(X, y, splits, ffts=True)
 
     all_results.append({
         'df': round(freq - fbase, 3),
         'raw': results['raw'],
         'pca': results['pca'],
         'features': results['features'],
-        'features_pca': results['features_pca']
+        'features_pca': results['features_pca'],
+        'fft': results['fft'],
+        'fft_pca': results['fft_pca']
     })
 
 # Save results
 with open(output_file, 'wb') as f:
     pickle.dump(all_results, f)
+    
 
 print(f"Sweep complete. Results saved to {output_file}")

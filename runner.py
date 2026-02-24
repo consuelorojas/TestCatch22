@@ -4,8 +4,10 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # List of sweep scripts
 SCRIPTS = [
-    "sweeps/fhn/samples_fhn.py",
-    "sweeps/fhn_obs/samples.py",
+    "sweeps/sinusoidal/frequency_sine.py",
+    "sweeps/sinusoidal/noise_sine.py",
+    "sweeps/sinusoidal/npoints_sine.py",
+    "sweeps/sinusoidal/periods_sine.py",
     "sweeps/sinusoidal/samples_sine.py"
 ]
 
