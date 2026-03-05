@@ -12,25 +12,31 @@ Here we present a modular Python pipeline for generating, transforming, and clas
 ## **Structure**
 
 ```
-├── main_pipeline.py            # Main script to run the experiment
-├── data/
-│   └── dataset.py              # Creation of dataset, labeling and folds
-├── signals/
-│   ├── sine.py                 # Noisy sine wave generation
-│   ├── fhn.py                  # Noisy FHN signal generator
-│   └── dispatcher.py           # Maps model names to signal generators
-├── FFTs/
-|   ├── sine_dyn/            # FFT representations for sine wave dynamics 
-|   ├── fhn_dyn/             # FFT representations for FHN dynamic
-│   └── fhn_obs/             # FFT representations for FHN observational
-
-├── preprocessing/
-│   └── preprocessing.py       # PCA + scaling utilities and subsampling
-├── features/
-│   └── features.py            # pycatch22 feature extraction
-├── models/
-│   └── classification.py      # AUC, accuracy classification
-└── README.md
+├── README.md
+├── runner.py                   # experiment runner
+├── requirements.txt            # dependencies
+├── report.mplstyle             # plotting styles
+├── data/                       # dataset creation and fold management
+│   └── dataset.py
+├── signals/                    # signal generators (sine, FHN, lorenz, etc.)
+│   ├── sine.py
+│   ├── fhn.py
+│   ├── fhn_obs.py
+│   └── dispatcher.py               # utility to generate datasets based on configurations
+├── preprocessing/              # preprocessing utilities (scaling, subsampling)
+│   └── preprocessing.py
+├── features/                   # feature extraction (pycatch22 wrappers)
+│   └── features.py
+├── FFTs/                       # frequency-domain transforms and results
+│   ├── fhn_dyn/
+│   ├── fhn_obs/
+│   └── sine/
+├── models/                     # classification and evaluation code
+│   └── classification.py
+├── figures/                    # plotting styles and output figures
+├── notebooks/                  # analysis and experiments in notebooks
+├── results/                    # structured experiment outputs
+└── sweeps/                     # parameter sweep scripts. Inside contains the scripts that run the experiments with the different configurations; results are stored in the `results/` directory
 ```
 
 ## **How it works**
