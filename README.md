@@ -46,4 +46,4 @@ Typical configurations include:
 
 All configurations share identical K-folds splits for a fair comparison.
 
-FFT representations are computed and organized under the `FFTs/` directory (see structure above). They provide frequency-domain information (e.g. peak frequencies, spectral power) that can be used directly by classifiers or combined with the pycatch22 features.
+FFT representations are computed and organized under the `FFTs/` directory (see structure above)
