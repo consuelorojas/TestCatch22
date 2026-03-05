@@ -24,10 +24,21 @@ labels = {
 }
 
 method_colors = {
-    "raw": "C0", 
-    #"pca": "C1", 
-    "features": "C2", 
-    "features_pca": "C3"
+    "raw": "C0",
+    "pca": "C1", 
+    "fft": "C2",
+    "fft_pca": "C3",
+    "features": "C4", 
+    "features_pca": "C5"
+}
+
+method_labels = {
+    "raw": "Raw",
+    "pca": "Raw + PCA",
+    "fft": "FFT",
+    "fft_pca": "FFT + PCA",
+    "features": "Catch22",
+    "features_pca": "Catch22 + PCA"
 }
 
 # ------------------------------
@@ -48,7 +59,7 @@ signal_handles = [
 # Method color patches
 method_handles = [
     Patch(facecolor=method_colors[key],
-          label=key.replace("_", " ").title())
+          label=method_labels[key],)
     for key in method_colors
 ]
 

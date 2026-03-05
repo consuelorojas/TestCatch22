@@ -31,8 +31,8 @@ cmap.set_bad("gray")
 b0 = 0.1
 
 b1 = 1.0
-#db1 = 0.178
-db1 = 0.032
+db1 = 0.178
+#db1 = 0.032
 b12 = b1 + db1
 dt = 0.1
 
@@ -52,8 +52,8 @@ samples = 80
 
 
 X, y, t = create_labeled_dataset([
-    (0, 'fhn_obs', {'length':850, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b1, epsilon, I, noise]}),
-    (1, 'fhn_obs', {'length':850, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b12, epsilon, I, noise]})],
+    (0, 'fhn', {'length':850, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b1, epsilon, I, noise]}),
+    (1, 'fhn', {'length':850, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b12, epsilon, I, noise]})],
     n_samples_per_class=samples, subsample_step = step, transient = trans, return_time=True
     )
 
@@ -106,8 +106,9 @@ mean_corr_pca = mean_corr.loc[['PCA1', 'PCA2'],[col for col in mean_corr_sorted.
 mean_corr_pca = mean_corr_pca[sine_order].T
 #mean_corr_pca = mean_corr_pca[sine_order]
 
+print(np.abs(mean_corr_pca))
 plt.figure(figsize=(5.7, 4.8))
-ax = sns.heatmap(mean_corr_pca, fmt=".2f", cmap=cmap, cbar=False, vmin=-1, vmax=1,
+ax = sns.heatmap(mean_corr_pca, fmt=".2f", cmap=cmap, cbar=False, vmin=0, vmax=1,
                   mask=mean_corr_pca.isnull(), square=True)
 ax.tick_params(left=False, labelleft=False)
 plt.grid(False)

@@ -31,17 +31,17 @@ noise = 0.1
 
 trans = 100 # transient
 
-samples = 80
+samples = 100
 
 
-X, y, t = create_labeled_dataset([
+X, y, t = create_labeled_dataset([ #type:ignore
     (0, 'fhn', {'length':850, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b1, epsilon, I, noise]}),
     (1, 'fhn', {'length':850, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b12, epsilon, I, noise]})],
     n_samples_per_class=samples, subsample_step = step, transient = trans, return_time=True
     )
 
 splits = get_kfold_splits(X, y, n_splits=50, stratified=True)
-results = time_experiment(X, y, splits)
+results = time_experiment(X, y, splits, ffts=True)
 
 print("Timing Results (milliseconds):")
 
@@ -55,6 +55,14 @@ print("Raw test:  {:.2f} ± {:.2f} ms".format(train([x[1] for x in results['raw'
 print("Raw + PCA preprocessing: {:.2f} ± {:.2f} ms".format(train([x[2] for x in results['pca']]), std([x[2] for x in results['pca']])))
 print("Raw + PCA train: {:.2f} ± {:.2f} ms".format(train([x[0] for x in results['pca']]), std([x[0] for x in results['pca']])))
 print("Raw + PCA test:  {:.2f} ± {:.2f} ms".format(train([x[1] for x in results['pca']]), std([x[1] for x in results['pca']])))
+
+print("FFT preprocessing: {:.2f} ± {:.2f} ms".format(train([x[2] for x in results['fft']]), std([x[2] for x in results['fft']])))
+print("FFT train: {:.2f} ± {:.2f} ms".format(train([x[0] for x in results['fft']]), std([x[0] for x in results['fft']])))
+print("FFT test:  {:.2f} ± {:.2f} ms".format(train([x[1] for x in results['fft']]), std([x[1] for x in results['fft']])))
+
+print("FFT + PCA preprocessing: {:.2f} ± {:.2f} ms".format(train([x[2] for x in results['fft_pca']]), std([x[2] for x in results['fft_pca']])))
+print("FFT + PCA train: {:.2f} ± {:.2f} ms".format(train([x[0] for x in results['fft_pca']]), std([x[0] for x in results['fft_pca']])))
+print("FFT + PCA test:  {:.2f} ± {:.2f} ms".format(train([x[1] for x in results['fft_pca']]), std([x[1] for x in results['fft_pca']])))
 
 print("Features preprocessing: {:.2f} ± {:.2f} ms".format(train([x[2] for x in results['features']]), std([x[2] for x in results['features']])))
 print("Features train: {:.2f} ± {:.2f} ms".format(train([x[0] for x in results['features']]), std([x[0] for x in results['features']])))

@@ -42,22 +42,23 @@ markers = {
     "raw": "o", 
     "fft": "s",
     "fft_pca": "P",
-    #"pca": "s", 
+    "pca": "s", 
     "features": "D", 
     "features_pca": "^"
 }
 
 method_colors = {
-    "raw": "C0", 
-    "fft": "C1",
-    "fft_pca": "C4",
-    #"pca": "C1", 
-    "features": "C2", 
-    "features_pca": "C3"
+    "raw": "C0",
+    "pca": "C1", 
+    "fft": "C2",
+    "fft_pca": "C3",
+    "features": "C4", 
+    "features_pca": "C5"
 }
 
 method_labels = {
     "raw": "Raw",
+    "pca": "Raw + PCA",
     "fft": "FFT",
     "fft_pca": "FFT + PCA",
     "features": "Catch22",
@@ -79,18 +80,19 @@ for method, color in method_colors.items():
         color=color
     )
 
-plt.xlabel(r"Parameter Difference $(\nu - \nu_1)$")
+plt.xlabel(r"Parameter difference $(\nu - \nu_1)$")
 plt.ylabel("AUC")
 plt.grid(True)
-plt.tight_layout()
+
 plt.ylim(0.0, 1.1)
-plt.text(0.0, 1.0, "(a)", fontweight="bold", fontsize=14, va="bottom", ha="left")
+plt.text(-0.13, 1.01, "(a)", fontweight="bold", fontsize=14, va="bottom", ha="left", transform=plt.gca().transAxes)
+plt.tight_layout()
 #plt.xlim(-0.05, 0.65)
 plt.savefig(
     "/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_frequency/errorbars_0-042.eps",
     format="eps", dpi=180
 )
-#legend = plt.legend(fontsize=14,ncol=5)
+#legend = plt.legend(fontsize=14,ncol=6)
 #export_legend(legend)
 plt.show()
 

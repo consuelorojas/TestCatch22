@@ -27,18 +27,18 @@ markers = {
     "raw": "o", 
     "fft": "s",
     "fft_pca": "P",
-    #"pca": "s", 
+    "pca": "s", 
     "features": "D", 
     "features_pca": "^"
 }
 
 method_colors = {
-    "raw": "C0", 
-    "fft": "C1",
-    "fft_pca": "C4",
-    #"pca": "C1", 
-    "features": "C2", 
-    "features_pca": "C3"
+    "raw": "C0",
+#    "pca": "C1", 
+    "fft": "C2",
+    "fft_pca": "C3",
+    "features": "C4", 
+    "features_pca": "C5"
 }
 
 # --- Compute mean & std per method/Δf ---
@@ -72,8 +72,8 @@ plt.xlabel(r"Number of periods $(N_p)$")
 plt.ylabel("AUC")
 #plt.legend(ncol=2, loc="lower right")
 plt.grid(True)
+plt.text(-0.13, 1.01, "(b)", fontweight="bold", fontsize=14, va="bottom", ha="left", transform=plt.gca().transAxes)
 plt.tight_layout()
-plt.text(0.8, 1.0, "(b)", fontweight="bold", fontsize=14, va="bottom", ha="left")
 plt.ylim(0.2, 1.1)
 plt.savefig(
     "results/sine/sine_periods/errorbars_1-8_np.eps", format="eps",

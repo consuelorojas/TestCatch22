@@ -7,7 +7,7 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/fhn_obs/samples/results_20260224_162700.pkl"
+result_file = "results/fhn_obs/samples/results_20260304_105933.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
@@ -34,18 +34,18 @@ markers = {
     "raw": "o", 
     "fft": "s",
     "fft_pca": "P",
-    #"pca": "s", 
+    "pca": "s", 
     "features": "D", 
     "features_pca": "^"
 }
 
 method_colors = {
-    "raw": "C0", 
-    "fft": "C1",
-    "fft_pca": "C4",
-    #"pca": "C1", 
-    "features": "C2", 
-    "features_pca": "C3"
+    "raw": "C0",
+    "pca": "C1", 
+    "fft": "C2",
+    "fft_pca": "C3",
+    "features": "C4", 
+    "features_pca": "C5"
 }
 
 
@@ -56,22 +56,23 @@ for method, color in method_colors.items():
     plt.errorbar(
         data["samples"], data["AUC_mean"],
         yerr=data["AUC_std"],
-        fmt='*',         # marker style
+        fmt='*',
+        markersize=10,         # marker style
         color=color,
         capsize=5,          # error bar caps
         #elinewidth=1,       # error bar line thickness
         alpha=0.7,
         #label=method_labels[method]
     )
-
+#print(data.samples.unique())
 plt.xlabel(r"Samples ($N_s$)")
 plt.ylabel("AUC")
 #plt.legend(ncol=2, loc ="lower left")
 plt.grid(True)
-plt.xticks(data.samples.unique()[::])
+plt.xticks(data.samples.unique()[::2])
 plt.ylim(0., 1.1)
 plt.xlim(0, 255)
-plt.text(10, 1.00, "(b)", fontweight="bold", fontsize=13, va="bottom", ha="left")
+plt.text(-0.13, 1.01, "(b)", fontweight="bold", fontsize=13, va="bottom", ha="left", transform=plt.gca().transAxes)
 plt.tight_layout()
 plt.savefig(
     "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn_obs/samples/samples_fhn_obs_errorbars.eps",

@@ -36,18 +36,18 @@ markers = {
     "raw": "o", 
     "fft": "s",
     "fft_pca": "P",
-    #"pca": "s", 
+    "pca": "s", 
     "features": "D", 
     "features_pca": "^"
 }
 
 method_colors = {
-    "raw": "C0", 
-    "fft": "C1",
-    "fft_pca": "C4",
-    #"pca": "C1", 
-    "features": "C2", 
-    "features_pca": "C3"
+    "raw": "C0",
+    "pca": "C1", 
+    "fft": "C2",
+    "fft_pca": "C3",
+    "features": "C4", 
+    "features_pca": "C5"
 }
 
 plt.figure(figsize=(6.4, 4.8))
@@ -69,11 +69,11 @@ plt.xlabel(r"Samples ($N_s$)")
 plt.ylabel("AUC")
 #plt.legend(loc ="lower right", ncol=2)
 plt.grid(True)
-plt.tight_layout()
 plt.xticks(data.samples.unique()[::2])
 plt.ylim(0.0, 1.1)
 plt.xlim(0, 255)
-plt.text(0.0, 1.0, "(a)", fontweight="bold", fontsize=14, va="bottom", ha="left")
+plt.text(-0.13, 1.01, "(a)", fontweight="bold", fontsize=13, va="bottom", ha="left", transform=plt.gca().transAxes)
+plt.tight_layout()
 plt.savefig(
     "/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_samples/samples_sine_errorbars.eps",
     format="eps", dpi=180

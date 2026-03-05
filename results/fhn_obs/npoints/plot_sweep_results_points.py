@@ -35,18 +35,18 @@ markers = {
     "raw": "o", 
     "fft": "s",
     "fft_pca": "P",
-    #"pca": "s", 
+    "pca": "s", 
     "features": "D", 
     "features_pca": "^"
 }
 
 method_colors = {
-    "raw": "C0", 
-    "fft": "C1",
-    "fft_pca": "C4",
-    #"pca": "C1", 
-    "features": "C2", 
-    "features_pca": "C3"
+    "raw": "C0",
+#    "pca": "C1", 
+    "fft": "C2",
+    "fft_pca": "C3",
+    "features": "C4", 
+    "features_pca": "C5"
 }
 
 plt.figure(figsize=(6.4, 4.8))
@@ -68,10 +68,10 @@ plt.xlabel(r"Number of points per period $(N_{pp})$")
 plt.ylabel("AUC")
 #plt.legend(ncol=2, loc ="lower left")
 plt.grid(True)
-plt.tight_layout()
 plt.ylim(0.1, 1.1)
 plt.xticks(data.npp.unique()[::2])
-plt.text(3.0, 1.0, "(c)", fontweight="bold", fontsize=14, va="bottom", ha="left")
+plt.text(-0.13, 1.01, "(c)", fontweight="bold", fontsize=14, va="bottom", ha="left", transform=plt.gca().transAxes)
+plt.tight_layout()
 #plt.xlim(-0.05, 0.65)
 plt.savefig(
     "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn_obs/npoints/npp_fhn_errorbars.eps",

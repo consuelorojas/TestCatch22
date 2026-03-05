@@ -37,18 +37,18 @@ markers = {
     "raw": "o", 
     "fft": "s",
     "fft_pca": "P",
-    #"pca": "s", 
+    "pca": "s", 
     "features": "D", 
     "features_pca": "^"
 }
 
 method_colors = {
-    "raw": "C0", 
-    "fft": "C1",
-    "fft_pca": "C4",
-    #"pca": "C1", 
-    "features": "C2", 
-    "features_pca": "C3"
+    "raw": "C0",
+#    "pca": "C1", 
+    "fft": "C2",
+    "fft_pca": "C3",
+    "features": "C4", 
+    "features_pca": "C5"
 }
 
 
@@ -72,10 +72,10 @@ plt.xlabel(r"Number of points per period $(N_{pp})$")
 plt.ylabel("AUC")
 #plt.legend(title="Method", loc='lower left')
 plt.grid(True)
-plt.tight_layout()
 plt.xticks(data.npoints.unique()[::2])
 plt.ylim(0.2, 1.1)
-plt.text(0.5, 1.0, "(c)", fontweight="bold", fontsize=14, va="bottom", ha="left")
+plt.text(-0.13, 1.01, "(c)", fontweight="bold", fontsize=14, va="bottom", ha="left", transform=plt.gca().transAxes)
+plt.tight_layout()
 #plt.xlim(-0.05, 0.65)
 plt.savefig(
     "/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_points/errorbars_1-20_npp.eps", format="eps",
