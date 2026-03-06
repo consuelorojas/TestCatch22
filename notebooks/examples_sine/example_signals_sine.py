@@ -52,6 +52,7 @@ for i in range(len(X)):
 plt.ylabel(r"$x(t)$")
 plt.xlabel("Time [s]")
 plt.title("Class 0: 5.0 Hz")
+plt.text(-0.15, 1.01, "(a)", fontweight="bold", fontsize=14, va="bottom", ha="left", transform=plt.gca().transAxes)
 plt.tight_layout()
 plt.savefig('notebooks/examples_sine/example_signals_sine_class0.pdf', format='pdf', dpi=300)
 
@@ -78,6 +79,7 @@ for i in range(len(X)):
 plt.ylabel(r"$x(t)$")
 plt.xlabel("Time [s]")
 plt.title("Class 1: 5.18 Hz")
+plt.text(-0.15, 1.01, "(b)", fontweight="bold", fontsize=14, va="bottom", ha="left", transform=plt.gca().transAxes)
 plt.tight_layout()
 plt.savefig('notebooks/examples_sine/example_signals_sine_class1.pdf', format='pdf', dpi=300)
 plt.show()
