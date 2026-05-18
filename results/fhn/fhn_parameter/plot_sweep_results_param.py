@@ -86,12 +86,12 @@ plt.ylabel("AUC")
 plt.grid(True)
 plt.ylim(0.2, 1.1)
 plt.xlim(-0.01, 0.31)
-plt.text(-0.13, 1.01, "(a)", fontweight="bold", fontsize=14, va="bottom", ha="left", transform=plt.gca().transAxes)
+#plt.text(-0.13, 1.01, "(a)", fontweight="bold", fontsize=14, va="bottom", ha="left", transform=plt.gca().transAxes)
 plt.tight_layout()
 
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_parameter/param_fhn_errorbars.eps",
-    format='eps', dpi=180
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_parameter/param_fhn_errorbars.png",
+    format='png', dpi=180
 )
 
 #legend = plt.legend(fontsize=14,ncol=6)

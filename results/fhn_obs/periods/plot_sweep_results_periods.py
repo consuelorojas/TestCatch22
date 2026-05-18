@@ -41,7 +41,7 @@ markers = {
 
 method_colors = {
     "raw": "C0",
-#    "pca": "C1", 
+    "pca": "C1", 
     "fft": "C2",
     "fft_pca": "C3",
     "features": "C4", 
@@ -68,12 +68,12 @@ plt.ylabel("AUC")
 #plt.legend(ncol=2, loc ="lower left")
 plt.grid(True)
 plt.ylim(0.2, 1.1)
-plt.text(-0.13, 1.01, "(b)", fontweight="bold", fontsize=14, va="bottom", ha="left", transform=plt.gca().transAxes)
+#plt.text(-0.13, 1.01, "(b)", fontweight="bold", fontsize=14, va="bottom", ha="left", transform=plt.gca().transAxes)
 plt.tight_layout()
 plt.xticks(data.periods.unique()[::2])
 #plt.xlim(-0.05, 0.65)
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn_obs/periods/periods_fhn_obs_errorbars.eps",
-    format="eps", dpi=180
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn_obs/periods/periods_fhn_obs_errorbars.png",
+    format="png", dpi=180
 )
 plt.show()

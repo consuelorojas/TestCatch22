@@ -15,7 +15,7 @@ with open(result_file, 'rb') as f:
 records = []
 for entry in all_results:
     df = entry["noise"]
-    for method in ["raw", "fft", "fft_pca", "features", "features_pca"]:
+    for method in ["raw", "fft", "pca", "fft_pca", "features", "features_pca"]:
         for auc in entry[method]:
             records.append({"noise": df, "Method": method, "AUC": auc})
 
@@ -42,7 +42,7 @@ markers = {
 
 method_colors = {
     "raw": "C0",
-#    "pca": "C1", 
+    "pca": "C1", 
     "fft": "C2",
     "fft_pca": "C3",
     "features": "C4", 
@@ -81,6 +81,7 @@ plt.xticks(data.noise.unique())
 plt.text(-0.13, 1.01, "(d)", fontweight="bold", fontsize=14, va="bottom", ha="left", transform=plt.gca().transAxes)
 plt.tight_layout()
 plt.ylim(0.4, 1.05)
+#plt.legend(title="Method", loc ="lower left", fontsize=10)
 #plt.xlim(-0.05, 0.65)
 plt.savefig(
     "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_noise/noise_fhn_errorbars.eps",

@@ -3,7 +3,7 @@ from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 
 
-def export_legend(legend, filename="legend_horizontal_3.eps"):
+def export_legend(legend, filename="legend_horizontal_3.png"):
     fig = legend.figure
     fig.canvas.draw()
     bbox = legend.get_window_extent().transformed(
@@ -13,12 +13,12 @@ def export_legend(legend, filename="legend_horizontal_3.eps"):
 
 
 markers = {
-    "sine": "o",
+    #"sine": "o",
     "fhn_obs": "*",
     "fhn_dyn": "s"
 }
 labels = {
-    "sine": "Sine",
+    #"sine": "Sine",
     "fhn_obs": "FHN Observed",
     "fhn_dyn": "FHN Dynamic"
 }
@@ -76,7 +76,7 @@ legend = ax.legend(
     handles=handles,
     loc="center",
     frameon=False,
-    ncol=len(handles),
+    ncol=len(handles)//2,
     columnspacing=1.0,
     handletextpad=0.35,
     fontsize=9
@@ -85,6 +85,6 @@ legend = ax.legend(
 # ------------------------------
 # Export tightly (legend bbox)
 # ------------------------------
-export_legend(legend, "legend_horizontal_all.eps")
+export_legend(legend, "legend_horizontal_all.png")
 
 plt.show()

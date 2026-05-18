@@ -15,7 +15,7 @@ with open(result_file, 'rb') as f:
 records = []
 for entry in all_results:
     df = entry["npp"]
-    for method in ["raw", "fft", "fft_pca", "features", "features_pca"]:
+    for method in ["raw", "fft", "pca", "fft_pca", "features", "features_pca"]:
         for auc in entry[method]:
             records.append({"npp": df, "Method": method, "AUC": auc})
 
@@ -42,7 +42,7 @@ markers = {
 
 method_colors = {
     "raw": "C0",
-#    "pca": "C1", 
+    "pca": "C1", 
     "fft": "C2",
     "fft_pca": "C3",
     "features": "C4", 
@@ -81,6 +81,7 @@ plt.ylim(0.4, 1.05)
 plt.text(-0.13, 1.01, "(c)", fontweight="bold", fontsize=14, va="bottom", ha="left", transform=plt.gca().transAxes)
 plt.xticks(data.npp.unique()[::2])
 plt.tight_layout()
+#plt.legend(title="Method", loc ="lower left", fontsize=10)
 #plt.xlim(-0.05, 0.65)
 plt.savefig(
     "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_npp/npp_fhn_errorbars.eps",

@@ -34,7 +34,7 @@ markers = {
 
 method_colors = {
     "raw": "C0",
-#    "pca": "C1", 
+    "pca": "C1", 
     "fft": "C2",
     "fft_pca": "C3",
     "features": "C4", 

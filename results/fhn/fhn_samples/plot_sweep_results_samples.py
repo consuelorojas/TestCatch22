@@ -15,7 +15,7 @@ with open(result_file, 'rb') as f:
 records = []
 for entry in all_results:
     df = entry["samples"]
-    for method in ["raw", "fft", "fft_pca", "features", "features_pca"]:
+    for method in ["raw", "fft", "pca", "fft_pca", "features", "features_pca"]:
         for auc in entry[method]:
             records.append({"samples": df, "Method": method, "AUC": auc})
 
@@ -78,12 +78,12 @@ plt.ylabel("AUC")
 #plt.legend(ncol=2, loc ="lower right")
 plt.grid(True)
 plt.xticks(data.samples.unique()[::2])#, rotation=45)
-plt.ylim(0.8, 1.01)
-plt.xlim(0, 255)
-plt.text(-0.13, 1.01, "(d)", fontweight="bold", fontsize=13, va="bottom", ha="left", transform=plt.gca().transAxes)
+plt.ylim(0.8, 1.02)
+plt.xlim(0, 105)
+plt.text(-0.13, 1.01, "(c)", fontweight="bold", fontsize=13, va="bottom", ha="left", transform=plt.gca().transAxes)
 plt.tight_layout()
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_samples/samples_fhn_errorbars_close_up.eps",
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_samples/samples_fhn_errorbars_close_up_last.eps",
     format = 'eps',
     dpi=180
 )
