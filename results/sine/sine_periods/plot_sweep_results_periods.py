@@ -76,7 +76,7 @@ plt.text(-0.13, 1.01, "(b)", fontweight="bold", fontsize=14, va="bottom", ha="le
 plt.tight_layout()
 plt.ylim(0.2, 1.1)
 plt.savefig(
-    "results/sine/sine_periods/errorbars_1-8_np.eps", format="eps",
+    "results/sine/sine_periods/errorbars_1-8_np_review.eps", format="eps",
     dpi=180
 )
 plt.show()

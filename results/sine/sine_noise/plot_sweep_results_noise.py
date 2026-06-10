@@ -8,7 +8,7 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/sine/sine_noise/results_20260224_145230.pkl"
+result_file = "results/sine/sine_noise/results_20260610_095517.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
@@ -82,7 +82,7 @@ plt.xlim(-0.01, 0.42)
 plt.text(-0.13, 1.01, "(d)", fontweight="bold", fontsize=14, va="bottom", ha="left", transform=plt.gca().transAxes)
 plt.tight_layout()
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_noise/errorbars_noise_resolution.eps",
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_noise/errorbars_noise_resolution_review.eps",
     format="eps", dpi=180
 )
 plt.show()
