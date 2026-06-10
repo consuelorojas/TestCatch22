@@ -4,15 +4,15 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # List of sweep scripts
 SCRIPTS = [
-    #"sweeps/fhn/bparam_fhn.py",
-    #"sweeps/fhn/periods_fhn.py",
-    #"sweeps/fhn/npoints_fhn.py",
-    #"sweeps/fhn/periods_fhn.py",
-    #"sweeps/fhn/samples_fhn.py",
-    #"sweeps/fhn_obs/bparam.py",
-    #"sweeps/fhn_obs/periods.py",
-    #"sweeps/fhn_obs/npoints.py",
-    #"sweeps/fhn_obs/samples.py",
+   # "sweeps/fhn/bparam_fhn.py",
+   # "sweeps/fhn/periods_fhn.py",
+   # "sweeps/fhn/npoints_fhn.py",
+   # "sweeps/fhn/periods_fhn.py",
+   # "sweeps/fhn/samples_fhn.py",
+   # "sweeps/fhn_obs/bparam.py",
+   # "sweeps/fhn_obs/periods.py",
+   # "sweeps/fhn_obs/npoints.py",
+   # "sweeps/fhn_obs/samples.py",
     "sweeps/sinusoidal/periods_sine.py",
     "sweeps/sinusoidal/npoints_sine.py",
     "sweeps/sinusoidal/samples_sine.py"
