@@ -7,7 +7,7 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/fhn/fhn_npp/results_20260224_163538.pkl"
+result_file = "results/fhn/fhn_npp/results_20260610_141955.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
@@ -84,7 +84,7 @@ plt.tight_layout()
 #plt.legend(title="Method", loc ="lower left", fontsize=10)
 #plt.xlim(-0.05, 0.65)
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_npp/npp_fhn_errorbars.eps",
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_npp/npp_fhn_errorbars_review.eps",
     format='eps', dpi=180
 )
 plt.show()

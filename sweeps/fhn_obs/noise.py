@@ -5,6 +5,7 @@ from datetime import datetime
 from matplotlib import pyplot as plt
 import numpy as np
 from tqdm import tqdm
+from concurrent.futures import ProcessPoolExecutor, as_completed
 
 sys.path.append(os.path.abspath("./models"))
 sys.path.append(os.path.abspath("./data"))
@@ -46,8 +47,7 @@ timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 output_file = os.path.join(output_dir, f"results_{timestamp}.pkl")
 
 # Run sweep
-all_results = []
-for i, n in enumerate(tqdm(noise)):
+def run_single_experiment(n):
     X, y = create_labeled_dataset([ #type: ignore
         (0, 'fhn_obs', {'length':800, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b1, epsilon, I, n]}),
         (1, 'fhn_obs', {'length':800, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b12, epsilon, I, n]})],
@@ -59,7 +59,7 @@ for i, n in enumerate(tqdm(noise)):
     results = run_experiment(X, y, splits, ffts=True)
     
 
-    all_results.append({
+    return{
         'noise': n,
         'raw': results['raw'],
         'pca': results['pca'],
@@ -67,10 +67,28 @@ for i, n in enumerate(tqdm(noise)):
         'features_pca': results['features_pca'],
         'fft': results['fft'],
         'fft_pca': results['fft_pca']
-    })
+    }
 
 # Save results
-with open(output_file, 'wb') as f:
-    pickle.dump(all_results, f)
+def main():
+    all_results = []
 
-print(f"Sweep complete. Results saved to {output_file}")
+    with ProcessPoolExecutor() as executor:
+        futures = {
+            executor.submit(run_single_experiment, n): n for n in noise
+        }
+
+        for future in tqdm(
+            as_completed(futures),
+            total=len(futures),
+            desc="Sweeping noise level"
+        ):
+            all_results.append(future.result())
+
+    # save results
+    with open(output_file, 'wb') as f:
+        pickle.dump(all_results, f)
+    print(f"Sweep complete. Results saved to {output_file}")
+
+if __name__ == "__main__":
+    main()

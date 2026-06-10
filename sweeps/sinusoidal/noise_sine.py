@@ -78,3 +78,6 @@ def main():
     with open(output_file, 'wb') as f:
         pickle.dump(all_results, f)
     print(f"Sweep complete. Results saved to {output_file}")
+
+if __name__ == "__main__":
+    main()
