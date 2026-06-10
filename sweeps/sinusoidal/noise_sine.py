@@ -3,7 +3,8 @@ import sys
 import pickle
 from datetime import datetime
 import numpy as np
-import tqdm as tqdm
+from tqdm import tqdm
+from concurrent.futures import ProcessPoolExecutor, as_completed
 
 sys.path.append(os.path.abspath("./models"))
 sys.path.append(os.path.abspath("./data"))
@@ -36,9 +37,11 @@ timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 output_file = os.path.join(output_dir, f"results_{timestamp}.pkl")
 
 # Run sweep
-all_results = []
-for i, n in enumerate(tqdm.tqdm(noise,desc="Sweeping noise levels")):
-    X, y = create_labeled_dataset( #type: ignore
+
+# worker function
+
+def run_single_experiment(n):
+    X, y = create_labeled_dataset( #type:ignore
         [(0, 'sine', {'args': [fbase, n, npoints, nperiods]}),
          (1, 'sine', {'args': [f1, n, npoints, nperiods]})],
         n_samples_per_class=samples
@@ -46,7 +49,7 @@ for i, n in enumerate(tqdm.tqdm(noise,desc="Sweeping noise levels")):
     splits = get_kfold_splits(X, y, n_splits=50, stratified=True)
     results = run_experiment(X, y, splits, ffts=True)
 
-    all_results.append({
+    return {
         'noise': n,
         'raw': results['raw'],
         'pca': results['pca'],
@@ -54,10 +57,24 @@ for i, n in enumerate(tqdm.tqdm(noise,desc="Sweeping noise levels")):
         'features_pca': results['features_pca'],
         'fft': results['fft'],
         'fft_pca': results['fft_pca']
-    })
+    }
 
-# Save results
-with open(output_file, 'wb') as f:
-    pickle.dump(all_results, f)
+def main():
+    all_results = []
 
-print(f"Sweep complete. Results saved to {output_file}")
+    with ProcessPoolExecutor() as executor:
+        futures = {
+            executor.submit(run_single_experiment, n): n for n in noise
+        }
+
+        for future in tqdm(
+            as_completed(futures),
+            total=len(futures),
+            desc="Sweeping noise levels"
+        ):
+            all_results.append(future.result())
+
+    # save results
+    with open(output_file, 'wb') as f:
+        pickle.dump(all_results, f)
+    print(f"Sweep complete. Results saved to {output_file}")

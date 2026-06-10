@@ -2,7 +2,8 @@ import os
 import sys
 import pickle
 from datetime import datetime
-import tqdm as tqdm
+import tqdm
+from concurrent.futures import ProcessPoolExecutor, as_completed
 
 sys.path.append(os.path.abspath("./models"))
 sys.path.append(os.path.abspath("./data"))
@@ -32,30 +33,47 @@ os.makedirs(output_dir, exist_ok=True)
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 output_file = os.path.join(output_dir, f"results_{timestamp}.pkl")
 
-# Run sweep
-all_results = []
-for i, freq in enumerate(tqdm.tqdm(f1,desc="Sweeping frequency differences")):
-    X, y = create_labeled_dataset(
-        [(0, 'sine', {'args': [fbase, 0.1, npoints, nperiods]}),
-         (1, 'sine', {'args': [freq, 0.1, npoints, nperiods]})],
+
+# worker function
+
+def run_single_experiment(freq):
+    X, y = create_labeled_dataset( #type:ignore
+        [(0, 'sine', {'args': [fbase, noise, npoints, nperiods]}),
+         (1, 'sine', {'args': [freq, noise, npoints, nperiods]})],
         n_samples_per_class=samples
     )
     splits = get_kfold_splits(X, y, n_splits=50, stratified=True)
     results = run_experiment(X, y, splits, ffts=True)
 
-    all_results.append({
-        'df': round(freq - fbase, 3),
-        'raw': results['raw'],
-        'pca': results['pca'],
-        'features': results['features'],
-        'features_pca': results['features_pca'],
-        'fft': results['fft'],
-        'fft_pca': results['fft_pca']
-    })
+    return {
+    'df': round(freq - fbase, 3),
+    'raw': results['raw'],
+    'pca': results['pca'],
+    'features': results['features'],
+    'features_pca': results['features_pca'],
+    'fft': results['fft'],
+    'fft_pca': results['fft_pca']
+    }
 
-# Save results
-with open(output_file, 'wb') as f:
-    pickle.dump(all_results, f)
-    
 
-print(f"Sweep complete. Results saved to {output_file}")
+# parallel execution
+
+def main():
+    all_results = []
+
+    with ProcessPoolExecutor() as executor:
+        futures = {
+            executor.submit(run_single_experiment, freq): freq for freq in f1
+        }
+
+        for future in tqdm.tqdm(
+            as_completed(futures),
+            total=len(futures),
+            desc="Sweeping frequency differences"
+        ):
+            all_results.append(future.result())
+
+    # save results
+    with open(output_file, 'wb') as f:
+        pickle.dump(all_results, f)
+    print(f"Sweep complete. Results saved to {output_file}")
