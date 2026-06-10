@@ -89,7 +89,7 @@ plt.text(-0.13, 1.01, "(a)", fontweight="bold", fontsize=14, va="bottom", ha="le
 plt.tight_layout()
 #plt.xlim(-0.05, 0.65)
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_frequency/errorbars_0-042_review.eps",
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/sine/sine_frequency/errorbars_0-042_review.png",
     format="eps", dpi=180
 )
 #legend = plt.legend(fontsize=14,ncol=6)

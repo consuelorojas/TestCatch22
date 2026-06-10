@@ -3,7 +3,6 @@
 __pycache__
 .ipynb_checkpoints
 *.pyc
-*.pkl
 *.h5
 *.csv
 *.xlsx
