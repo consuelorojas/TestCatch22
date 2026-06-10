@@ -1,6 +1,8 @@
 import numpy as np
 from sklearn.metrics import roc_auc_score, accuracy_score
 from sklearn.svm import SVC
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import GridSearchCV, StratifiedKFold
 import pandas as pd
 import time
 
@@ -82,13 +84,27 @@ def evaluate_single_fold(X_train, X_test, y_train, y_test, classifier, probabili
     Returns:
     - auc_score: AUC score for the fold
     """
-    classifier.fit(X_train, y_train)
-    # compute probabilities or decision function
-    if probability and hasattr(classifier, 'predict_proba'):
-        y_pred = classifier.predict_proba(X_test)[:, 1]
+    # grid search 
+    param_grid = {
+        "C": [0.1, 1, 10, 100],
+        "gamma":["scale", 0.01, 0.1, 1]
+    }
 
-    elif hasattr(classifier, 'decision_function'):
-        y_pred = classifier.decision_function(X_test)
+    # cross validation
+    cv = StratifiedKFold(n_splits=3, shuffle=True)
+    grid = GridSearchCV(classifier, param_grid, cv=cv, scoring="roc_auc" if len(np.unique(y_train)) == 2 else "accuracy")
+    grid.fit(X_train, y_train)
+    
+    # best estimator
+    classifier_tuned = grid.best_estimator_
+    classifier_tuned.fit(X_train, y_train)
+
+    # compute probabilities or decision function
+    if probability and hasattr(classifier_tuned, 'predict_proba'):
+        y_pred = classifier_tuned.predict_proba(X_test)[:, 1]
+
+    elif hasattr(classifier_tuned, 'decision_function'):
+        y_pred = classifier_tuned.decision_function(X_test)
 
     else:
         raise ValueError("Model does not support probability prediction or decision function.")
@@ -128,7 +144,7 @@ def time_single_fold(X_train, X_test, y_train, y_test, classifier, probability=T
 
 # ---------- Pipeline function ----------
 
-def run_experiment(X,y, splits, n_pca_components = 2, ffts=False, clf_fn = None, features = None, ):
+def run_experiment(X,y, splits, n_pca_components = 0.95, ffts=False, clf_fn = None, features = None, ):
     """
     Run classification pipeline with four config
     - Raw
@@ -160,23 +176,35 @@ def run_experiment(X,y, splits, n_pca_components = 2, ffts=False, clf_fn = None,
 
         # raw
         clf = clf_fn()
-        raw.append(evaluate_single_fold(x_train, x_test, y_train, y_test, clf))
+        scaler_raw = StandardScaler()
+
+        # scale raw features before classification
+        x_train_raw = scaler_raw.fit_transform(x_train)
+        x_test_raw = scaler_raw.transform(x_test)
+
+        raw.append(evaluate_single_fold(x_train_raw, x_test_raw, y_train, y_test, clf))
 
         if ffts:
             # fft features
             X_fft_train = np.abs(np.fft.rfft(x_train, axis=1))
             X_fft_test = np.abs(np.fft.rfft(x_test, axis=1))
-            fft.append(evaluate_single_fold(X_fft_train, X_fft_test, y_train, y_test, clf))
+
+            # scale fft features before classification
+            scaler_fft = StandardScaler()
+            X_fft_train_scaled = scaler_fft.fit_transform(X_fft_train)
+            X_fft_test_scaled = scaler_fft.transform(X_fft_test)
+
+            fft.append(evaluate_single_fold(X_fft_train_scaled, X_fft_test_scaled, y_train, y_test, clf))
 
             # pca on fft features
-            train_pca_fft, pca_tf, scaler = apply_pca(X_fft_train,n_components = 2)
+            train_pca_fft, pca_tf, scaler = apply_pca(X_fft_train,n_components = n_pca_components)
             test_pca_fft = scaler.transform(X_fft_test)
             test_pca_fft = pca_tf.transform(test_pca_fft)
             pca_fft.append(evaluate_single_fold(train_pca_fft, test_pca_fft, y_train, y_test, clf))
 
         # raw + pca
         clf = clf_fn()
-        train_pca, pca_tf, scaler = apply_pca(x_train,n_components = 2)
+        train_pca, pca_tf, scaler = apply_pca(x_train,n_components = n_pca_components)
         test_pca = scaler.transform(x_test)
         test_pca = pca_tf.transform(test_pca)
         
@@ -189,7 +217,12 @@ def run_experiment(X,y, splits, n_pca_components = 2, ffts=False, clf_fn = None,
         else:
             X_feat = extract_features(X, return_array=True, feat=features)
 
+        # scale features before classification
         train_feat, test_feat = X_feat[train_idx], X_feat[test_idx]
+        scaler_fft = StandardScaler()
+        train_feat = scaler_fft.fit_transform(train_feat)
+        test_feat = scaler_fft.transform(test_feat)
+        
         feat.append(evaluate_single_fold(train_feat, test_feat, y_train, y_test, clf))
 
 
@@ -252,15 +285,24 @@ def time_experiment(X,y, splits, n_pca_components = 2, clf_fn = None, features=N
         x_train, x_test = X[train_idx], X[test_idx]
         y_train, y_test = y[train_idx], y[test_idx]
 
+        # scale raw features before classification
+
+
         # raw
         clf = clf_fn()
-        train_time, test_time = time_single_fold(x_train, x_test, y_train, y_test, clf)
-        raw.append((train_time, test_time, 0.0))
+        time_raw = time.time()
+        scaler_raw = StandardScaler()
+        x_train_raw = scaler_raw.fit_transform(x_train)
+        x_test_raw = scaler_raw.transform(x_test)
+        time_raw = time.time() - time_raw
+        train_time, test_time = time_single_fold(x_train_raw, x_test_raw, y_train, y_test, clf)
+        raw.append((train_time, test_time, time_raw))
 
         # raw + pca
         clf = clf_fn()
         pca_time = time.time()
         train_pca, pca_tf, scaler = apply_pca(x_train,n_components = 1)
+
         test_pca = scaler.transform(x_test)
         test_pca = pca_tf.transform(test_pca)
         pca_time = time.time() - pca_time
@@ -275,29 +317,36 @@ def time_experiment(X,y, splits, n_pca_components = 2, clf_fn = None, features=N
             fft_time = time.time()
             X_fft_train = np.abs(np.fft.rfft(x_train, axis=1))
             X_fft_test = np.abs(np.fft.rfft(x_test, axis=1))
+
+            scaler_fft = StandardScaler()
+            X_fft_train_scaled = scaler_fft.fit_transform(X_fft_train)
+            X_fft_test_scaled = scaler_fft.transform(X_fft_test)
             fft_time = time.time() - fft_time
-            train_time, test_time = time_single_fold(X_fft_train, X_fft_test, y_train, y_test, clf)
+
+            train_time, test_time = time_single_fold(X_fft_train_scaled, X_fft_test_scaled, y_train, y_test, clf)
             fft.append((train_time, test_time, fft_time))
 
             clf = clf_fn()
             fft_time = time.time()
+
             train_fft, pca_tf_fft, scaler_fft = apply_pca(X_fft_train,n_components = 2)
             test_fft = scaler_fft.transform(X_fft_test)
             test_fft = pca_tf_fft.transform(test_fft)
             fft_time = time.time() - fft_time
+
             train_time, test_time = time_single_fold(train_fft, test_fft, y_train, y_test, clf)
             pca_fft.append((train_time, test_time, fft_time))
 
         # features
         clf = clf_fn()
-        if features is None:
-            X_feat = extract_features(X, return_array=True)
-        else:
-            X_feat = extract_features(X, return_array=True, feat=features)
 
         feat_time = time.time()
         X_feat = extract_features(X, return_array=True)
         train_feat, test_feat = X_feat[train_idx], X_feat[test_idx]
+        scaler_fft = StandardScaler()
+        train_feat = scaler_fft.fit_transform(train_feat)
+        test_feat = scaler_fft.transform(test_feat)
+
         feat_time = time.time() - feat_time
 
         train_time, test_time = time_single_fold(train_feat, test_feat, y_train, y_test, clf)

@@ -3,7 +3,7 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 import pandas as pd
 
-def apply_pca(X, n_components = 2):
+def apply_pca(X, n_components=0.95):
     """
     Apply PCA to reduce the dimensionality of the dataset.
 
