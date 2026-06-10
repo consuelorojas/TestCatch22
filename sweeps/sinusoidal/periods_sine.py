@@ -3,6 +3,7 @@ import sys
 import pickle
 from datetime import datetime
 from tqdm import tqdm
+from concurrent.futures import ProcessPoolExecutor, as_completed
 
 sys.path.append(os.path.abspath("./models"))
 sys.path.append(os.path.abspath("./data"))
@@ -30,8 +31,8 @@ timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 output_file = os.path.join(output_dir, f"results_{timestamp}.pkl")
 
 # Run sweep
-all_results = []
-for i, periods in enumerate(tqdm(nperiods, desc="Sweeping number of periods")):
+
+def run_single_experiment(periods):
     X, y = create_labeled_dataset( #type: ignore
         [(0, 'sine', {'args': [fbase, 0.1, npoints, periods]}),
          (1, 'sine', {'args': [f1, 0.1, npoints, periods]})],
@@ -40,7 +41,7 @@ for i, periods in enumerate(tqdm(nperiods, desc="Sweeping number of periods")):
     splits = get_kfold_splits(X, y, n_splits=50, stratified=True)
     results = run_experiment(X, y, splits, ffts=True)
 
-    all_results.append({
+    return{
         'periods': periods,
         'raw': results['raw'],
         'pca': results['pca'],
@@ -48,10 +49,25 @@ for i, periods in enumerate(tqdm(nperiods, desc="Sweeping number of periods")):
         'features_pca': results['features_pca'],
         'fft': results['fft'],
         'fft_pca': results['fft_pca']
-    })
+    }
 
 # Save results
-with open(output_file, 'wb') as f:
-    pickle.dump(all_results, f)
+def main():
+    all_results = []
 
-print(f"Sweep complete. Results saved to {output_file}")
+    with ProcessPoolExecutor() as executor:
+        futures = {
+            executor.submit(run_single_experiment, period): period for period in nperiods
+        }
+
+        for future in tqdm(
+            as_completed(futures),
+            total=len(futures),
+            desc="Sweeping number of periods"
+        ):
+            all_results.append(future.result())
+
+    # save results
+    with open(output_file, 'wb') as f:
+        pickle.dump(all_results, f)
+    print(f"Sweep complete. Results saved to {output_file}")
