@@ -66,9 +66,9 @@ for i in range(len(X)):
 plt.ylabel(r"$v(t)$")
 plt.xlabel("Time [a.u]")
 #plt.title("Class 0: b=1.0")
-#plt.text(-0.15, 1.01, "(e)", fontweight="bold", fontsize=14, va="bottom", ha="left", transform=plt.gca().transAxes)
+plt.text(-0.15, 1.01, "(a)", fontweight="bold", fontsize=14, va="bottom", ha="left", transform=plt.gca().transAxes)
 plt.tight_layout()
-plt.savefig('notebooks/examples_fhn_obs/example_signals_fhn_dyn_class0.png', format='png', dpi=300)
+plt.savefig('notebooks/examples_fhn_obs/example_signals_fhn_obs_class0.pdf', format='pdf', dpi=300)
 
 #plt.show()
 
@@ -90,11 +90,11 @@ for i in range(len(X)):
 # Horizontal line across the whole plot at y=1
 #plt.axhline(y=0, color='black', marker='',linestyle='-')
 plt.ylabel(r"$v(t)$")
-plt.title(f"Class 1: b={b12}")
+#plt.title(f"Class 1: b={b12}")
 plt.xlabel("Time [a.u]")
 plt.text(-0.15, 1.01, "(f)", fontweight="bold", fontsize=14, va="bottom", ha="left", transform=plt.gca().transAxes)
 plt.tight_layout()
-plt.savefig('notebooks/examples_fhn_obs/example_signals_fhn_dyn_class1.png', format='png', dpi=300)
+plt.savefig('notebooks/examples_fhn_obs/example_signals_fhn_dyn_class1.eps', format='eps', dpi=300)
 
 #plt.show()
 
@@ -104,6 +104,6 @@ plt.plot(X[indices_one[1]], marker='*', alpha=1, color='indigo', label=f'Class 1
 plt.xlabel("Time [a.u]")
 plt.ylabel(r"$v(t)$")
 plt.legend(loc = 'lower left')
-plt.savefig('notebooks/examples_fhn/example_fhn_single_class1.png', dpi=300)
+plt.savefig('notebooks/examples_fhn/example_fhn_single_class1.eps', dpi=300)
 plt.show()
 
