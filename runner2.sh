@@ -4,7 +4,7 @@
 #SBATCH -c 20
 #SBATCH --mem=40G
 #SBATCH --time=1-00:00:00
-#SBATCH -J sine22
+#SBATCH -J stats_catch22
 
 # Initialize conda (IMPORTANT)
 source ~/.bashrc

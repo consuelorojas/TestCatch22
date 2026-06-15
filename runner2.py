@@ -9,15 +9,19 @@ SCRIPTS = [
    # "sweeps/fhn/npoints_fhn.py",
    # "sweeps/fhn/periods_fhn.py",
    # "sweeps/fhn/samples_fhn.py",
-     "sweeps/fhn/noise_fhn.py",
+   #  "sweeps/fhn/noise_fhn.py",
    # "sweeps/fhn_obs/bparam.py",
    # "sweeps/fhn_obs/periods.py",
    # "sweeps/fhn_obs/npoints.py",
    # "sweeps/fhn_obs/samples.py",
-    "sweeps/fhn_obs/noise.py",
+   # "sweeps/fhn_obs/noise.py",
    # "sweeps/sinusoidal/periods_sine.py",
    # "sweeps/sinusoidal/npoints_sine.py",
    # "sweeps/sinusoidal/samples_sine.py"
+]
+
+SCRIPTS = [
+    'notebooks/p_values.py'
 ]
 
 # Number of parallel workers (default: run all at once)
