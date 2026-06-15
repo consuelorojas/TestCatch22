@@ -10,7 +10,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # results 
 
-PARAMETERS = ["b", "df", "noise", "npp", "periods", "samples"]
+PARAMETERS = ["b", "df", "noise", "npp", "periods", "samples", "npoints"]
 
 METHODS = [
     "raw",
