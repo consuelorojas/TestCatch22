@@ -10,7 +10,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # results 
 
-PARAMETERS = ["b", "v", "noise", "npp", "periods", "samples"]
+PARAMETERS = ["b", "df", "noise", "npp", "periods", "samples"]
 
 METHODS = [
     "raw",
@@ -21,10 +21,6 @@ METHODS = [
     "features_pca"
 ]
 
-
-
-
-result_path = '/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn_obs/parameter/results_20260610_141954.pkl'
 
 # open results
 def results_dataframe(path_to_results):
@@ -188,22 +184,54 @@ def process_results_dict(results_dict, max_workers = 4, remove_ceiling=True, cei
 
 def main():
 
-    results_fhn = {
-    'b': 'results/fhn/fhn_parameter/results_20260610_141954.pkl',
-    'periods': 'results/fhn/fhn_periods/results_20260610_141955.pkl',
-    'npp': 'results/fhn/fhn_npp/results_20260610_141955.pkl',
-    'noise': 'results/fhn/fhn_noise/results_20260224_163459.pkl', #change as soon as possible to the new one
-    'samples': 'results/fhn/fhn_samples/results_20260610_141955.pkl'
-}
+    results_sine = {
+        'df': 'results/sine/sine_frequency/results_20260610_095517.pkl',
+        'periods': 'results/sine/sine_periods/results_20260610_151236.pkl',
+        'noise': 'results/sine/sine_noise/results_20260610_095517.pkl',
+        'npp': 'results/sine/sine_points/results_20260610_151236.pkl',
+        'samples': 'results/sine/sine_samples/results_20260610_151236.pkl'
+    }
+
+    results_fhn_dyn = {
+        'b': 'results/fhn/fhn_parameter/results_20260610_141954.pkl',
+        'periods': 'results/fhn/fhn_periods/results_20260610_141955.pkl',
+        'npp': 'results/fhn/fhn_npp/results_20260610_141955.pkl',
+        'noise': 'results/fhn/fhn_noise/results_20260615_152611.pkl', 
+        'samples': 'results/fhn/fhn_samples/results_20260610_141955.pkl'
+    }
+
+    results_fhn_obs = {
+        'b' : 'results/fhn_obs/parameter/results_20260610_141954.pkl',
+        'noise': 'results/fhn_obs/noise/results_20260615_152611.pkl',
+        'npp': 'results/fhn_obs/npoints/results_20260610_141955.pkl',
+        'periods': 'results/fhn_obs/periods/results_20260610_141955.pkl',
+        'samples': 'results/fhn_obs/samples/results_20260610_141954.pkl'
+    }
+    
+
 
 
     all_statistics = {
-        "fhn": process_results_dict(
-            results_fhn,
+        "fhn_dyn": process_results_dict(
+            results_fhn_dyn,
             max_workers=4,
             remove_ceiling=True,
             ceiling_auc=0.99,
             save_path='fhn_dyn_stats.pkl'
+        ),
+        "sine": process_results_dict(
+            results_sine,
+            max_workers=4,
+            remove_ceiling=True,
+            ceiling_auc=0.99,
+            save_path='sine_stats.pkl'
+        ),
+        "fhn_obs": process_results_dict(
+            results_fhn_obs,
+            max_workers=4,
+            remove_ceiling=True,
+            ceiling_auc = 0.99,
+            save_path='fhn_obs_stats.pkl'
         )
     }
 
