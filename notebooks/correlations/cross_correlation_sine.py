@@ -53,10 +53,19 @@ for train_idx, test_idx in splits:
 
 # Second, apply PCA to each fold separately
 x_pca = []
+variance = 0
+n_pcs = 0
 for frame in x_feat:
-    x_pca.append(apply_pca(frame, n_components=2)[0])
-    # x_pca is a list of numpy arrays, one per fold.
+    pca_aux = apply_pca(frame, n_components=0.95)
+    x_pca.append(pca_aux[0])
+    variance_percentages = pca_aux[1].explained_variance_ratio_ * 100
+    variance = variance + np.sum(variance_percentages)
+    n_pcs = n_pcs + pca_aux[1].n_components_
 
+
+print(variance/len(x_feat),n_pcs/len(x_feat))
+
+'''
 # Finally, we get the cross relation between the two PCA components and each feature per fold
 # pearson correlation between each feature and each PCA component
 
@@ -104,3 +113,5 @@ plt.tight_layout()
 plt.savefig('notebooks/correlations/correlation_heatmap_mean_pca_sine.eps',format='eps',
             bbox_inches='tight', dpi=300)
 plt.show()
+
+'''

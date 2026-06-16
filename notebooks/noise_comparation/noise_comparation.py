@@ -98,8 +98,8 @@ for i, method in enumerate(methods):
              va="bottom",
              ha="left")
     plt.tight_layout()
-    plt.savefig(f"notebooks/noise_comparation/{method}.eps",
-                format= "eps")
+    #plt.savefig(f"notebooks/noise_comparation/{method}.eps",
+    #            format= "eps")
     #legend = plt.legend(fontsize=14, ncol=3)
     #export_legend(legend, filename="noise_legend.eps")
     

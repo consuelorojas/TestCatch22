@@ -73,5 +73,5 @@ fig.suptitle(
 )
 
 plt.tight_layout()
-plt.savefig(f'pca_comparison_sine_{f1 - fbase}.png', dpi=300, bbox_inches='tight')
+#plt.savefig(f'pca_comparison_sine_{f1 - fbase}.png', dpi=300, bbox_inches='tight')
 plt.show()
