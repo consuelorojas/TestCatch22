@@ -54,7 +54,7 @@ def run_single_experiment(s, i):
         n_samples_per_class=samples, subsample_step = s, transient = trans
         )
     
-    splits = get_kfold_splits(X, y, n_splits=50, stratified=True)
+    splits = get_kfold_splits(X, y, n_splits=10, stratified=True)
     results = run_experiment(X, y, splits, ffts=True)
 
     return{

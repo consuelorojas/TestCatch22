@@ -41,7 +41,7 @@ def create_labeled_dataset(class_configs, n_samples_per_class, subsample_step = 
         return np.array(X), np.array(y)
 
 
-def get_kfold_splits(X, y, n_splits = 5, n_repeats=5,stratified = True, test_size = 0.2, random_state = 42):
+def get_kfold_splits(X, y, n_splits = 5, n_repeats=5,stratified = True, test_size = 0.2, random_state = 13):
     """
     Generate train/test splits using StratifiedShuffleSplit to get stratified samples for training.
     Parameters:

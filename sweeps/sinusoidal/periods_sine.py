@@ -38,7 +38,7 @@ def run_single_experiment(periods):
          (1, 'sine', {'args': [f1, 0.1, npoints, periods]})],
         n_samples_per_class=samples
     )
-    splits = get_kfold_splits(X, y, n_splits=50, stratified=True)
+    splits = get_kfold_splits(X, y, n_splits=10, stratified=True)
     results = run_experiment(X, y, splits, ffts=True)
 
     return{

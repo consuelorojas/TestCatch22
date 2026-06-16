@@ -40,7 +40,7 @@ def run_single_experiment(s):
          (1, 'sine', {'args': [f1, noise, npoints, nperiods]})],
         n_samples_per_class=s
     )
-    splits = get_kfold_splits(X, y, n_splits=50, stratified=True)
+    splits = get_kfold_splits(X, y, n_splits=10, stratified=True)
     results = run_experiment(X, y, splits, ffts=True)
 
     return{

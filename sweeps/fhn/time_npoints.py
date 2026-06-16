@@ -54,7 +54,7 @@ for i, s in enumerate(tqdm(step)):
         n_samples_per_class=samples, subsample_step = s, transient = trans
         )
     
-    splits = get_kfold_splits(X, y, n_splits=50, stratified=True)
+    splits = get_kfold_splits(X, y, n_splits=10, stratified=True)
     results = time_experiment(X, y, splits)
 
     all_results.append({

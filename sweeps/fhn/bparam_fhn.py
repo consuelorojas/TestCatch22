@@ -58,7 +58,7 @@ def run_single_experiment(b):
         n_samples_per_class=samples, subsample_step = step, transient = trans
         )
     
-    splits = get_kfold_splits(X, y, n_splits=50, stratified=True)
+    splits = get_kfold_splits(X, y, n_splits=10, stratified=True)
     #plt.plot(X[0], '*-')
     #plt.show()
     results = run_experiment(X, y, splits, ffts=True)
