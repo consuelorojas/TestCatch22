@@ -7,7 +7,7 @@ from datetime import datetime
 plt.style.use('report.mplstyle')
 
 
-result_file = "results/sine/sine_periods/results_20260224_145322.pkl"
+result_file = "results/sine/sine_periods/results_20260610_151236.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
@@ -74,7 +74,7 @@ plt.ylabel("AUC")
 plt.grid(True)
 plt.text(-0.13, 1.01, "(b)", fontweight="bold", fontsize=14, va="bottom", ha="left", transform=plt.gca().transAxes)
 plt.tight_layout()
-plt.ylim(0.2, 1.1)
+plt.ylim(-0.01, 1.1)
 plt.savefig(
     "results/sine/sine_periods/errorbars_1-8_np_review.eps", format="eps",
     dpi=180
