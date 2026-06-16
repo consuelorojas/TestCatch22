@@ -10,7 +10,8 @@ plt.style.use('report.mplstyle')
 # ---- Load results from file ----
 # Replace this with your actual path:
 result_file = "results/fhn/fhn_parameter/results_20260610_141954.pkl" #review
-result_file = "results/fhn/fhn_parameter/results_20260224_163459.pkl"
+#result_file = "results/fhn/fhn_parameter/results_20260224_163459.pkl"
+
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 

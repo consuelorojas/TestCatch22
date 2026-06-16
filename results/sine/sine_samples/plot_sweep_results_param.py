@@ -7,7 +7,7 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/sine/sine_samples/results_20260224_145410.pkl"
+result_file = "results/sine/sine_samples/results_20260610_151236.pkl"
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
