@@ -29,7 +29,8 @@ cmap.set_bad("gray")
 
 # Sine waves parameters
 fbase = 5
-f1 = 5.18
+#f1 = 5.18
+f1 = 5.35
 nperiods = 3
 npoints = 7
 

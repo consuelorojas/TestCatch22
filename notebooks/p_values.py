@@ -21,6 +21,16 @@ METHODS = [
     "features_pca"
 ]
 
+from pathlib import Path
+
+def latest_pkl(folder):
+    folder = Path(folder)
+    files = list(folder.glob("results_*.pkl"))
+
+    if not files:
+        raise FileNotFoundError(f"No .pkl files found in {folder}")
+
+    return str(max(files, key=lambda p: p.stat().st_mtime))
 
 # open results
 def results_dataframe(path_to_results):
@@ -185,29 +195,28 @@ def process_results_dict(results_dict, max_workers = 4, remove_ceiling=True, cei
 def main():
 
     results_sine = {
-        'df': 'results/sine/sine_frequency/results_20260610_095517.pkl',
-        'periods': 'results/sine/sine_periods/results_20260610_151236.pkl',
-        'noise': 'results/sine/sine_noise/results_20260610_095517.pkl',
-        'npp': 'results/sine/sine_points/results_20260610_151236.pkl',
-        'samples': 'results/sine/sine_samples/results_20260610_151236.pkl'
+        'df': latest_pkl('results/sine/sine_frequency'),
+        'periods': latest_pkl('results/sine/sine_periods'),
+        'noise': latest_pkl('results/sine/sine_noise'),
+        'npp': latest_pkl('results/sine/sine_points'),
+        'samples': latest_pkl('results/sine/sine_samples')
     }
 
     results_fhn_dyn = {
-        'b': 'results/fhn/fhn_parameter/results_20260610_141954.pkl',
-        'periods': 'results/fhn/fhn_periods/results_20260610_141955.pkl',
-        'npp': 'results/fhn/fhn_npp/results_20260610_141955.pkl',
-        'noise': 'results/fhn/fhn_noise/results_20260615_152611.pkl', 
-        'samples': 'results/fhn/fhn_samples/results_20260610_141955.pkl'
+        'b': latest_pkl('results/fhn/fhn_parameter'),
+        'periods': latest_pkl('results/fhn/fhn_periods'),
+        'npp': latest_pkl('results/fhn/fhn_npp'),
+        'noise': latest_pkl('results/fhn/fhn_noise'),
+        'samples': latest_pkl('results/fhn/fhn_samples')
     }
 
     results_fhn_obs = {
-        'b' : 'results/fhn_obs/parameter/results_20260610_141954.pkl',
-        'noise': 'results/fhn_obs/noise/results_20260615_152611.pkl',
-        'npp': 'results/fhn_obs/npoints/results_20260610_141955.pkl',
-        'periods': 'results/fhn_obs/periods/results_20260610_141955.pkl',
-        'samples': 'results/fhn_obs/samples/results_20260610_141954.pkl'
+        'b': latest_pkl('results/fhn_obs/parameter'),
+        'noise': latest_pkl('results/fhn_obs/noise'),
+        'npp': latest_pkl('results/fhn_obs/npoints'),
+        'periods': latest_pkl('results/fhn_obs/periods'),
+        'samples': latest_pkl('results/fhn_obs/samples')
     }
-    
 
 
 

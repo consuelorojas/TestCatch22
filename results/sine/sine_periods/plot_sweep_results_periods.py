@@ -7,7 +7,11 @@ from datetime import datetime
 plt.style.use('report.mplstyle')
 
 
-result_file = "results/sine/sine_periods/results_20260610_151236.pkl"
+from pathlib import Path
+
+result_file = next(
+    Path("results/sine/sine_periods").glob("results_20260616*.pkl")
+)
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 

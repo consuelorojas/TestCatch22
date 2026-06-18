@@ -124,23 +124,39 @@ def time_single_fold(X_train, X_test, y_train, y_test, classifier, probability=T
     Returns:
     - auc_score: AUC score for the fold
     """
-    train_time, test_time = 0, 0
+
+    tuning_time, train_time, test_time = 0, 0, 0
     start = time.time()
-    classifier.fit(X_train, y_train)
-    train_time = time.time() - start
+    # grid search 
+    param_grid = {
+        "C": [0.1, 1, 10, 100],
+        "gamma":["scale", 0.01, 0.1, 1]
+    }
+
+    # cross validation
+    cv = StratifiedKFold(n_splits=3, shuffle=True)
+    grid = GridSearchCV(classifier, param_grid, cv=cv, scoring="roc_auc" if len(np.unique(y_train)) == 2 else "accuracy")
+    grid.fit(X_train, y_train)
+    
+    # best estimator
+    classifier_tuned = grid.best_estimator_
+    tuning_time = time.time() - start
+
+    classifier_tuned.fit(X_train, y_train)
+    train_time = time.time() - start - tuning_time
     # compute probabilities or decision function
     if probability and hasattr(classifier, 'predict_proba'):
         _= classifier.predict_proba(X_test)[:, 1]
-        test_time = time.time() - start - train_time
+        test_time = time.time() - train_time
 
     elif hasattr(classifier, 'decision_function'):
         _ = classifier.decision_function(X_test)
-        test_time = time.time() - start - train_time
+        test_time = time.time() - train_time
 
     else:
         raise ValueError("Model does not support probability prediction or decision function.")
     
-    return train_time, test_time
+    return train_time, test_time, tuning_time
 
 # ---------- Pipeline function ----------
 
@@ -255,7 +271,7 @@ def run_experiment(X,y, splits, n_pca_components = 0.95, ffts=False, clf_fn = No
 
 # Time for the run_experiment function. Get the time per configuration
 
-def time_experiment(X,y, splits, n_pca_components = 2, clf_fn = None, features=None, ffts=False):
+def time_experiment(X,y, splits, n_pca_components = 0.95, clf_fn = None, features=None, ffts=False):
     """
     Time the classification pipeline with four config
     - Raw
@@ -295,20 +311,20 @@ def time_experiment(X,y, splits, n_pca_components = 2, clf_fn = None, features=N
         x_train_raw = scaler_raw.fit_transform(x_train)
         x_test_raw = scaler_raw.transform(x_test)
         time_raw = time.time() - time_raw
-        train_time, test_time = time_single_fold(x_train_raw, x_test_raw, y_train, y_test, clf)
-        raw.append((train_time, test_time, time_raw))
+        train_time, test_time, tuned_time = time_single_fold(x_train_raw, x_test_raw, y_train, y_test, clf)
+        raw.append((train_time, test_time, time_raw, tuned_time))
 
         # raw + pca
         clf = clf_fn()
         pca_time = time.time()
-        train_pca, pca_tf, scaler = apply_pca(x_train,n_components = 1)
+        train_pca, pca_tf, scaler = apply_pca(x_train,n_components = n_pca_components)
 
         test_pca = scaler.transform(x_test)
         test_pca = pca_tf.transform(test_pca)
         pca_time = time.time() - pca_time
 
-        train_time, test_time = time_single_fold(train_pca, test_pca, y_train, y_test, clf)
-        pca.append((train_time, test_time, pca_time))
+        train_time, test_time, tuned_time = time_single_fold(train_pca, test_pca, y_train, y_test, clf)
+        pca.append((train_time, test_time, pca_time, tuned_time))
         
         # fft features
         if ffts:
@@ -323,19 +339,19 @@ def time_experiment(X,y, splits, n_pca_components = 2, clf_fn = None, features=N
             X_fft_test_scaled = scaler_fft.transform(X_fft_test)
             fft_time = time.time() - fft_time
 
-            train_time, test_time = time_single_fold(X_fft_train_scaled, X_fft_test_scaled, y_train, y_test, clf)
-            fft.append((train_time, test_time, fft_time))
+            train_time, test_time, tuned_time = time_single_fold(X_fft_train_scaled, X_fft_test_scaled, y_train, y_test, clf)
+            fft.append((train_time, test_time, fft_time, tuned_time))
 
             clf = clf_fn()
             fft_time = time.time()
 
-            train_fft, pca_tf_fft, scaler_fft = apply_pca(X_fft_train,n_components = 2)
+            train_fft, pca_tf_fft, scaler_fft = apply_pca(X_fft_train,n_components = n_pca_components)
             test_fft = scaler_fft.transform(X_fft_test)
             test_fft = pca_tf_fft.transform(test_fft)
             fft_time = time.time() - fft_time
 
-            train_time, test_time = time_single_fold(train_fft, test_fft, y_train, y_test, clf)
-            pca_fft.append((train_time, test_time, fft_time))
+            train_time, test_time, tuned_time = time_single_fold(train_fft, test_fft, y_train, y_test, clf)
+            pca_fft.append((train_time, test_time, fft_time, tuned_time))
 
         # features
         clf = clf_fn()
@@ -349,8 +365,8 @@ def time_experiment(X,y, splits, n_pca_components = 2, clf_fn = None, features=N
 
         feat_time = time.time() - feat_time
 
-        train_time, test_time = time_single_fold(train_feat, test_feat, y_train, y_test, clf)
-        feat.append((train_time, test_time, feat_time))
+        train_time, test_time, tuned_time = time_single_fold(train_feat, test_feat, y_train, y_test, clf)
+        feat.append((train_time, test_time, feat_time, tuned_time))
 
 
         # features + pca
@@ -362,9 +378,9 @@ def time_experiment(X,y, splits, n_pca_components = 2, clf_fn = None, features=N
         test_feat_pca = scaler.transform(test_feat)
         test_feat_pca = pca_tf.transform(test_feat_pca)
         feat_pca_time = time.time() - feat_pca_time
-        train_time, test_time = time_single_fold(train_feat_pca, test_feat_pca, y_train, y_test, clf)
+        train_time, test_time, tuned_time = time_single_fold(train_feat_pca, test_feat_pca, y_train, y_test, clf)
 
-        feat_pca.append([train_time, test_time, feat_pca_time+feat_time])
+        feat_pca.append([train_time, test_time, feat_pca_time+feat_time, tuned_time])
     if ffts:
         return {
             "raw": raw,

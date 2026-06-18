@@ -7,7 +7,11 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_file = "results/fhn/fhn_npp/results_20260610_141955.pkl"
+from pathlib import Path
+
+result_file = next(
+    Path("results/fhn/fhn_npp").glob("results_20260616*.pkl")
+)
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
