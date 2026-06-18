@@ -139,18 +139,18 @@ def time_single_fold(X_train, X_test, y_train, y_test, classifier, probability=T
     grid.fit(X_train, y_train)
     
     # best estimator
-    classifier_tuned = grid.best_estimator_
+    classifier_best = grid.best_estimator_
     tuning_time = time.time() - start
 
-    classifier_tuned.fit(X_train, y_train)
+    classifier_best.fit(X_train, y_train)
     train_time = time.time() - start - tuning_time
     # compute probabilities or decision function
     if probability and hasattr(classifier, 'predict_proba'):
-        _= classifier.predict_proba(X_test)[:, 1]
+        _= classifier_best.predict_proba(X_test)[:, 1]
         test_time = time.time() - train_time
 
     elif hasattr(classifier, 'decision_function'):
-        _ = classifier.decision_function(X_test)
+        _ = classifier_best.decision_function(X_test)
         test_time = time.time() - train_time
 
     else:
