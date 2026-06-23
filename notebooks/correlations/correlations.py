@@ -14,8 +14,8 @@ sys.path.append(os.path.abspath("./data"))
 sys.path.append(os.path.abspath("./features"))
 sys.path.append(os.path.abspath("./preprocessing"))
 from dataset import create_labeled_dataset, get_kfold_splits
-from features import extract_features
-from preprocessing import apply_pca
+from features import extract_features #type:ignore
+from preprocessing import apply_pca #type:ignore
 
 cmap = mpl.colormaps.get_cmap("coolwarm").with_extremes(under="w")
 cmap.set_bad("0.4")
@@ -49,32 +49,36 @@ noise = 0.1
 samples = 80
 
 # sine
-Xs, ys = create_labeled_dataset(
+# we create the different signals
+Xs, ys = create_labeled_dataset( #type:ignore
     [(0, 'sine', {'args': [fbase, noise, npoints, nperiods]}),
     (1, 'sine', {'args': [f1, noise, npoints, nperiods]})],
     n_samples_per_class=samples
 )
 
-Xobs, yobs, t = create_labeled_dataset([
+Xobs, yobs, t = create_labeled_dataset([ #type:ignore
     (0, 'fhn_obs', {'length':850, 'dt': dt, 'x0': [0,0], 'args':[b0, b1, epsilon, I, noise]}),
     (1, 'fhn_obs', {'length':850, 'dt': dt, 'x0': [0,0], 'args':[b0, b_obs, epsilon, I, noise]})],
     n_samples_per_class=samples, subsample_step = step, transient = trans, return_time=True
     )
 
-Xdyn, ydyn, t = create_labeled_dataset([
+Xdyn, ydyn, t = create_labeled_dataset([ #type:ignore
     (0, 'fhn_obs', {'length':850, 'dt': dt, 'x0': [0,0], 'args':[b0, b1, epsilon, I, noise]}),
     (1, 'fhn_obs', {'length':850, 'dt': dt, 'x0': [0,0], 'args':[b0, b_dyn, epsilon, I, noise]})],
     n_samples_per_class=samples, subsample_step = step, transient = trans, return_time=True
     )
 
+# got the features for each signal.
 Sfeats = extract_features(Xs)
 ObsFeats = extract_features(Xobs)
 DynFeats = extract_features(Xdyn)
 
+# got the PCA of the features per signal
 Spca = apply_pca(Sfeats, n_components=2)[0]
 ObsPCA = apply_pca(ObsFeats, n_components = 2)[0]
 DynPCA = apply_pca(DynFeats, n_components = 2)[0]
 
+# got the values of the first 2 components
 Sfeats['PCA1'] = Spca[:,0]
 Sfeats['PCA2'] = Spca[:,1]
 ObsFeats['PCA1'] = ObsPCA[:,0]
@@ -82,10 +86,12 @@ ObsFeats['PCA2'] = ObsPCA[:,1]
 DynFeats['PCA1'] = DynPCA[:,0]
 DynFeats['PCA2'] = DynPCA[:,1]
 
+# got correlation of the features and itself but with the PCAs added as another column
 S_corr = np.abs(Sfeats.corr(method='pearson'))
 Obs_corr = np.abs(ObsFeats.corr(method='pearson'))
 Dyn_corr = np.abs(DynFeats.corr(method='pearson'))
 
+# order the sinusoidal by their values in descending
 order = S_corr.sort_values(by='PCA1', ascending=False).loc[lambda x: ~x.index.isin(['PCA1', 'PCA2'])].index
 print(order)
 

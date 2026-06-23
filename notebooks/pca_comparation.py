@@ -30,7 +30,7 @@ samples = 100
 
 
 # Run sweep
-X, y = create_labeled_dataset(
+X, y = create_labeled_dataset( #type: ignore
     [(0, 'sine', {'args': [fbase, noise, npoints, nperiods]}),
     (1, 'sine', {'args': [f1, noise, npoints, nperiods]})],
     n_samples_per_class=samples
@@ -42,18 +42,38 @@ x_train, x_test = X[splits[0][0]], X[splits[0][1]]
 y_train, y_test = y[splits[0][0]], y[splits[0][1]]
 
 # Raw + PCA
-train_pca, pca_tf, scaler = apply_pca(x_train,n_components = 2)
+train_pca, pca_tf, scaler = apply_pca(x_train,n_components = 0.95)
 test_pca = scaler.transform(x_test)
 test_pca = pca_tf.transform(test_pca)
 
 
+
 # Features + PCA
-X_feat = extract_features(X, return_array=True)
-train_feat, test_feat = X_feat[splits[0][0]], X_feat[splits[0][1]]
-train_feat_pca, pca_tf, scaler = apply_pca(train_feat, n_components=2)
+X_feat = extract_features(X, return_array=False)
+train_feat, test_feat = X_feat.values[splits[0][0]], X_feat.values[splits[0][1]]
+train_feat_pca, pca_tf, scaler = apply_pca(train_feat, n_components=0.95)
+
+"""
+print(f"Explained variance ratio: {pca_tf.explained_variance_ratio_}")
+print(f"Total explained variance: {pca_tf.explained_variance_ratio_.sum():.2f}")
+
+loading = pd.DataFrame(
+    pca_tf.components_.T,
+    index=X_feat.columns,
+    columns=[f"PC{i+1}" for i in range(pca_tf.n_components_)]
+)
+loading_abs = loading.abs()
+loading_norm = loading_abs.div(
+    loading_abs.sum(axis=0),
+    axis=1
+)
+
 test_feat = test_feat.values if isinstance(test_feat, pd.DataFrame) else test_feat
 test_feat_pca = scaler.transform(test_feat)
 test_feat_pca = pca_tf.transform(test_feat_pca)
+
+"""
+
 
 # Plotting
 fig, axs = plt.subplots(1, 2)#, figsize=(10, 8))
