@@ -4,7 +4,7 @@
 #SBATCH -c 20
 #SBATCH --mem=40G
 #SBATCH --time=1-00:00:00
-#SBATCH -J sweep_all22
+#SBATCH -J control_fhn
 
 # Initialize conda (IMPORTANT)
 source ~/.bashrc
@@ -21,4 +21,4 @@ conda activate testcatch22
  ls
 
 # Run your script
-srun ~/miniconda3/envs/testcatch22/bin/python runner2.py
+srun ~/miniconda3/envs/testcatch22/bin/python sweeps/fhn_obs/npoints.py
