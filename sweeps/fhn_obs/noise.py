@@ -18,7 +18,8 @@ from dataset import create_labeled_dataset, get_kfold_splits
 b0 = 0.1
 
 b1 = 1
-db1 = 0.18
+db1 = 0.18 #control
+db1 = 0.03157
 b12 = b1 + db1
 
 epsilon = 0.2
@@ -44,7 +45,7 @@ os.makedirs(output_dir, exist_ok=True)
 
 # Timestamped filename
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-output_file = os.path.join(output_dir, f"results_{timestamp}.pkl")
+output_file = os.path.join(output_dir, f"results_{timestamp}_control.pkl")
 
 # Run sweep
 def run_single_experiment(n):

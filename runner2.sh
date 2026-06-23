@@ -21,4 +21,4 @@ conda activate testcatch22
  ls
 
 # Run your script
-srun ~/miniconda3/envs/testcatch22/bin/python sweeps/fhn_obs/npoints.py
+srun ~/miniconda3/envs/testcatch22/bin/python runner2.py
