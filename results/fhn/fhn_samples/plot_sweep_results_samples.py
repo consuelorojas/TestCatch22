@@ -84,10 +84,10 @@ plt.grid(True)
 plt.xticks(data.samples.unique()[::2])#, rotation=45)
 plt.ylim(0.5, 1.02)
 plt.xlim(0, 105)
-plt.text(-0.13, 1.01, "(c)", fontweight="bold", fontsize=13, va="bottom", ha="left", transform=plt.gca().transAxes)
+plt.text(-0.13, 1.01, "(d)", fontweight="bold", fontsize=13, va="bottom", ha="left", transform=plt.gca().transAxes)
 plt.tight_layout()
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_samples/samples_fhn_errorbars.eps",
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn/fhn_samples/samples_fhn_errorbars_close_up.eps",
     format = 'eps',
     dpi=180
 )

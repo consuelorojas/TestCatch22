@@ -90,7 +90,7 @@ plt.ylabel("AUC")
 plt.grid(True)
 plt.ylim(0.2, 1.1)
 plt.xlim(-0.01, 0.31)
-plt.text(-0.13, 1.01, "(b)", fontweight="bold", fontsize=14, va="bottom", ha="left", transform=plt.gca().transAxes)
+plt.text(-0.13, 1.01, "(a)", fontweight="bold", fontsize=14, va="bottom", ha="left", transform=plt.gca().transAxes)
 plt.tight_layout()
 
 plt.savefig(

@@ -77,7 +77,7 @@ plt.tight_layout()
 plt.xticks(data.periods.unique()[::2])
 #plt.xlim(-0.05, 0.65)
 plt.savefig(
-    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn_obs/periods/periods_fhn_obs_errorbars.png",
-    format="png", dpi=180
+    "/home/consuelo/Documentos/GitHub/TestCatch22/results/fhn_obs/periods/periods_fhn_obs_errorbars.eps",
+    format="eps", dpi=180
 )
 plt.show()

@@ -11,8 +11,9 @@ plt.style.use('report.mplstyle')
 from pathlib import Path
 
 result_file = next(
-    Path("results/fhn_obs/noise").glob("results_20260616*.pkl")
+    Path("results/fhn_obs/noise").glob("results_20260623*.pkl")
 )
+
 with open(result_file, 'rb') as f:
     all_results = pickle.load(f)
 
