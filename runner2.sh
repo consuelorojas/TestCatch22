@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -p Total
+#SBATCH -p LightFull
 #SBATCH -N 1
 #SBATCH -c 20
 #SBATCH --mem=40G

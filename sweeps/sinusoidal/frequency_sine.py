@@ -44,8 +44,8 @@ def run_single_experiment(freq):
         n_samples_per_class=samples
     )
     splits = get_kfold_splits(X, y, n_splits=10, stratified=True)
-    clf = SVC(kernel='linear')
-    results = run_experiment(X, y, splits, ffts=True, clf_fn=clf)
+    
+    results = run_experiment(X, y, splits, ffts=True, clf_fn=lambda: SVC(kernel="linear", probability=True))
 
     return {
     'df': round(freq - fbase, 3),

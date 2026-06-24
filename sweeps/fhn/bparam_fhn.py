@@ -58,11 +58,11 @@ def run_single_experiment(b):
         (1, 'fhn', {'length':750, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b, epsilon, I, noise]})],
         n_samples_per_class=samples, subsample_step = step, transient = trans
         )
-    clf = SVC(kernel='linear')
+    
     splits = get_kfold_splits(X, y, n_splits=10, stratified=True)
     #plt.plot(X[0], '*-')
     #plt.show()
-    results = run_experiment(X, y, splits, ffts=True, clf_fn=clf)
+    results = run_experiment(X, y, splits, ffts=True, clf_fn=lambda: SVC(kernel="linear", probability=True))
 
     return{
         'b': round(b - b1, 3),
