@@ -5,6 +5,7 @@ from datetime import datetime
 from matplotlib import pyplot as plt
 import numpy as np
 from tqdm import tqdm
+from sklearn.svm import SVC
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
 sys.path.append(os.path.abspath("./models"))
@@ -58,10 +59,11 @@ def run_single_experiment(b):
         n_samples_per_class=samples, subsample_step = step, transient = trans
         )
     
+    clf = SVC(kernel='linear')
     splits = get_kfold_splits(X, y, n_splits=10, stratified=True)
     #plt.plot(X[0], '*-')
     #plt.show()
-    results = run_experiment(X, y, splits, ffts=True)
+    results = run_experiment(X, y, splits, ffts=True, clf_fn=clf)
 
     return{
         'b': round(b - b1, 3),

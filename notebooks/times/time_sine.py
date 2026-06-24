@@ -27,7 +27,7 @@ X,y = create_labeled_dataset( #type:ignore
     n_samples_per_class=samples
 )
 
-splits = get_kfold_splits(X, y, n_splits=50, stratified=True)
+splits = get_kfold_splits(X, y, n_splits=10, stratified=True)
 results = time_experiment(X, y, splits, ffts=True)
 
 

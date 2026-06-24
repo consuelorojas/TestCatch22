@@ -147,11 +147,11 @@ def time_single_fold(X_train, X_test, y_train, y_test, classifier, probability=T
     # compute probabilities or decision function
     if probability and hasattr(classifier, 'predict_proba'):
         _= classifier_best.predict_proba(X_test)[:, 1]
-        test_time = time.time() - train_time
+        test_time = time.time() - (train_time + start + tuning_time)
 
     elif hasattr(classifier, 'decision_function'):
         _ = classifier_best.decision_function(X_test)
-        test_time = time.time() - train_time
+        test_time = time.time() - (train_time + start + tuning_time)
 
     else:
         raise ValueError("Model does not support probability prediction or decision function.")
@@ -181,7 +181,7 @@ def run_experiment(X,y, splits, n_pca_components = 0.95, ffts=False, clf_fn = No
     """
 
     if clf_fn is None:
-        clf_fn = lambda: SVC(probability=True, random_state=42)
+        clf_fn = lambda: SVC(probability=True)
     
     raw, pca, feat, feat_pca = [], [], [], []
     fft, pca_fft  = [], []
@@ -292,7 +292,7 @@ def time_experiment(X,y, splits, n_pca_components = 0.95, clf_fn = None, feature
     """
 
     if clf_fn is None:
-        clf_fn = lambda: SVC(probability=True, random_state=42)
+        clf_fn = lambda: SVC(probability=True)
     
     raw, pca, feat, feat_pca = [], [], [], []
     fft, pca_fft  = [], []

@@ -3,6 +3,7 @@ import sys
 import pickle
 from datetime import datetime
 import tqdm
+from sklearn.svm import SVC
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
 sys.path.append(os.path.abspath("./models"))
@@ -43,7 +44,8 @@ def run_single_experiment(freq):
         n_samples_per_class=samples
     )
     splits = get_kfold_splits(X, y, n_splits=10, stratified=True)
-    results = run_experiment(X, y, splits, ffts=True)
+    clf = SVC(kernel='linear')
+    results = run_experiment(X, y, splits, ffts=True, clf_fn=clf)
 
     return {
     'df': round(freq - fbase, 3),

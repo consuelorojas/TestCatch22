@@ -5,6 +5,7 @@ from datetime import datetime
 from matplotlib import pyplot as plt
 import numpy as np
 from tqdm import tqdm
+from sklearn.svm import SVC
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
 sys.path.append(os.path.abspath("./models"))
@@ -48,7 +49,7 @@ os.makedirs(output_dir, exist_ok=True)
 
 # Timestamped filename
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-output_file = os.path.join(output_dir, f"results_{timestamp}.pkl")
+output_file = os.path.join(output_dir, f"results_{timestamp}_lineal_EXPC.pkl")
 
 # Run sweep
 def run_single_experiment(b):
@@ -57,11 +58,11 @@ def run_single_experiment(b):
         (1, 'fhn', {'length':750, 'dt': 0.1, 'x0': [0,0], 'args':[b0, b, epsilon, I, noise]})],
         n_samples_per_class=samples, subsample_step = step, transient = trans
         )
-    
+    clf = SVC(kernel='linear')
     splits = get_kfold_splits(X, y, n_splits=10, stratified=True)
     #plt.plot(X[0], '*-')
     #plt.show()
-    results = run_experiment(X, y, splits, ffts=True)
+    results = run_experiment(X, y, splits, ffts=True, clf_fn=clf)
 
     return{
         'b': round(b - b1, 3),
