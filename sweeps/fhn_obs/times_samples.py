@@ -64,7 +64,9 @@ for i, sample in enumerate(tqdm(samples)):
         'raw': results['raw'],
         'pca': results['pca'],
         'features': results['features'],
-        'features_pca': results['features_pca']
+        'features_pca': results['features_pca'],
+        'fft': results['fft'],
+        'fft_pca': results['fft_pca']
     })
 
 # Save results

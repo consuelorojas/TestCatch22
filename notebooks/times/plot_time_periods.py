@@ -9,9 +9,9 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_fhn = "results/fhn/fhn_periods/results_times_20251125_185555.pkl"
-results_fhn_obs = "results/fhn_obs/periods/results_times_20251125_185424.pkl"
-results_sine = "results/sine/sine_periods/results_times_20251126_130959.pkl"
+result_fhn = "results/fhn/fhn_periods/results_times_20260618_175548.pkl"
+results_fhn_obs = "results/fhn_obs/periods/results_times_20260618_175548.pkl"
+results_sine = "results/sine/sine_periods/results_times_20260618_175548.pkl"
 
 def export_legend(legend, filename="legend_times.pdf"):
     fig  = legend.figure
@@ -160,18 +160,18 @@ for idx, method in enumerate(method_list):
     )
 
     plt.tight_layout()
-    plt.savefig(f"notebooks/times/periods_times_{method}.pdf", format="pdf")
+    #plt.savefig(f"notebooks/times/periods_times_{method}.pdf", format="pdf")
     leg = plt.legend(ncol=9, fontsize=10)
     export_legend(leg, filename=f"notebooks/times/legend_times_{method}.pdf")
     plt.show()
 
-'''
+
 # ---- SubPlots (1x3 layout) ----
 fig, axs = plt.subplots(1, 3, figsize=(12, 4.8))
 axs = axs.flatten()
 
 # Set y-limits for each subplot (optional)
-row1_ylim = (0, 0.6)   # adjust as needed
+#row1_ylim = (0, 0.6)   # adjust as needed
 axs = axs.flatten()# ---- SubPlots (1x3 layout) ----
 fig, axs = plt.subplots(1, 3, figsize=(12, 4.8))
 axs = axs.flatten()
@@ -240,7 +240,7 @@ for sig, col in signal_colors.items():
 #fig.legend(handles, labels, ncol=3, loc="upper center", fontsize=10)
 
 plt.tight_layout()
-plt.savefig("notebooks/times/periods_times.pdf", format="pdf")
+#plt.savefig("notebooks/times/periods_times.pdf", format="pdf")
 plt.show()
 
 # Loop over methods and axes
@@ -303,6 +303,5 @@ for sig, col in signal_colors.items():
 #fig.legend(handles, labels, ncol=3, loc="upper center", fontsize=10)
 
 plt.tight_layout()
-plt.savefig("notebooks/times/periods_times.pdf", format="pdf")
+#plt.savefig("notebooks/times/periods_times.pdf", format="pdf")
 plt.show()
-'''

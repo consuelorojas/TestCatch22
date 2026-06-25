@@ -55,14 +55,17 @@ for i, s in enumerate(tqdm(step)):
         )
     
     splits = get_kfold_splits(X, y, n_splits=10, stratified=True)
-    results = time_experiment(X, y, splits)
+    results = time_experiment(X, y, splits, ffts=True)
 
     all_results.append({
         'npp': npp[i],
         'raw': results['raw'],
         'pca': results['pca'],
         'features': results['features'],
-        'features_pca': results['features_pca']
+        'features_pca': results['features_pca'],
+        'fft': results['fft'],
+        'fft_pca': results['fft_pca']
+
     })
 
 # Save results

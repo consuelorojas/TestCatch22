@@ -9,6 +9,7 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
+
 result_fhn = "results/fhn/fhn_times/results_20251124_130931.pkl"
 results_fhn_obs = "results/fhn_obs/times/results_20251125_151259.pkl"
 results_sine = "results/sine/sine_times/results_20251124_145817.pkl"

@@ -9,9 +9,9 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_fhn = "results/fhn/fhn_npp/results_times_20251125_183234.pkl"
-results_fhn_obs = "results/fhn_obs/npoints/results_times_20251125_183324.pkl"
-results_sine = "results/sine/sine_points/results_times_20251125_183442.pkl"
+result_fhn = "results/fhn/fhn_npp/results_times_20260618_175548.pkl"
+results_fhn_obs = "results/fhn_obs/npoints/results_times_20260618_175548.pkl"
+results_sine = "results/sine/sine_points/results_times_20260618_175548.pkl"
 
 
 
@@ -34,7 +34,7 @@ def files_to_dataframe(results_files):
     records = []
     for entry in all_results:
         df =  entry["npp"]
-        for method in ["raw", "pca", "features", "features_pca"]:
+        for method in ["raw", "pca", "features", "features_pca"]:#, 'fft', 'fft_pca']:
             for times in entry[method]:
                 records.append({"npp": df, "Method": method, "Train": times[0], "Test": times[1], "Pre": times[2]})
 
@@ -80,7 +80,7 @@ signal_frames = {
 }
 
 #method_list = ["raw", "pca", "features", "features_pca"]
-method_list = ["raw", "features", "features_pca"]
+method_list = ["raw", "features", "features_pca", "fft", "fft_pca"]
 
 signal_colors = {
     "Sine": "C4",

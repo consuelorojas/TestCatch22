@@ -76,7 +76,7 @@ legend = ax.legend(
     handles=handles,
     loc="center",
     frameon=False,
-    ncol=len(handles)//2,
+    ncol=len(handles),
     columnspacing=1.0,
     handletextpad=0.35,
     fontsize=9
@@ -85,6 +85,6 @@ legend = ax.legend(
 # ------------------------------
 # Export tightly (legend bbox)
 # ------------------------------
-export_legend(legend, "legend_horizontal_all.png")
+export_legend(legend, "legend_horizontal_fhn.eps")
 
 plt.show()
