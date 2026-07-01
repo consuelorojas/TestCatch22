@@ -49,7 +49,7 @@ os.makedirs(output_dir, exist_ok=True)
 
 # Timestamped filename
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-output_file = os.path.join(output_dir, f"results_{timestamp}_lineal_EXPC.pkl")
+output_file = os.path.join(output_dir, f"results_lineal_{timestamp}.pkl")
 
 # Run sweep
 def run_single_experiment(b):

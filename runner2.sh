@@ -1,10 +1,10 @@
 #!/bin/bash
 #SBATCH -p LightFull
 #SBATCH -N 1
-#SBATCH -c 90
+#SBATCH -c 15
 #SBATCH --mem=40G
 #SBATCH --time=1-00:00:00
-#SBATCH -J control time experiments
+#SBATCH -J lineal_control
 
 # Initialize conda (IMPORTANT)
 source ~/.bashrc
