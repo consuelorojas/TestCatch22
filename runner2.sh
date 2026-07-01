@@ -1,10 +1,10 @@
 #!/bin/bash
 #SBATCH -p LightFull
 #SBATCH -N 1
-#SBATCH -c 20
+#SBATCH -c 90
 #SBATCH --mem=40G
 #SBATCH --time=1-00:00:00
-#SBATCH -J control_fhn
+#SBATCH -J control time experiments
 
 # Initialize conda (IMPORTANT)
 source ~/.bashrc
