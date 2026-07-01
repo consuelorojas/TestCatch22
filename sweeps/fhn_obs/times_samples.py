@@ -56,7 +56,7 @@ for i, sample in enumerate(tqdm(samples)):
     
     splits = get_kfold_splits(X, y, n_splits=50, stratified=True)
     #print(f" train set size: {len(splits[0][0])}, test set size: {len(splits[0][1])}")
-    results = time_experiment(X, y, splits)
+    results = time_experiment(X, y, splits, ffts=True)
     
 
     all_results.append({
