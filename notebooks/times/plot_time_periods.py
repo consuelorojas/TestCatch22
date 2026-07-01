@@ -9,8 +9,8 @@ plt.style.use('report.mplstyle')
 
 # ---- Load results from file ----
 # Replace this with your actual path:
-result_fhn = "results/fhn/fhn_periods/results_times_20260618_175548.pkl"
-results_fhn_obs = "results/fhn_obs/periods/results_times_20260618_175548.pkl"
+result_fhn = "results/fhn/fhn_periods/results_times_20260626_001310.pkl"
+results_fhn_obs = "results/fhn_obs/periods/results_times_20260626_001310.pkl"
 results_sine = "results/sine/sine_periods/results_times_20260618_175548.pkl"
 
 def export_legend(legend, filename="legend_times.pdf"):
@@ -83,8 +83,8 @@ signal_frames = {
     "FHN dyn": df_fhn_dyn,
 }
 
-#method_list = ["raw", "pca", "features", "features_pca"]
-method_list = ["raw", "features", "features_pca"]
+method_list = ["raw", "pca", "features", "features_pca"]
+#method_list = ["raw", "fft", "features", "features_pca"]
 
 signal_colors = {
     "Sine": "C4",
@@ -160,7 +160,7 @@ for idx, method in enumerate(method_list):
     )
 
     plt.tight_layout()
-    #plt.savefig(f"notebooks/times/periods_times_{method}.pdf", format="pdf")
+    plt.savefig(f"notebooks/times/periods_times_{method}.pdf", format="pdf")
     leg = plt.legend(ncol=9, fontsize=10)
     export_legend(leg, filename=f"notebooks/times/legend_times_{method}.pdf")
     plt.show()

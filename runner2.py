@@ -27,12 +27,12 @@ SCRIPTS = [
 ]
 '''
 SCRIPTS = [
-    "sweeps/fhn/time_sample_fhn.py",
-    "sweeps/fhn/time_npoints.py",
-    "sweeps/fhn/time_periods.py",
-    "sweeps/fhn_obs/times_npoints.py",
-    "sweeps/fhn_obs/times_periods.py",
-    "sweeps/fhn_obs/times_samples.py",
+#    "sweeps/fhn/time_sample_fhn.py",
+#    "sweeps/fhn/time_npoints.py",
+#    "sweeps/fhn/time_periods.py",
+#    "sweeps/fhn_obs/times_npoints.py",
+#    "sweeps/fhn_obs/times_periods.py",
+#    "sweeps/fhn_obs/times_samples.py",
     "sweeps/sinusoidal/times_npoints.py",
     "sweeps/sinusoidal/times_periods.py",
     "sweeps/sinusoidal/times_sine.py"
