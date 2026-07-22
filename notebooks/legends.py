@@ -85,6 +85,62 @@ legend = ax.legend(
 # ------------------------------
 # Export tightly (legend bbox)
 # ------------------------------
-export_legend(legend, "legend_horizontal_fhn.eps")
+#export_legend(legend, "legend_horizontal_fhn.eps")
+
+plt.show()
+
+
+import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
+
+plt.style.use("report.mplstyle")
+
+legend_elements = [
+    Line2D(
+        [0], [0],
+        marker="o",
+        color="C6",
+        linestyle="None",
+        markersize=8,
+        label="Sine",
+    ),
+    Line2D(
+        [0], [0],
+        marker="*",
+        color="C6",
+        linestyle="None",
+        markersize=10,
+        label="FHN Obs",
+    ),
+    Line2D(
+        [0], [0],
+        marker="s",
+        color="C6",
+        linestyle="None",
+        markersize=8,
+        label="FHN Dyn",
+    ),
+]
+
+fig, ax = plt.subplots(figsize=(3, 1.2))
+
+ax.legend(
+    handles=legend_elements,
+    loc="center",
+    frameon=True,
+    ncol=3,
+    fontsize=10,
+)
+
+ax.axis("off")
+
+plt.tight_layout()
+
+plt.savefig(
+    "legend_basic_stats.eps",
+    format="eps",
+    dpi=300,
+    bbox_inches="tight",
+)
 
 plt.show()

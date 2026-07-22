@@ -71,7 +71,7 @@ x_pca = []
 variance = 0
 n_pcs = 0
 for frame in x_feat:
-    pca_aux = apply_pca(frame, n_components=0.95)
+    pca_aux = apply_pca(frame, n_components=3)
     x_pca.append(pca_aux[0])
     variance_percentages = pca_aux[1].explained_variance_ratio_ * 100
     variance = variance + np.sum(variance_percentages)

@@ -1,307 +1,486 @@
 import pickle
-import os
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
+from pathlib import Path
+
 import numpy as np
-import matplotlib.ticker as mtick
-plt.style.use('report.mplstyle')
+import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
 
-# ---- Load results from file ----
-# Replace this with your actual path:
-result_fhn = "results/fhn/fhn_periods/results_times_20260626_001310.pkl"
-results_fhn_obs = "results/fhn_obs/periods/results_times_20260626_001310.pkl"
-results_sine = "results/sine/sine_periods/results_times_20260618_175548.pkl"
-
-def export_legend(legend, filename="legend_times.pdf"):
-    fig  = legend.figure
-    fig.canvas.draw()
-    bbox  = legend.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
-    fig.savefig(filename, dpi="figure", bbox_inches=bbox)
+plt.style.use("report.mplstyle")
 
 
-# ---- Convert to DataFrame ----
-'''
-Data structure in all_results:
-    dictionary with keys: "samples", "raw", "pca", "features", "features_pca".
-    Each key (except "samples") contains a list of lists of times [train, test, pre] for each fold.
-    There are 50 folds, so 50 entries per method.
-'''
+# ============================================================
+# GLOBAL FONT SETTINGS
+# ============================================================
 
-def files_to_dataframe(results_files):
+plt.rcParams.update({
+    "font.size": 25,
+    "axes.labelsize": 24,
+    "xtick.labelsize": 24,
+    "ytick.labelsize": 24,
+    "legend.fontsize": 24,
+})
+
+
+# ============================================================
+# CONFIGURATION
+# ============================================================
+
+FILES = {
+    "sine": "results/sine/sine_periods/results_times_20260701_124139.pkl",
+    "fhn_obs": "results/fhn_obs/periods/results_times_20260701_124139.pkl",
+    "fhn_dyn": "results/fhn/fhn_periods/results_times_20260701_124139.pkl",
+}
+
+METHODS = [
+    "raw",
+    "fft",
+    "features",
+]
+
+COLORS = {
+    "raw": "C0",
+    "fft": "C2",
+    "features": "C4",
+}
+
+METHOD_LABELS = {
+    "raw": "Raw",
+    "fft": "FFT",
+    "features": "Catch22",
+}
+
+PANEL_LABELS = {
+    "sine": "a",
+    "fhn_obs": "b",
+    "fhn_dyn": "c",
+}
+
+OUTPUT_DPI = 600
+
+
+# ============================================================
+# HELPER FUNCTIONS
+# ============================================================
+
+def mean_times(fold_list):
     """
-    Convert sweep results from a pickle file to a pandas DataFrame. For time_experiment results.1
+    Calculate the mean computational times over all folds.
+
+    Parameters
+    ----------
+    fold_list : list
+        List of tuples with the structure:
+
+        (training_time, testing_time, preprocessing_time, tuning_time)
+
+        Times are assumed to be stored in seconds.
+
+    Returns
+    -------
+    dict
+        Mean times converted to milliseconds.
     """
-    with open(results_files, 'rb') as f:
-        all_results = pickle.load(f)
+    arr = np.asarray(fold_list, dtype=float)
 
-    records = []
-    for entry in all_results:
-        df =  entry["periods"]
-        for method in ["raw", "pca", "features", "features_pca"]:
-            for times in entry[method]:
-                records.append({"periods": df, "Method": method, "Train": times[0], "Test": times[1], "Pre": times[2]})
+    if arr.ndim != 2 or arr.shape[1] < 4:
+        raise ValueError(
+            "Each method entry must contain rows with the structure "
+            "(train, test, pre, tune)."
+        )
 
-    df_results = pd.DataFrame(records)
-    return df_results
-
-sine_results = files_to_dataframe(results_sine)
-fhn_dyn_results = files_to_dataframe(result_fhn)
-fhn_obs_results = files_to_dataframe(results_fhn_obs)
+    return {
+        "train": arr[:, 0].mean() * 1000,
+        "test": arr[:, 1].mean() * 1000,
+        "pre": arr[:, 2].mean() * 1000,
+        "tune": arr[:, 3].mean() * 1000,
+    }
 
 
-# --- Compute mean & std per method/Δf ---
-df_sine = (
-    sine_results
-    .groupby(["Method", "periods"])
-    .agg(train_mean=("Train", "mean"), train_std=("Train", "std"),
-         test_mean=("Test", "mean"), test_std=("Test", "std"),
-         pre_mean=("Pre", "mean"), pre_std=("Pre", "std"))
-    .reset_index()
-)
-df_fhn_dyn = (
-    fhn_dyn_results
-    .groupby(["Method", "periods"])
-    .agg(train_mean=("Train", "mean"), train_std=("Train", "std"),
-         test_mean=("Test", "mean"), test_std=("Test", "std"),
-         pre_mean=("Pre", "mean"), pre_std=("Pre", "std")) 
-    .reset_index()
-)
-df_fhn_obs = (
-    fhn_obs_results
-    .groupby(["Method", "periods"])
-    .agg(train_mean=("Train", "mean"), train_std=("Train", "std"),
-         test_mean=("Test", "mean"), test_std=("Test", "std"),
-         pre_mean=("Pre", "mean"), pre_std=("Pre", "std")) 
-    .reset_index()
-)
+def extract_method_over_sweep(data, method):
+    """
+    Extract mean timing statistics for one method across all sweep points.
 
-# ---- Plot Config ----
-signal_frames = {
-    "Sine": df_sine,
-    "FHN obs": df_fhn_obs,
-    "FHN dyn": df_fhn_dyn,
-}
+    Parameters
+    ----------
+    data : list
+        Complete data loaded from one pickle file.
 
-method_list = ["raw", "pca", "features", "features_pca"]
-#method_list = ["raw", "fft", "features", "features_pca"]
+    method : str
+        Method name, such as 'raw', 'fft', or 'features'.
 
-signal_colors = {
-    "Sine": "C4",
-    "FHN obs": "C5",
-    "FHN dyn": "C6",
-}
+    Returns
+    -------
+    list of dict
+        One timing dictionary per sweep point.
+    """
+    output = []
 
-alpha_vals = {
-    "Train": 1.0,
-    "Test": 0.65,
-    "Pre": 0.35,
-}
+    for index, sweep_point in enumerate(data):
 
-# Common x-axis values (sorted union)
-all_samples = sorted(
-    set(df_sine.periods.unique()) 
-    | set(df_fhn_obs.periods.unique()) 
-    | set(df_fhn_dyn.periods.unique())
-)
-x = np.arange(len(all_samples))
+        if method not in sweep_point:
+            raise KeyError(
+                f"Method '{method}' was not found at sweep point {index}. "
+                f"Available keys: {list(sweep_point.keys())}"
+            )
 
-# Width of each signal block
-group_width = 0.3  # three groups → 0.75 total width
-offsets = {
-    "Sine": -group_width,
-    "FHN obs": 0,
-    "FHN dyn": group_width,
-}
-subplot_labels = ["(a)", "(b)", "(c)", "(d)"]
+        method_data = sweep_point[method]
+        output.append(mean_times(method_data))
 
-# ---- Main Loop (one figure per method) ----
-for idx, method in enumerate(method_list):
+    return output
 
-    fig, ax = plt.subplots(figsize=(6.4, 4.8))
 
-    for signal_name, frame in signal_frames.items():
-        color = signal_colors[signal_name]
+def validate_periods(data):
+    """
+    Verify that every sweep point contains the 'periods' key.
+    """
+    missing = [
+        index
+        for index, sweep_point in enumerate(data)
+        if "periods" not in sweep_point
+    ]
 
-        dfm = frame[frame["Method"] == method]
+    if missing:
+        raise KeyError(
+            "The key 'periods' is missing from sweep points: "
+            f"{missing}"
+        )
 
-        train_means = dfm.set_index("periods")["train_mean"].reindex(all_samples, fill_value=0)
-        test_means  = dfm.set_index("periods")["test_mean"].reindex(all_samples, fill_value=0)
-        pre_means   = dfm.set_index("periods")["pre_mean"].reindex(all_samples, fill_value=0)
 
-        xo = x + offsets[signal_name]
-
-        # Stacked bars (NO labels)
-        ax.bar(xo, train_means,
-               width=group_width, color=color, alpha=alpha_vals["Train"])
-        ax.bar(xo, test_means,
-               width=group_width, bottom=train_means,
-               color=color, alpha=alpha_vals["Test"])
-        ax.bar(xo, pre_means,
-               width=group_width, bottom=train_means + test_means,
-               color=color, alpha=alpha_vals["Pre"])
-
-    # Axes formatting
-    ax.set_xticks(x)
-    ax.set_xticklabels(all_samples, rotation=45)
-    ax.set_xlabel(r"Number of periods ($N_{p}$)")
-    ax.set_ylabel("Time (s)")
-    ax.grid(axis="y", linestyle="--", alpha=0.4)
-
-    # Panel letter (a), (b), (c), ...
-    ax.text(
-        0.02, 0.95,
-        f"({chr(97 + idx)})",
-        transform=ax.transAxes,
-        fontweight="bold",
-        fontsize=12,
-        va="top",
-        ha="left"
+def save_figure(fig, filename_stem):
+    """
+    Save a figure as PDF, EPS, and PNG.
+    """
+    fig.savefig(
+        f"{filename_stem}.pdf",
+        dpi=OUTPUT_DPI,
+        bbox_inches="tight",
     )
 
-    plt.tight_layout()
-    plt.savefig(f"notebooks/times/periods_times_{method}.pdf", format="pdf")
-    leg = plt.legend(ncol=9, fontsize=10)
-    export_legend(leg, filename=f"notebooks/times/legend_times_{method}.pdf")
+    fig.savefig(
+        f"{filename_stem}.eps",
+        format="eps",
+        dpi=OUTPUT_DPI,
+        bbox_inches="tight",
+    )
+
+    fig.savefig(
+        f"{filename_stem}.png",
+        format="png",
+        dpi=OUTPUT_DPI,
+        bbox_inches="tight",
+    )
+
+
+# ============================================================
+# PLOTTING FUNCTION
+# ============================================================
+
+def plot_signal(data, signal_name, panel_label):
+    """
+    Create one stacked grouped-bar plot for a signal type.
+
+    Each group corresponds to one number of periods.
+    Within each group, the three bars correspond to:
+        Raw, FFT, and Catch22.
+
+    Each bar is divided into:
+        preprocessing, training, testing, and tuning.
+    """
+    validate_periods(data)
+
+    samples = [sweep_point["periods"] for sweep_point in data]
+
+    processed = {
+        method: extract_method_over_sweep(data, method)
+        for method in METHODS
+    }
+
+    x = np.arange(len(samples))
+
+    bar_width = 0.28
+
+    offsets = {
+        "raw": -bar_width,
+        "fft": 0,
+        "features": bar_width,
+    }
+
+    fig, ax = plt.subplots(figsize=(15, 7))
+
+    for method in METHODS:
+
+        pre = np.array([
+            processed[method][j]["pre"]
+            for j in range(len(samples))
+        ])
+
+        train = np.array([
+            processed[method][j]["train"]
+            for j in range(len(samples))
+        ])
+
+        test = np.array([
+            processed[method][j]["test"]
+            for j in range(len(samples))
+        ])
+
+        tune = np.array([
+            processed[method][j]["tune"]
+            for j in range(len(samples))
+        ])
+
+        x_position = x + offsets[method]
+
+        bottom = np.zeros(len(samples))
+
+        # Preprocessing
+        ax.bar(
+            x_position,
+            pre,
+            bar_width,
+            color=COLORS[method],
+            alpha=0.90,
+            edgecolor="none",
+        )
+
+        bottom += pre
+
+        # Training
+        ax.bar(
+            x_position,
+            train,
+            bar_width,
+            bottom=bottom,
+            color=COLORS[method],
+            alpha=0.65,
+            edgecolor="none",
+        )
+
+        bottom += train
+
+        # Testing
+        ax.bar(
+            x_position,
+            test,
+            bar_width,
+            bottom=bottom,
+            color=COLORS[method],
+            alpha=0.40,
+            edgecolor="none",
+        )
+
+        bottom += test
+
+        # Hyperparameter tuning
+        ax.bar(
+            x_position,
+            tune,
+            bar_width,
+            bottom=bottom,
+            color=COLORS[method],
+            alpha=0.20,
+            edgecolor="none",
+        )
+
+    # Panel label
+    ax.text(
+        0.02,
+        0.96,
+        f"({panel_label})",
+        transform=ax.transAxes,
+        fontsize=28,
+        fontweight="bold",
+        va="top",
+        ha="left",
+    )
+
+    # Axis labels
+    ax.set_xlabel(
+        r"Number of periods ($N_p$)",
+        fontsize=24,
+        labelpad=12,
+    )
+
+    ax.set_ylabel(
+        "Time (ms)",
+        fontsize=24,
+        labelpad=12,
+    )
+
+    # Tick settings
+    ax.set_xticks(x)
+
+    ax.set_xticklabels(
+        samples,
+        rotation=45,
+        ha="right",
+        fontsize=19,
+    )
+
+    ax.tick_params(
+        axis="y",
+        labelsize=19,
+    )
+
+    ax.tick_params(
+        axis="both",
+        width=1.4,
+        length=6,
+    )
+
+    # Grid
+    ax.grid(
+        True,
+        axis="y",
+        alpha=0.25,
+    )
+
+    ax.set_axisbelow(True)
+
+    fig.tight_layout()
+
+    return fig, ax
+
+
+# ============================================================
+# SEPARATE ONE-ROW LEGEND
+# ============================================================
+
+def build_legend():
+    """
+    Create one independent legend figure with all entries in one row.
+    """
+
+    method_handles = [
+        Patch(
+            facecolor=COLORS["raw"],
+            edgecolor="none",
+            label="Raw",
+        ),
+        Patch(
+            facecolor=COLORS["fft"],
+            edgecolor="none",
+            label="FFT",
+        ),
+        Patch(
+            facecolor=COLORS["features"],
+            edgecolor="none",
+            label="Catch22",
+        ),
+    ]
+
+    time_handles = [
+        Patch(
+            facecolor="black",
+            edgecolor="none",
+            alpha=0.90,
+            label="Preprocessing",
+        ),
+        Patch(
+            facecolor="black",
+            edgecolor="none",
+            alpha=0.65,
+            label="Training",
+        ),
+        Patch(
+            facecolor="black",
+            edgecolor="none",
+            alpha=0.40,
+            label="Testing",
+        ),
+        Patch(
+            facecolor="black",
+            edgecolor="none",
+            alpha=0.20,
+            label="Tuning",
+        ),
+    ]
+
+    all_handles = method_handles + time_handles
+
+    fig = plt.figure(figsize=(17, 1.5))
+
+    legend = fig.legend(
+        handles=all_handles,
+        loc="center",
+        ncol=7,
+        frameon=False,
+        fontsize=20,
+        handlelength=1.8,
+        handleheight=1.2,
+        columnspacing=1.5,
+        handletextpad=0.6,
+        borderaxespad=0,
+    )
+
+    fig.canvas.draw()
+
+    bbox = legend.get_window_extent().transformed(
+        fig.dpi_scale_trans.inverted()
+    )
+
+    return fig, bbox
+
+
+# ============================================================
+# MAIN
+# ============================================================
+
+def main():
+
+    for signal_name, file_path in FILES.items():
+
+        file_path = Path(file_path)
+
+        if not file_path.exists():
+            raise FileNotFoundError(
+                f"Timing file not found:\n{file_path.resolve()}"
+            )
+
+        print(f"Loading: {file_path}")
+
+        with open(file_path, "rb") as file:
+            data = pickle.load(file)
+
+        fig, ax = plot_signal(
+            data=data,
+            signal_name=signal_name,
+            panel_label=PANEL_LABELS[signal_name],
+        )
+
+        save_figure(
+            fig=fig,
+            filename_stem=f"{signal_name}_timing_periods",
+        )
+
+    # --------------------------------------------------------
+    # SEPARATE GLOBAL LEGEND
+    # --------------------------------------------------------
+
+    legend_fig, legend_bbox = build_legend()
+
+    legend_fig.savefig(
+        "legend_times.pdf",
+        dpi=OUTPUT_DPI,
+        bbox_inches=legend_bbox,
+    )
+
+    legend_fig.savefig(
+        "legend_times.eps",
+        format="eps",
+        dpi=OUTPUT_DPI,
+        bbox_inches=legend_bbox,
+    )
+
+    legend_fig.savefig(
+        "legend_times.png",
+        format="png",
+        dpi=OUTPUT_DPI,
+        bbox_inches=legend_bbox,
+    )
+
     plt.show()
 
 
-# ---- SubPlots (1x3 layout) ----
-fig, axs = plt.subplots(1, 3, figsize=(12, 4.8))
-axs = axs.flatten()
-
-# Set y-limits for each subplot (optional)
-#row1_ylim = (0, 0.6)   # adjust as needed
-axs = axs.flatten()# ---- SubPlots (1x3 layout) ----
-fig, axs = plt.subplots(1, 3, figsize=(12, 4.8))
-axs = axs.flatten()
-
-# Set y-limits for each subplot (optional)
-row1_ylim = (0, 0.6)   # adjust as needed
-axs = axs.flatten()
-
-# Loop over methods and axes
-for idx, (method, ax) in enumerate(zip(method_list[:3], axs)):
-
-    for signal_name, frame in signal_frames.items():
-
-        color = signal_colors[signal_name]
-        dfm = frame[frame["Method"] == method]
-
-        train_means = dfm.set_index("periods")["train_mean"].reindex(all_samples, fill_value=0)
-        test_means  = dfm.set_index("periods")["test_mean"].reindex(all_samples, fill_value=0)
-        pre_means   = dfm.set_index("periods")["pre_mean"].reindex(all_samples, fill_value=0)
-
-        xo = x + offsets[signal_name]
-
-        # Stacked bars
-        ax.bar(xo, train_means,
-               width=group_width, color=color, alpha=alpha_vals["Train"])
-        ax.bar(xo, test_means,
-               width=group_width, color=color, alpha=alpha_vals["Test"],
-               bottom=train_means)
-        ax.bar(xo, pre_means,
-               width=group_width, color=color, alpha=alpha_vals["Pre"],
-               bottom=train_means + test_means)
-
-    # Subplot letters
-    ax.text(0.02, 0.95, f"{subplot_labels[idx]}",
-            transform=ax.transAxes,
-            fontweight="bold",
-            fontsize=12,
-            va="top",
-            ha="left")
-
-    # Grid
-    ax.grid(axis="y", linestyle="--", alpha=0.4)
-
-    # Optional: set individual y-limits if needed
-    ax.set_ylim(0, dfm[['train_mean','test_mean','pre_mean']].values.max()*1.2) 
-    ax.yaxis.set_major_formatter(mtick.FormatStrFormatter('%.2f'))
-
-# Global X labels
-for ax in axs:
-    ax.set_xlabel(r"Number of periods ($N_{p}$)")
-axs[0].set_ylabel("Time (s)")
-
-# Set xticks
-for ax in axs:
-    ax.set_xticks(x)
-    ax.set_xticklabels(all_samples, rotation=45)
-
-# Global legend
-handles = []
-labels = []
-for sig, col in signal_colors.items():
-    for phase, a in alpha_vals.items():
-        handles.append(plt.Rectangle((0,0),1,1,color=col,alpha=a))
-        labels.append(f"{sig} {phase}")
-
-#fig.legend(handles, labels, ncol=3, loc="upper center", fontsize=10)
-
-plt.tight_layout()
-#plt.savefig("notebooks/times/periods_times.pdf", format="pdf")
-plt.show()
-
-# Loop over methods and axes
-for idx, (method, ax) in enumerate(zip(method_list[:3], axs)):
-
-    for signal_name, frame in signal_frames.items():
-
-        color = signal_colors[signal_name]
-        dfm = frame[frame["Method"] == method]
-
-        train_means = dfm.set_index("periods")["train_mean"].reindex(all_samples, fill_value=0)
-        test_means  = dfm.set_index("periods")["test_mean"].reindex(all_samples, fill_value=0)
-        pre_means   = dfm.set_index("periods")["pre_mean"].reindex(all_samples, fill_value=0)
-
-        xo = x + offsets[signal_name]
-
-        # Stacked bars
-        ax.bar(xo, train_means,
-               width=group_width, color=color, alpha=alpha_vals["Train"])
-        ax.bar(xo, test_means,
-               width=group_width, color=color, alpha=alpha_vals["Test"],
-               bottom=train_means)
-        ax.bar(xo, pre_means,
-               width=group_width, color=color, alpha=alpha_vals["Pre"],
-               bottom=train_means + test_means)
-
-    # Subplot letters
-    ax.text(0.02, 0.95, f"{subplot_labels[idx]}",
-            transform=ax.transAxes,
-            fontweight="bold",
-            fontsize=12,
-            va="top",
-            ha="left")
-
-    # Grid
-    ax.grid(axis="y", linestyle="--", alpha=0.4)
-
-    # Optional: set individual y-limits if needed
-    ax.set_ylim(0, dfm[['train_mean','test_mean','pre_mean']].values.max()*1.2) 
-    ax.yaxis.set_major_formatter(mtick.FormatStrFormatter('%.2f'))
-
-# Global X labels
-for ax in axs:
-    ax.set_xlabel(r"Number of periods ($N_{p}$)")
-axs[0].set_ylabel("Time (s)")
-
-# Set xticks
-for ax in axs:
-    ax.set_xticks(x)
-    ax.set_xticklabels(all_samples, rotation=45)
-
-# Global legend
-handles = []
-labels = []
-for sig, col in signal_colors.items():
-    for phase, a in alpha_vals.items():
-        handles.append(plt.Rectangle((0,0),1,1,color=col,alpha=a))
-        labels.append(f"{sig} {phase}")
-
-#fig.legend(handles, labels, ncol=3, loc="upper center", fontsize=10)
-
-plt.tight_layout()
-#plt.savefig("notebooks/times/periods_times.pdf", format="pdf")
-plt.show()
+if __name__ == "__main__":
+    main()
